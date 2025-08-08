@@ -90,3 +90,4 @@ Este proyecto está configurado para funcionar con:
 ¡Feliz codificación! 🎉 # Updated for Vercel deployment
 # Fixed email configuration
 // Fixed email configuration
+// Using correct email: sistemas3@winston93.edu.mx
