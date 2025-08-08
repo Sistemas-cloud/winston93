@@ -88,3 +88,4 @@ Este proyecto está configurado para funcionar con:
 - [Documentación de Tailwind CSS](https://tailwindcss.com/docs)
 
 ¡Feliz codificación! 🎉 # Updated for Vercel deployment
+# Fixed email configuration
