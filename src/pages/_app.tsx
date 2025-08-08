@@ -1,6 +1,7 @@
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 import { useState, useEffect } from 'react'
+import { AnimatePresence } from 'framer-motion'
 import LoadingScreen from '@/components/LoadingScreen'
 import Layout from '@/components/Layout'
 import { useRouter } from 'next/router'
@@ -18,13 +19,15 @@ export default function App({ Component, pageProps }: AppProps) {
     return () => clearTimeout(timer)
   }, [])
 
-  if (isLoading) {
-    return <LoadingScreen />
-  }
-
   return (
-    <Layout showFooter={router.pathname !== '/'}>
-      <Component {...pageProps} />
-    </Layout>
+    <AnimatePresence mode="wait">
+      {isLoading ? (
+        <LoadingScreen key="loading" />
+      ) : (
+        <Layout key="layout" showFooter={router.pathname !== '/'}>
+          <Component {...pageProps} />
+        </Layout>
+      )}
+    </AnimatePresence>
   )
 } // Updated: vie 08 ago 2025 11:02:42 CST
