@@ -6,25 +6,9 @@ import Layout from '@/components/Layout'
 import { useRouter } from 'next/router'
 
 export default function App({ Component, pageProps }: AppProps) {
-  const [isLoading, setIsLoading] = useState(true)
-  const router = useRouter()
-
-  useEffect(() => {
-    // Simular tiempo de carga
-    const timer = setTimeout(() => {
-      setIsLoading(false)
-    }, 2000) // 2 segundos de loading
-
-    return () => clearTimeout(timer)
-  }, [])
-
-  // Force Vercel to use updated code - React error fix
-  if (isLoading) {
-    return <LoadingScreen />
-  }
-
+  // Temporarily disable loading screen to fix React error
   return (
-    <Layout showFooter={router.pathname !== '/'}>
+    <Layout showFooter={false}>
       <Component {...pageProps} />
     </Layout>
   )
