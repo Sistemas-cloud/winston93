@@ -224,7 +224,7 @@ export default function PrimariaPage() {
         {/* Nueva imagen de bandas horizontales con movimiento de izquierda a derecha */}
         <motion.div 
           className="absolute inset-0 flex items-center justify-center"
-          initial={{ x: -windowSize.width, opacity: 0 }}
+          initial={{ x: -1000, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
         >
@@ -242,7 +242,7 @@ export default function PrimariaPage() {
         {/* Imagen del estudiante con movimiento de abajo hacia arriba */}
         <motion.div 
           className="absolute bottom-0 left-0 w-full h-full"
-          initial={{ y: windowSize.height, opacity: 0 }}
+          initial={{ y: 1000, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 1.8, delay: 0.8, ease: "easeOut" }}
         >

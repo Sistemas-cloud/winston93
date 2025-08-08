@@ -34,7 +34,7 @@ const LoadingScreen = () => {
         {[...Array(20)].map((_, i) => (
           <motion.div
             key={`distributed-${i}`}
-            className="absolute w-0.5 h-0.5 bg-blue-300 rounded-full opacity-8"
+            className="absolute w-0.5 h-0.5 bg-blue-300 rounded-full opacity-20"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -56,7 +56,7 @@ const LoadingScreen = () => {
         {[...Array(18)].map((_, i) => (
           <motion.div
             key={`golden-${i}`}
-            className="absolute w-0.75 h-0.75 bg-yellow-300 rounded-full opacity-12"
+            className="absolute w-1 h-1 bg-yellow-300 rounded-full opacity-30"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -78,7 +78,7 @@ const LoadingScreen = () => {
         {[...Array(30)].map((_, i) => (
           <motion.div
             key={`tiny-${i}`}
-            className="absolute w-0.25 h-0.25 bg-white rounded-full opacity-6"
+            className="absolute w-0.5 h-0.5 bg-white rounded-full opacity-15"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -123,7 +123,7 @@ const LoadingScreen = () => {
         {[...Array(12)].map((_, i) => (
           <motion.div
             key={`small-bottom-${i}`}
-            className="absolute w-0.5 h-0.5 bg-white rounded-full opacity-15"
+            className="absolute w-0.5 h-0.5 bg-white rounded-full opacity-40"
             style={{
               left: `${Math.random() * 100}%`,
               bottom: `${Math.random() * 60}%`,
