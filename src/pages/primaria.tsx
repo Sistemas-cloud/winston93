@@ -2,6 +2,7 @@ import Head from 'next/head'
 import { useState, useEffect } from 'react'
 import Navigation from '@/components/Navigation'
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
+import Image from 'next/image'
 
 // Componente de Galería Modal
 const GalleryModal = ({ 
@@ -228,9 +229,11 @@ export default function PrimariaPage() {
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
         >
-          <img
+          <Image
             src="/images/facilities/pleca_verde.png"
             alt="Bandas decorativas"
+            width={1920}
+            height={1080}
             className="w-full h-full object-cover"
           />
           {/* Texto PRIMARIA sobre la banda azul */}
@@ -246,9 +249,11 @@ export default function PrimariaPage() {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 1.8, delay: 0.8, ease: "easeOut" }}
         >
-          <img
+          <Image
             src="/images/facilities/niño.png"
             alt="Estudiante de Primaria - Instituto Winston Churchill"
+            width={800}
+            height={1080}
             className="absolute bottom-0 left-16 h-full w-auto object-cover object-bottom"
           />
         </motion.div>

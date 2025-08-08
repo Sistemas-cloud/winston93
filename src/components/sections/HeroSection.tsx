@@ -9,7 +9,6 @@ export default function HeroSection() {
         muted
         loop
         playsInline
-        controls
         className="absolute inset-0 w-full h-full object-cover"
       >
         <source src="/videos/winston-video.mp4" type="video/mp4" />
