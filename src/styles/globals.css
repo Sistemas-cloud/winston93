@@ -796,13 +796,18 @@ body {
     height: 100dvh !important;
     min-height: 100vh !important;
     min-height: 100dvh !important;
+    max-height: 100vh !important;
+    max-height: 100dvh !important;
   }
   
   /* Para secciones que deben ocupar toda la pantalla */
   .min-h-\[calc\(100vh-4rem\)\] {
     min-height: 100vh !important;
     min-height: 100dvh !important;
-    height: auto !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    max-height: 100vh !important;
+    max-height: 100dvh !important;
   }
   
   /* Asegurar que el contenedor principal ocupe toda la pantalla */
@@ -824,7 +829,16 @@ body {
     .min-h-\[calc\(100vh-4rem\)\] {
       height: 100dvh !important;
       min-height: 100dvh !important;
+      max-height: 100dvh !important;
     }
+  }
+  
+  /* Prevenir desbordamiento del video */
+  video {
+    max-height: 100vh !important;
+    max-height: 100dvh !important;
+    object-fit: cover !important;
+    object-position: center !important;
   }
 }
 

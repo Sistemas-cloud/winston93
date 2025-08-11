@@ -10,6 +10,12 @@ export default function HeroSection() {
         loop
         playsInline
         className="absolute inset-0 w-full h-full object-cover"
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          objectPosition: 'center'
+        }}
       >
         <source src="/videos/winston-video.mp4" type="video/mp4" />
         Tu navegador no soporta videos HTML5.
