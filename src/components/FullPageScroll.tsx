@@ -15,13 +15,30 @@ export default function FullPageScroll({ children, onSectionChange }: FullPageSc
   // Inicializar altura de ventana en el cliente
   useEffect(() => {
     const updateHeight = () => {
-      setWindowHeight(window.innerHeight)
+      // En móvil, usar visualViewport si está disponible para mejor precisión
+      if (window.visualViewport) {
+        setWindowHeight(window.visualViewport.height)
+      } else {
+        setWindowHeight(window.innerHeight)
+      }
     }
     
     updateHeight()
     window.addEventListener('resize', updateHeight)
+    window.addEventListener('orientationchange', updateHeight)
     
-    return () => window.removeEventListener('resize', updateHeight)
+    // Para móvil, también escuchar cambios en visualViewport
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', updateHeight)
+    }
+    
+    return () => {
+      window.removeEventListener('resize', updateHeight)
+      window.removeEventListener('orientationchange', updateHeight)
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', updateHeight)
+      }
+    }
   }, [])
 
   const scrollToSection = (index: number) => {
@@ -37,12 +54,16 @@ export default function FullPageScroll({ children, onSectionChange }: FullPageSc
     
     if (containerRef.current) {
       let translateY = 0
+      const isMobile = window.innerWidth < 768
+      
       if (index === 0) {
         translateY = 0
       } else if (index === 1) {
         translateY = windowHeight // Primera sección completa
       } else {
-        translateY = windowHeight + (index - 1) * (windowHeight - 64) // Primera completa + demás con header
+        // En móvil, usar altura completa para todas las secciones
+        const sectionHeight = isMobile ? windowHeight : (windowHeight - 64)
+        translateY = windowHeight + (index - 1) * sectionHeight
       }
       containerRef.current.style.transform = `translateY(-${translateY}px)`
     }
@@ -167,7 +188,15 @@ export default function FullPageScroll({ children, onSectionChange }: FullPageSc
           <div
             key={index}
             className="w-full flex-shrink-0 relative"
-            style={{ height: index === 0 ? '100vh' : 'calc(100vh - 4rem)' }}
+            style={{ 
+              height: index === 0 ? '100vh' : 'calc(100vh - 4rem)',
+              minHeight: index === 0 ? '100vh' : 'calc(100vh - 4rem)',
+              // Para móvil, usar altura dinámica basada en el contenido
+              ...(window.innerWidth < 768 && {
+                height: 'auto',
+                minHeight: '100vh'
+              })
+            }}
           >
             {child}
           </div>

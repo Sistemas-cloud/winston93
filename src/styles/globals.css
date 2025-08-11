@@ -787,3 +787,61 @@ body {
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
 } 
+
+/* Correcciones específicas para móvil - Secciones de pantalla completa */
+@media screen and (max-width: 767px) {
+  /* Asegurar que las secciones ocupen toda la pantalla en móvil */
+  .h-screen {
+    height: 100vh !important;
+    height: 100dvh !important;
+    min-height: 100vh !important;
+    min-height: 100dvh !important;
+  }
+  
+  /* Para secciones que deben ocupar toda la pantalla */
+  .min-h-\[calc\(100vh-4rem\)\] {
+    min-height: 100vh !important;
+    min-height: 100dvh !important;
+    height: auto !important;
+  }
+  
+  /* Asegurar que el contenedor principal ocupe toda la pantalla */
+  .w-full.h-full {
+    height: 100vh !important;
+    height: 100dvh !important;
+  }
+  
+  /* Corregir problemas de viewport en móvil */
+  html, body {
+    height: 100vh;
+    height: 100dvh;
+    overflow-x: hidden;
+  }
+  
+  /* Ajustes para dispositivos móviles con barras de navegación */
+  @supports (height: 100dvh) {
+    .h-screen,
+    .min-h-\[calc\(100vh-4rem\)\] {
+      height: 100dvh !important;
+      min-height: 100dvh !important;
+    }
+  }
+}
+
+/* Ajustes para dispositivos móviles con notch o barras de estado */
+@media screen and (max-width: 767px) and (max-height: 700px) {
+  .h-screen,
+  .min-h-\[calc\(100vh-4rem\)\] {
+    height: 100vh !important;
+    min-height: 100vh !important;
+  }
+}
+
+/* Ajustes para dispositivos móviles en modo landscape */
+@media screen and (max-width: 767px) and (orientation: landscape) {
+  .h-screen,
+  .min-h-\[calc\(100vh-4rem\)\] {
+    height: 100vh !important;
+    min-height: 100vh !important;
+  }
+} 
