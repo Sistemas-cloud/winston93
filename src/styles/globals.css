@@ -99,6 +99,177 @@ body {
   }
 }
 
+/* Estilos específicos para la página de programas */
+.programas-container {
+  scroll-snap-type: y mandatory;
+  overflow-y: auto;
+  height: 100vh;
+}
+
+.programas-section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* Ocultar scrollbar en la página de programas */
+.programas-container::-webkit-scrollbar {
+  display: none;
+}
+
+.programas-container {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Efectos de transición suaves */
+.section-transition {
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Overlay de fundido para las imágenes */
+.image-overlay {
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(0, 0, 0, 0.1) 50%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+}
+
+/* Overlay de fundido más fuerte para mejor transición */
+.image-overlay-strong {
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(0, 0, 0, 0.1) 20%,
+    rgba(0, 0, 0, 0.3) 40%,
+    rgba(0, 0, 0, 0.6) 70%,
+    rgba(0, 0, 0, 0.9) 90%,
+    rgba(0, 0, 0, 1) 100%
+  );
+}
+
+/* Efecto de difuminado adicional para el panel de texto */
+.text-panel-blur {
+  position: relative;
+}
+
+.text-panel-blur::before {
+  content: '';
+  position: absolute;
+  left: -20px;
+  top: 0;
+  width: 20px;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(0, 0, 0, 0.3) 50%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+  pointer-events: none;
+}
+
+/* Efecto de unión mejorado para el panel de texto */
+.text-panel-united {
+  position: relative;
+  border: none;
+  outline: none;
+}
+
+.text-panel-united::before {
+  content: '';
+  position: absolute;
+  left: -30px;
+  top: 0;
+  width: 30px;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    var(--fade-color, rgba(0, 0, 0, 0.8)) 0%,
+    rgba(0, 0, 0, 0.4) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+  border: none;
+  outline: none;
+}
+
+/* Estilos para imágenes fragmentadas */
+.image-fragments-container {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  border: none;
+  outline: none;
+  position: relative;
+  gap: 0;
+}
+
+.image-fragment {
+  flex-shrink: 0;
+  height: 100%;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: scale(1.2); /* Hacer las imágenes más grandes */
+  border: none;
+  outline: none;
+  position: relative;
+  z-index: 1;
+}
+
+.image-fragment img {
+  height: 100%;
+  width: auto;
+  object-fit: cover;
+  object-position: center;
+  border: none;
+  outline: none;
+}
+
+/* Efecto de unión suave entre fragmentos */
+.image-fragment:not(:last-child) {
+  margin-right: 0px; /* Sin solapamiento para evitar líneas */
+}
+
+/* Eliminar todos los bordes en las secciones de programas */
+.programas-section * {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.programas-section {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Eliminar cualquier línea o separación */
+.programas-section *::before,
+.programas-section *::after {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Asegurar que no haya separaciones en el flex */
+.programas-section .flex {
+  gap: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Eliminar cualquier borde en imágenes */
+.programas-section img {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 @keyframes float {
   0%, 100% {
     transform: translateY(0px);

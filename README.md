@@ -1,21 +1,23 @@
 # Mi Proyecto Web
 
-Un proyecto web moderno construido con **Next.js 12**, **TypeScript** y **Tailwind CSS**.
+Un proyecto web moderno construido con **Next.js 15**, **TypeScript** y **Tailwind CSS**.
 
 ## 🚀 Características
 
-- ⚡ **Next.js 12** con Pages Router
-- 🔷 **TypeScript** para tipado estático
-- 🎨 **Tailwind CSS** para estilos utility-first
+- ⚡ **Next.js 15** con Pages Router
+- 🔷 **TypeScript 5** para tipado estático
+- 🎨 **Tailwind CSS 3.4** para estilos utility-first
 - 📱 **Responsive Design** incluido
 - 🌙 **Soporte para tema oscuro**
 - 🔧 **ESLint** configurado
-- 🧶 **Yarn** como gestor de paquetes
+- 🎭 **Framer Motion** para animaciones
+- 📧 **Nodemailer** para envío de emails
 
 ## 📋 Requisitos previos
 
-- Node.js 16.8.0 o superior
-- Yarn (recomendado) o npm
+- **Node.js 20.0.0 o superior** (recomendado)
+- **npm 10.0.0 o superior**
+- **Yarn** (opcional)
 
 ## 🛠️ Instalación y Uso
 
@@ -72,10 +74,11 @@ mi-proyecto-web/
 ## ⚙️ Configuración Específica
 
 Este proyecto está configurado para funcionar con:
-- **Node.js 16.8.0** (instalado en `/home/sistemam/nodejs/`)
-- **Yarn 1.22.22** como gestor de paquetes
-- **Next.js 12** (compatible con Node.js 16.8.0)
-- **TypeScript 4.9** (compatible con la configuración actual)
+- **Node.js 20.0.0 o superior** (recomendado)
+- **npm 10.0.0 o superior** como gestor de paquetes
+- **Next.js 15.4.6** (última versión estable)
+- **TypeScript 5.0.0** (última versión estable)
+- **React 18.3.0** (última versión estable)
 
 ## 🌐 Estado del Servidor
 
