@@ -9,17 +9,43 @@ interface NavigationProps {
 
 export default function Navigation({ currentSection = 0 }: NavigationProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const router = useRouter()
+  
+  // Detectar si es móvil
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    window.addEventListener('orientationchange', checkMobile)
+    
+    return () => {
+      window.removeEventListener('resize', checkMobile)
+      window.removeEventListener('orientationchange', checkMobile)
+    }
+  }, [])
   
   // El header será sobrepuesto (absolute) SOLO en la primera sección (index 0) de cada página
   // EXCEPTO en la página de contacto, donde siempre será sticky
+  // En móviles, siempre será fixed para evitar problemas de posicionamiento
   const isContactPage = router.pathname === '/contacto'
   const isFirstSection = currentSection === 0
-  const shouldBeAbsolute = !isContactPage && isFirstSection
+  
+  let navPosition = 'sticky'
+  if (isMobile) {
+    navPosition = 'fixed'
+  } else if (!isContactPage && isFirstSection) {
+    navPosition = 'absolute'
+  } else {
+    navPosition = 'sticky'
+  }
 
   return (
-    <nav className={`${shouldBeAbsolute ? 'absolute' : 'sticky'} top-0 left-0 right-0 z-50 transition-all duration-700 ease-in-out ${
-      shouldBeAbsolute 
+    <nav className={`${navPosition} top-0 left-0 right-0 z-50 transition-all duration-700 ease-in-out ${
+      navPosition === 'absolute' 
         ? 'bg-transparent !bg-transparent' 
         : 'bg-[#0038e4] shadow-lg backdrop-blur-sm'
     }`}>
@@ -100,7 +126,7 @@ export default function Navigation({ currentSection = 0 }: NavigationProps) {
               <Link href="/servicios-en-linea" className="text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide px-4 py-2 rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#dafb00'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(218, 251, 0, 0.5), 0 4px 6px -2px rgba(218, 251, 0, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
                 SERVICIOS EN LÍNEA
               </Link>
-              <Link href="/programas" className="text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide px-4 py-2 rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#dafb00'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(218, 251, 0, 0.5), 0 4px 6px -2px rgba(218, 251, 0, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
+              <Link href="/programas" className="text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide px-4 py-2 rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#dafb00'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(218, 251, 0, 0.5), 0 4px 6px -2px rgba(218, 251, 0, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.boxShadow = 'none'}}>
                 PROGRAMAS
               </Link>
               <Link href="#winston-life" className="text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide px-4 py-2 rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#dafb00'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(218, 251, 0, 0.5), 0 4px 6px -2px rgba(218, 251, 0, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>

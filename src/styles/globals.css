@@ -1322,3 +1322,42 @@ body {
   right: 0 !important;
   z-index: 50 !important;
 } 
+
+/* Estilos específicos para móviles */
+@media (max-width: 767px) {
+  /* Forzar altura exacta en móviles */
+  .home-page .h-screen,
+  .home-page section {
+    height: 100vh !important;
+    min-height: 100vh !important;
+    max-height: 100vh !important;
+    height: 100dvh !important; /* Dynamic viewport height para móviles */
+    min-height: 100dvh !important;
+    max-height: 100dvh !important;
+  }
+  
+  /* Asegurar que el header no interfiera en móviles */
+  .home-page nav {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 50 !important;
+  }
+  
+  /* Ajustar el contenedor principal para móviles */
+  .home-page {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+  }
+  
+  /* Forzar que las secciones ocupen todo el viewport móvil */
+  .home-page > div > div > div {
+    height: 100vh !important;
+    height: 100dvh !important;
+    min-height: 100vh !important;
+    min-height: 100dvh !important;
+    max-height: 100vh !important;
+    max-height: 100dvh !important;
+  }
+} 
