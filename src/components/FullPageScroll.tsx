@@ -9,6 +9,7 @@ export default function FullPageScroll({ children, onSectionChange }: FullPageSc
   const [currentSection, setCurrentSection] = useState(0)
   const [isScrolling, setIsScrolling] = useState(false)
   const [windowHeight, setWindowHeight] = useState(0)
+  const [actualViewportHeight, setActualViewportHeight] = useState(0)
   const [isAndroid, setIsAndroid] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [isTablet, setIsTablet] = useState(false)
@@ -19,14 +20,16 @@ export default function FullPageScroll({ children, onSectionChange }: FullPageSc
   // Función para actualizar altura de ventana
   const updateHeight = () => {
     if (typeof window !== 'undefined') {
-      // En móviles y tablet vertical, usar innerHeight para mejor compatibilidad
-      if ((isMobile || (isTablet && !isTabletLandscape)) && window.innerHeight) {
-        setWindowHeight(window.innerHeight)
-      } else if (window.visualViewport) {
-        setWindowHeight(window.visualViewport.height)
-      } else {
-        setWindowHeight(window.innerHeight)
+      // Obtener la altura real del viewport
+      let realHeight = window.innerHeight
+      
+      // En móviles, usar visualViewport si está disponible para mejor precisión
+      if (window.visualViewport && window.visualViewport.height) {
+        realHeight = window.visualViewport.height
       }
+      
+      setWindowHeight(realHeight)
+      setActualViewportHeight(realHeight)
     }
   }
 
@@ -59,16 +62,20 @@ export default function FullPageScroll({ children, onSectionChange }: FullPageSc
     updateHeight()
     updateDeviceType()
     
-    window.addEventListener('resize', () => {
+    const handleResize = () => {
       updateHeight()
       updateDeviceType()
-    })
-    window.addEventListener('orientationchange', () => {
+    }
+    
+    const handleOrientationChange = () => {
       setTimeout(() => {
         updateHeight()
         updateDeviceType()
-      }, 300) // Aumentar delay para móviles
-    })
+      }, 300)
+    }
+    
+    window.addEventListener('resize', handleResize)
+    window.addEventListener('orientationchange', handleOrientationChange)
     
     // Para móvil, también escuchar cambios en visualViewport
     if (typeof window !== 'undefined' && window.visualViewport) {
@@ -76,6 +83,8 @@ export default function FullPageScroll({ children, onSectionChange }: FullPageSc
     }
 
     return () => {
+      window.removeEventListener('resize', handleResize)
+      window.removeEventListener('orientationchange', handleOrientationChange)
       if (typeof window !== 'undefined' && window.visualViewport) {
         window.visualViewport.removeEventListener('resize', updateHeight)
       }
@@ -95,9 +104,8 @@ export default function FullPageScroll({ children, onSectionChange }: FullPageSc
       if (index === 0) {
         translateY = 0
       } else {
-        // En móviles y tablet vertical, usar altura exacta del viewport
-        // En tablet horizontal, usar altura calculada
-        const sectionHeight = (isMobile || (isTablet && !isTabletLandscape)) ? window.innerHeight : windowHeight
+        // Usar la altura real del viewport para todos los dispositivos
+        const sectionHeight = actualViewportHeight
         translateY = index * sectionHeight
       }
       containerRef.current.style.transform = `translateY(-${translateY}px)`
@@ -201,10 +209,10 @@ export default function FullPageScroll({ children, onSectionChange }: FullPageSc
         window.removeEventListener('touchend', handleTouchEnd)
       }
     }
-  }, [currentSection, isScrolling, children.length, windowHeight, isMobile, isTablet, isTabletLandscape, scrollToSection])
+  }, [currentSection, isScrolling, children.length, actualViewportHeight, isMobile, isTablet, isTabletLandscape, scrollToSection])
 
   // No renderizar hasta que tengamos la altura de la ventana
-  if (windowHeight === 0) {
+  if (windowHeight === 0 || actualViewportHeight === 0) {
     return <div className="h-screen flex items-center justify-center">Cargando...</div>
   }
 
@@ -220,9 +228,9 @@ export default function FullPageScroll({ children, onSectionChange }: FullPageSc
             key={index}
             className="w-full flex-shrink-0 relative"
             style={{ 
-              height: '100vh',
-              minHeight: '100vh',
-              maxHeight: '100vh'
+              height: `${actualViewportHeight}px`,
+              minHeight: `${actualViewportHeight}px`,
+              maxHeight: `${actualViewportHeight}px`
             }}
           >
             {child}
