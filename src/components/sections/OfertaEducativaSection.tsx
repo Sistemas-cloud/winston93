@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import Footer from '@/components/Footer'
+import AnimatedElement from '@/components/AnimatedElement'
 
 export default function OfertaEducativaSection() {
   const [isVisible, setIsVisible] = useState(false)
@@ -12,7 +13,7 @@ export default function OfertaEducativaSection() {
           setIsVisible(true)
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.3 }
     )
 
     if (sectionRef.current) {
@@ -24,18 +25,18 @@ export default function OfertaEducativaSection() {
 
   const educationalLevels = [
     {
-      name: 'KINDER',
+      name: 'KÍNDER',
       image: '/images/education/kinder.png',
-      bgColor: 'bg-cyan-400',
+      bgColor: 'bg-green-600',
       textColor: 'text-white',
       delay: '200ms',
-      link: 'https://winstonkinder.edu.mx/'
+      link: '/kinder'
     },
     {
       name: 'PRIMARIA',
       image: '/images/education/primaria.png',
-      bgColor: 'bg-[#dafb00]',
-      textColor: 'text-black',
+      bgColor: 'bg-yellow-500',
+      textColor: 'text-white',
       delay: '400ms',  
       link: '/primaria'
     },
@@ -52,26 +53,26 @@ export default function OfertaEducativaSection() {
   return (
     <div ref={sectionRef} className="w-full relative h-screen flex flex-col">
       {/* Contenido de la sección */}
-      <div className="bg-white py-4 md:py-6 flex-1 flex flex-col justify-center">
+      <div className="bg-white py-3 sm:py-4 md:py-6 flex-1 flex flex-col justify-center">
         <div className="container mx-auto px-4 md:px-8">
-          <div className="text-center mb-8 md:mb-14">
+          <div className="text-center mb-6 sm:mb-8 md:mb-14">
             {/* Título principal */}
             <div className={`transition-all duration-1000 ease-out ${
               isVisible 
                 ? 'opacity-100 translate-y-0 scale-100' 
                 : 'opacity-0 -translate-y-8 scale-95'
             }`} style={{ transitionDelay: '100ms' }}>
-              <h1 className="text-2xl md:text-5xl lg:text-6xl font-bold text-blue-900 mb-2 md:mb-4">
+              <h1 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-blue-900 mb-1 sm:mb-2 md:mb-4">
                 OFERTA
               </h1>
-              <h2 className="text-2xl md:text-5xl lg:text-6xl font-bold text-blue-600">
+              <h2 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-blue-600">
                 EDUCATIVA
               </h2>
             </div>
           </div>
 
-          {/* Tarjetas de niveles educativos */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8 max-w-6xl mx-auto">
+          {/* Tarjetas de niveles educativos - Grid responsive */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-5 lg:gap-8 max-w-6xl mx-auto">
             {educationalLevels.map((level, index) => {
               // Función para manejar la navegación
               const handleNavigation = () => {
@@ -88,7 +89,7 @@ export default function OfertaEducativaSection() {
                 <div
                   key={level.name}
                   onClick={handleNavigation}
-                  className={`bg-white rounded-3xl overflow-hidden shadow-lg transition-all duration-1000 ease-out transform cursor-pointer group hover:scale-105 hover:shadow-2xl hover:-translate-y-2 ${
+                  className={`bg-white rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg transition-all duration-1000 ease-out transform cursor-pointer group hover:scale-105 hover:shadow-2xl hover:-translate-y-2 ${
                     isVisible 
                       ? 'opacity-100 translate-y-0 scale-100' 
                       : 'opacity-0 translate-y-12 scale-95'
@@ -96,7 +97,7 @@ export default function OfertaEducativaSection() {
                   style={{ transitionDelay: level.delay }}
                 >
                   {/* Imagen del nivel educativo que ocupa la mayor parte de la tarjeta */}
-                  <div className="relative h-44 md:h-64 lg:h-72 overflow-hidden">
+                  <div className="relative h-32 sm:h-36 md:h-44 lg:h-56 xl:h-64 2xl:h-72 overflow-hidden">
                     <img
                       src={level.image}
                       alt={`Estudiantes de ${level.name} - Instituto Winston Churchill`}
@@ -109,9 +110,9 @@ export default function OfertaEducativaSection() {
                   </div>
 
                   {/* Sección inferior con color de fondo y texto */}
-                  <div className={`${level.bgColor} px-5 py-3 md:px-8 md:py-5`}>
+                  <div className={`${level.bgColor} px-3 py-2 sm:px-4 sm:py-3 md:px-6 md:py-4 lg:px-8 lg:py-5`}>
                     <div className="text-center">
-                      <h3 className={`text-xl md:text-3xl lg:text-4xl font-bold ${level.textColor} tracking-wider transition-all duration-150 group-hover:scale-110 group-hover:tracking-widest`}>
+                      <h3 className={`text-sm sm:text-base md:text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-bold ${level.textColor} tracking-wider transition-all duration-150 group-hover:scale-110 group-hover:tracking-widest`}>
                         {level.name}
                       </h3>
                     </div>

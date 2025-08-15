@@ -120,40 +120,40 @@ export default function SliderSection() {
                 : 'w-full md:w-1/2 md:max-w-lg text-white md:pr-8'        // Slides 1 y 2: izquierda en desktop
             }`}>
               <AnimatedElement>
-                <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-4 tracking-wide">
+                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-2 md:mb-4 tracking-wide">
                   {slides[currentSlide].title}
                 </h2>
-                <h3 className="text-xl md:text-3xl lg:text-4xl font-bold mb-4 md:mb-6 text-blue-300">
+                <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-3 md:mb-4 lg:mb-6 text-blue-300">
                   {slides[currentSlide].subtitle}
                 </h3>
-                <p className="text-sm md:text-base lg:text-lg text-gray-200 leading-relaxed mb-6 md:mb-8">
+                <p className="text-xs sm:text-sm md:text-base lg:text-lg text-gray-200 leading-relaxed mb-4 md:mb-6 lg:mb-8 max-w-sm md:max-w-none">
                   {slides[currentSlide].description}
                 </p>
-                <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 md:px-6 md:py-3 rounded-lg font-semibold transition-colors duration-300 text-sm md:text-base">
+                <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 md:px-4 md:py-2 lg:px-6 lg:py-3 rounded-lg font-semibold transition-colors duration-300 text-xs sm:text-sm md:text-base">
                   Saber más
                 </button>
               </AnimatedElement>
             </div>
 
-            {/* Controles de navegación */}
-            <div className="hidden md:flex flex-col items-center justify-center space-y-4">
+            {/* Controles de navegación - Desktop y Tablet */}
+            <div className="hidden md:flex flex-col items-center justify-center space-y-3 md:space-y-4">
               {/* Botón anterior */}
               <button
                 onClick={prevSlide}
-                className="w-12 h-12 md:w-14 md:h-14 bg-white/20 hover:bg-white/30 text-white rounded-full flex items-center justify-center transition-all duration-300 backdrop-blur-sm"
+                className="w-10 h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 bg-white/20 hover:bg-white/30 text-white rounded-full flex items-center justify-center transition-all duration-300 backdrop-blur-sm"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
               </button>
 
               {/* Indicadores de slide */}
-              <div className="flex flex-col space-y-2">
+              <div className="flex flex-col space-y-1.5 md:space-y-2">
                 {slides.map((_, index) => (
                   <button
                     key={index}
                     onClick={() => goToSlide(index)}
-                    className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    className={`w-2.5 h-2.5 md:w-3 md:h-3 rounded-full transition-all duration-300 ${
                       index === currentSlide 
                         ? 'bg-white scale-125' 
                         : 'bg-white/50 hover:bg-white/75'
@@ -165,9 +165,9 @@ export default function SliderSection() {
               {/* Botón siguiente */}
               <button
                 onClick={nextSlide}
-                className="w-12 h-12 md:w-14 md:h-14 bg-white/20 hover:bg-white/30 text-white rounded-full flex items-center justify-center transition-all duration-300 backdrop-blur-sm"
+                className="w-10 h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 bg-white/20 hover:bg-white/30 text-white rounded-full flex items-center justify-center transition-all duration-300 backdrop-blur-sm"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </button>
@@ -197,17 +197,17 @@ export default function SliderSection() {
       <div className="md:hidden absolute inset-x-0 top-1/2 transform -translate-y-1/2 z-40 flex justify-between px-4">
         <button
           onClick={prevSlide}
-          className="w-10 h-10 bg-white/20 hover:bg-white/30 text-white rounded-full flex items-center justify-center transition-all duration-300 backdrop-blur-sm"
+          className="w-8 h-8 bg-white/20 hover:bg-white/30 text-white rounded-full flex items-center justify-center transition-all duration-300 backdrop-blur-sm"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </button>
         <button
           onClick={nextSlide}
-          className="w-10 h-10 bg-white/20 hover:bg-white/30 text-white rounded-full flex items-center justify-center transition-all duration-300 backdrop-blur-sm"
+          className="w-8 h-8 bg-white/20 hover:bg-white/30 text-white rounded-full flex items-center justify-center transition-all duration-300 backdrop-blur-sm"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </button>
