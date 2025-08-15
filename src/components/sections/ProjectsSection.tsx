@@ -5,6 +5,7 @@ export default function SliderSection() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isMobile, setIsMobile] = useState(false)
   const [isTablet, setIsTablet] = useState(false)
+  const [isTabletLandscape, setIsTabletLandscape] = useState(false)
   
   const slides = [
     {
@@ -31,8 +32,12 @@ export default function SliderSection() {
   useEffect(() => {
     const updateDeviceType = () => {
       const width = window.innerWidth
+      const height = window.innerHeight
+      const isLandscape = width > height
+      
       setIsMobile(width < 768)
       setIsTablet(width >= 768 && width < 1024)
+      setIsTabletLandscape(width >= 768 && width < 1024 && isLandscape)
     }
     
     updateDeviceType()
@@ -111,7 +116,12 @@ export default function SliderSection() {
       {/* Contenido superpuesto */}
       <div className="relative z-30 h-full flex items-center">
         <div className="container mx-auto px-4 md:px-8">
-          <div className="flex items-start justify-between h-full pt-16 md:pt-20">
+          <div className={`flex items-start justify-between h-full ${
+            // Ajustar padding-top según el dispositivo
+            isTabletLandscape 
+              ? 'pt-12' // Menos padding en tablet horizontal
+              : 'pt-16 md:pt-20' // Padding normal para otros dispositivos
+          }`}>
             
             {/* Texto dinámico con posicionamiento condicional */}
             <div className={`${
