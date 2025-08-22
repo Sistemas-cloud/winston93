@@ -6,7 +6,6 @@ export default function OfertaEducativaSection() {
   const [isVisible, setIsVisible] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [isTabletHorizontal, setIsTabletHorizontal] = useState(false)
-  const [debugInfo, setDebugInfo] = useState('')
   const sectionRef = useRef<HTMLDivElement>(null)
 
   // Detectar tipo de dispositivo específicamente
@@ -21,11 +20,6 @@ export default function OfertaEducativaSection() {
       
       // Tablet horizontal: 768 <= width < 1024 Y landscape
       const newIsTabletHorizontal = width >= 768 && width < 1024 && isLandscape
-      
-      // Debug info
-      const debug = `Width: ${width}, Height: ${height}, Landscape: ${isLandscape}, Mobile: ${newIsMobile}, TabletHorizontal: ${newIsTabletHorizontal}`
-      setDebugInfo(debug)
-      console.log('OfertaEducativa Debug:', debug)
       
       setIsMobile(newIsMobile)
       setIsTabletHorizontal(newIsTabletHorizontal)
@@ -84,12 +78,6 @@ export default function OfertaEducativaSection() {
 
   return (
     <div ref={sectionRef} className="w-full relative h-full flex flex-col">
-      {/* Debug info - solo en desarrollo */}
-      {process.env.NODE_ENV === 'development' && (
-        <div className="fixed top-0 left-0 text-white p-2 text-xs z-50">
-          {debugInfo}
-        </div>
-      )}
       
       {/* Contenido de la sección */}
       <div className={`bg-white flex-1 flex flex-col justify-center ${

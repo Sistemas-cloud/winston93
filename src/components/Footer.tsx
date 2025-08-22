@@ -1,18 +1,28 @@
 import AnimatedElement from '@/components/AnimatedElement'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 
 export default function Footer() {
+  const router = useRouter()
+  const isWinstonLife = router.pathname === '/winston-life'
   return (
     <footer className="relative text-white overflow-hidden" style={{ minHeight: '220px' }}>
-      {/* Imagen de fondo */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: 'url(/images/hero/footer.png)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'
-        }}
-      />
+      {/* Fondo: imagen por defecto; azul sólido solo en Winston Life */}
+      {isWinstonLife ? (
+        <div
+          className="absolute inset-0"
+          style={{ backgroundColor: '#063ce6' }}
+        />
+      ) : (
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: 'url(/images/hero/footer.png)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
+        />
+      )}
 
       {/* Contenido principal */}
       <div className="relative z-10 container mx-auto px-6 md:px-10 py-6 md:py-10">

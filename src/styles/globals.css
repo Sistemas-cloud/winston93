@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Animación tipada para la mueca de la cintilla */
+@property --hole-r {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
 /* Estilos globales */
 html {
   scroll-behavior: smooth;
