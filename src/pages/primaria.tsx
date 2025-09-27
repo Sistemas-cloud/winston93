@@ -142,11 +142,8 @@ export default function PrimariaPage() {
     tecnologia: {
       title: "TECNOLOGÍA",
       images: [
-        "/images/entrepreneurs/emprendedores5.JPG",
-        "/images/entrepreneurs/emprendedores6.JPG",
-        "/images/entrepreneurs/emprendedores7.JPG",
-        "/images/entrepreneurs/emprendedores8.JPG",
-        "/images/entrepreneurs/emprendedores9.JPG"
+        "/images/tecnologia/tec1.png",
+        "/images/tecnologia/tec2.png"
       ]
     },
     entrepreneurs: {

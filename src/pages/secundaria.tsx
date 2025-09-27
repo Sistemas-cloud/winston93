@@ -163,8 +163,12 @@ export default function SecundariaPage() {
     formacionSocial: {
       title: "FORMACIÓN SOCIAL Y HUMANA",
       images: [
-        "/images/secundaria/formacion/formacion1.jpg",
-        "/images/secundaria/formacion/formacion2.jpg"
+        "/images/secundaria/formacion/formacion1.JPG",
+        "/images/secundaria/formacion/formacion2.png",
+        "/images/secundaria/formacion/formacion3.JPG",
+        "/images/secundaria/formacion/formacion4.png",
+        "/images/secundaria/formacion/formacion5.JPG",
+        "/images/secundaria/formacion/formacion6.JPG"
       ]
     }
   }

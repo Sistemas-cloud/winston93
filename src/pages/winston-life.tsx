@@ -104,7 +104,7 @@ export default function WinstonLife() {
   const galleries = {
     soyWinston: {
       title: "#SOY WINSTON",
-      images: [
+      gridImages: [
         "/images/Winston Life/galeria soy winston/xantolo.png",
         "/images/Winston Life/galeria soy winston/xantolo1.png",
         "/images/Winston Life/galeria soy winston/posada.png",
@@ -113,6 +113,16 @@ export default function WinstonLife() {
         "/images/Winston Life/galeria soy winston/navidad.png",
         "/images/Winston Life/galeria soy winston/halloween.png",
         "/images/Winston Life/galeria soy winston/acción.png"
+      ],
+      galleryImages: [
+        "/images/Winston Life/galeria soy winston/xantolo_banner.png",
+        "/images/Winston Life/galeria soy winston/xantolo1_banner.jpg",
+        "/images/Winston Life/galeria soy winston/posada_banner.jpg",
+        "/images/Winston Life/galeria soy winston/niño_banner.jpg",
+        "/images/Winston Life/galeria soy winston/navidad_primaria_banner.jpg",
+        "/images/Winston Life/galeria soy winston/navidad_banner.jpg",
+        "/images/Winston Life/galeria soy winston/halloween_banner.jpg",
+        "/images/Winston Life/galeria soy winston/accion_banner.png"
       ]
     }
   }
@@ -132,14 +142,14 @@ export default function WinstonLife() {
   const nextImage = () => {
     if (currentGallery && galleries[currentGallery as keyof typeof galleries]) {
       const gallery = galleries[currentGallery as keyof typeof galleries]
-      setCurrentImageIndex((prev) => (prev + 1) % gallery.images.length)
+      setCurrentImageIndex((prev) => (prev + 1) % gallery.galleryImages.length)
     }
   }
 
   const prevImage = () => {
     if (currentGallery && galleries[currentGallery as keyof typeof galleries]) {
       const gallery = galleries[currentGallery as keyof typeof galleries]
-      setCurrentImageIndex((prev) => (prev - 1 + gallery.images.length) % gallery.images.length)
+      setCurrentImageIndex((prev) => (prev - 1 + gallery.galleryImages.length) % gallery.galleryImages.length)
     }
   }
 
@@ -369,7 +379,7 @@ export default function WinstonLife() {
             
             {/* Grid de imágenes */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              {galleries.soyWinston.images.map((image, index) => (
+              {galleries.soyWinston.gridImages.map((image, index) => (
                 <div
                   key={index}
                   className="relative group overflow-hidden rounded-2xl cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-300"
@@ -416,7 +426,7 @@ export default function WinstonLife() {
           <GalleryModal
             isOpen={galleryOpen}
             onClose={closeGallery}
-            images={galleries[currentGallery as keyof typeof galleries].images}
+            images={galleries[currentGallery as keyof typeof galleries].galleryImages}
             currentIndex={currentImageIndex}
             onNext={nextImage}
             onPrev={prevImage}
