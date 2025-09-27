@@ -90,7 +90,7 @@ export default function SliderSection() {
   }, [currentSlide])
 
   return (
-    <div className="w-full h-auto md:h-full relative overflow-hidden">
+    <div className="w-full h-full relative overflow-hidden">
       {/* Slider de imágenes de fondo */}
       <div className="absolute inset-0">
         {slides.map((slide, index) => (
@@ -115,12 +115,12 @@ export default function SliderSection() {
 
       {/* Contenido superpuesto */}
       <div className="relative z-30 h-full flex items-center">
-        <div className="container mx-auto px-4 md:px-8 py-6 md:py-0">
+        <div className="container mx-auto px-2 md:px-8 py-0 md:py-0">
           <div className={`flex items-start justify-between h-full ${
-            // Ajustar padding-top según el dispositivo
+            // Eliminar padding-top en móvil, mantener en tablet/desktop
             isTabletLandscape 
               ? 'pt-12' // Menos padding en tablet horizontal
-              : 'pt-16 md:pt-20' // Padding normal para otros dispositivos
+              : 'pt-4 md:pt-20' // Mínimo padding en móvil, normal en desktop
           }`}>
             
             {/* Texto dinámico con posicionamiento condicional */}

@@ -23,14 +23,14 @@ export default function EducationalOfferSection() {
   }, [])
 
   return (
-    <div ref={sectionRef} className="min-h-screen md:h-screen w-full relative overflow-hidden bg-white">
+    <div ref={sectionRef} className="h-full w-full relative overflow-hidden bg-white">
       {/* Contenido principal */}
-      <div className="h-full flex items-center py-4 sm:py-6 md:py-0">
+      <div className="h-full flex items-center">
         <div className="container mx-auto px-4 md:px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between h-full py-4 md:py-0">
+          <div className="flex flex-col md:flex-row items-center justify-between h-full">
             
             {/* Lado izquierdo - Imagen de estudiantes */}
-            <div className="w-full md:w-1/2 relative flex items-center justify-center mb-4 sm:mb-6 md:mb-0">
+            <div className="w-full md:w-1/2 relative flex items-center justify-center mb-0 md:mb-0">
               <div className={`relative transition-all duration-1000 ease-out ${
                 isVisible 
                   ? 'opacity-100 translate-x-0' 
@@ -51,17 +51,17 @@ export default function EducationalOfferSection() {
             </div>
 
             {/* Lado derecho - Contenido de texto */}
-            <div className="w-full md:w-1/2 text-center px-3 md:px-0 flex flex-col justify-center">
+            <div className="w-full md:w-1/2 text-center px-4 md:px-0 flex flex-col justify-center">
               {/* Títulos - Entran desde arriba */}
-              <div className={`mb-3 sm:mb-4 md:mb-8 transition-all duration-1000 ease-out ${
+              <div className={`mb-2 md:mb-8 transition-all duration-1000 ease-out ${
                 isVisible 
                   ? 'opacity-100 translate-y-0 scale-100' 
                   : 'opacity-0 -translate-y-8 scale-95'
               }`} style={{ transitionDelay: '400ms' }}>
-                <h1 className="text-lg sm:text-xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-blue-900 leading-tight mb-1 sm:mb-2 md:mb-4">
+                <h1 className="text-xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-blue-900 leading-tight mb-1 md:mb-4">
                   INSTITUTO WINSTON CHURCHILL
                 </h1>
-                <h2 className="text-sm sm:text-base md:text-xl lg:text-2xl xl:text-3xl font-bold text-blue-700 mb-2 sm:mb-3 md:mb-6">
+                <h2 className="text-base md:text-xl lg:text-2xl xl:text-3xl font-bold text-blue-700 mb-2 md:mb-6">
                   Formando líderes con visión global desde hace más de 30 años.
                 </h2>
               </div>

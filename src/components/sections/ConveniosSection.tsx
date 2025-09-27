@@ -40,14 +40,12 @@ export default function ConveniosSection() {
   return (
     <div ref={sectionRef} className="h-full w-full relative overflow-hidden bg-white">
       {/* Contenido principal */}
-      <div className={`h-full flex items-center justify-center ${
-        isTablet ? 'py-1 -mt-8' : 'py-2 md:py-4'
-      }`}>
-        <div className="w-full px-2 md:px-4">
+      <div className="h-full flex items-center justify-center">
+        <div className="w-full px-4 md:px-8">
           <div className="flex items-center justify-center h-full">
             
             {/* Imagen de convenios más grande y mejor centrada */}
-            <div className="relative flex items-center justify-center w-full max-w-7xl -mt-12 md:-mt-16 lg:-mt-20 ml-8 md:ml-12 lg:ml-16">
+            <div className="relative flex items-center justify-center w-full max-w-7xl ml-4 md:ml-12 lg:ml-16">
               <div className={`relative w-full flex items-center justify-center transition-all duration-1000 ease-out ${
                 isVisible 
                   ? 'opacity-100 translate-y-0 scale-100' 

@@ -237,21 +237,22 @@ export default function PrimariaPage() {
       {/* Navigation - transparente al inicio, azul al hacer scroll */}
       <Navigation currentSection={scrolled ? 1 : 0} />
 
-      {/* Hero Section con imagen de fondo fija */}
-      <section className="relative h-screen w-full overflow-hidden">
-        {/* Imagen de fondo fija con fundido suave */}
+      {/* Hero Section con imagen de fondo fija - 1/3 en móvil */}
+      <section className="relative h-[33vh] md:h-screen w-full overflow-hidden">
+        {/* Imagen de fondo fija con fundido suave - fachada completa visible */}
         <motion.div 
-          className="absolute inset-0 bg-cover bg-center bg-fixed"
+          className="absolute inset-0 bg-contain bg-center bg-no-repeat bg-fixed"
           style={{
             backgroundImage: `url('/images/facilities/fondo_escuela.png')`,
-            backgroundAttachment: 'fixed'
+            backgroundAttachment: 'fixed',
+            backgroundSize: 'contain'
           }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1.5, ease: "easeInOut" }}
         >
-          {/* Overlay con gradiente */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent"></div>
+          {/* Overlay con gradiente más suave para no opacar la fachada */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/15 to-transparent"></div>
         </motion.div>
 
         {/* Nueva imagen de bandas horizontales con movimiento de izquierda a derecha */}
@@ -269,8 +270,8 @@ export default function PrimariaPage() {
             className="w-full h-full object-cover"
           />
           {/* Texto PRIMARIA sobre la banda azul */}
-          <div className="absolute bottom-1/3 right-1/4 transform translate-y-1/2">
-            <h1 className="text-white text-4xl md:text-6xl font-bold tracking-wider">PRIMARIA</h1>
+          <div className="absolute bottom-1/3 right-4 md:right-1/4 transform translate-y-1/2">
+            <h1 className="text-white text-2xl md:text-6xl font-bold tracking-wider">PRIMARIA</h1>
           </div>
         </motion.div>
 
@@ -286,7 +287,7 @@ export default function PrimariaPage() {
             alt="Estudiante de Primaria - Instituto Winston Churchill"
             width={800}
             height={1080}
-            className="absolute bottom-0 left-16 h-full w-auto object-cover object-bottom"
+            className="absolute bottom-0 left-2 md:left-16 h-full w-auto object-cover object-bottom"
           />
         </motion.div>
       </section>
@@ -307,23 +308,23 @@ export default function PrimariaPage() {
         />
         
         {/* Contenido de Educación Bilingüe */}
-        <div className="py-20 relative z-10">
-          <div className="container mx-auto px-6">
-            <div className="flex gap-80 items-start justify-center">
+        <div className="py-8 md:py-20 relative z-10">
+          <div className="container mx-auto px-4 md:px-6">
+            <div className="flex flex-col md:flex-row gap-8 md:gap-80 items-start justify-center">
               {/* Título a la izquierda */}
-              <div className="flex-shrink-0 text-left">
-                <h2 className="text-4xl md:text-6xl font-bold text-blue-900">EDUCACIÓN</h2>
-                <h3 className="text-4xl md:text-6xl font-bold text-blue-600">BILINGÜE</h3>
+              <div className="flex-shrink-0 text-center md:text-left mb-6 md:mb-0">
+                <h2 className="text-2xl md:text-6xl font-bold text-blue-900">EDUCACIÓN</h2>
+                <h3 className="text-2xl md:text-6xl font-bold text-blue-600">BILINGÜE</h3>
                 <div className="ml-0">
-                  <p className="text-xl md:text-2xl text-blue-700 font-medium">QUE FORMA</p>
-                  <p className="text-xl md:text-2xl text-blue-700 font-medium">CON PROPÓSITO</p>
+                  <p className="text-lg md:text-2xl text-blue-700 font-medium">QUE FORMA</p>
+                  <p className="text-lg md:text-2xl text-blue-700 font-medium">CON PROPÓSITO</p>
                 </div>
               </div>
 
               {/* Texto descriptivo a la derecha */}
-              <div className="w-96 relative">
-                {/* Plaquita verde - tira vertical simple */}
-                <div className="absolute -right-32 -top-8 w-20 h-64 pointer-events-none">
+              <div className="w-full md:w-96 relative">
+                {/* Plaquita verde - tira vertical simple - oculta en móvil */}
+                <div className="hidden md:block absolute -right-32 -top-8 w-20 h-64 pointer-events-none">
                   <div className="relative w-full h-full">
                     {/* Tira verde vertical principal */}
                                           <div 
@@ -334,7 +335,7 @@ export default function PrimariaPage() {
                     <div className="absolute bottom-0 right-0 w-20 h-20 bg-white rounded-tl-full"></div>
                   </div>
                 </div>
-                <div className="space-y-2 text-gray-600 leading-relaxed text-justify">
+                <div className="space-y-2 text-gray-600 leading-relaxed text-justify px-4 md:px-0">
                   <p>
                     En nuestra primaria, nuestros alumnos aprenden un modelo bilingüe con inmersión total en inglés, logrando comprender y expresarse con fluidez.
                     La otra mitad se imparte en español cumpliendo con el programa oficial de la SEP.
@@ -351,13 +352,13 @@ export default function PrimariaPage() {
         </div>
 
         {/* Contenido de Materias Extracurriculares */}
-        <div className="py-20 relative z-10">
-          <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-blue-900 mb-4">
+        <div className="py-8 md:py-20 relative z-10">
+          <div className="container mx-auto px-4 md:px-6">
+          <div className="text-center mb-8 md:mb-16">
+            <h2 className="text-2xl md:text-4xl font-bold text-blue-900 mb-2 md:mb-4">
               Materias extracurriculares que
             </h2>
-            <h3 className="text-3xl md:text-4xl font-bold text-blue-600">
+            <h3 className="text-2xl md:text-4xl font-bold text-blue-600">
               enriquecen su formación:
             </h3>
           </div>
@@ -444,8 +445,8 @@ export default function PrimariaPage() {
       </div>
 
         {/* Contenido de Certificaciones */}
-        <div className="py-16 relative z-10">
-          <div className="container mx-auto px-6">
+        <div className="py-8 md:py-16 relative z-10">
+          <div className="container mx-auto px-4 md:px-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Certificación Internacional */}
               <div className="bg-blue-600 text-white p-8 rounded-2xl">

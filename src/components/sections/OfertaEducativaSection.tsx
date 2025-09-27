@@ -77,20 +77,20 @@ export default function OfertaEducativaSection() {
   ]
 
   return (
-    <div ref={sectionRef} className="w-full relative h-auto md:h-full flex flex-col">
+    <div ref={sectionRef} className="w-full relative min-h-screen flex flex-col">
       
       {/* Contenido de la sección */}
       <div className={`bg-white flex-1 flex flex-col justify-center ${
-        // Móvil: padding y separación un poco mayores para lectura
-        isTabletHorizontal ? 'py-0' : isMobile ? 'py-4' : 'py-3 sm:py-4 md:py-6'
+        // Móvil: padding ajustado para dar espacio al footer
+        isTabletHorizontal ? 'py-0' : isMobile ? 'py-6 pb-2' : 'py-3 sm:py-4 md:py-6'
       }`}>
         <div className={`container mx-auto ${
-          // Móvil: padding normal, Tablet horizontal: mínimo, Desktop: normal
-          isTabletHorizontal ? 'px-1' : isMobile ? 'px-3' : 'px-4 md:px-8'
+          // Móvil: padding normal para legibilidad
+          isTabletHorizontal ? 'px-1' : isMobile ? 'px-4' : 'px-4 md:px-8'
         }`}>
           <div className={`text-center ${
-            // Móvil: más margen inferior para aire
-            isTabletHorizontal ? 'mb-0' : isMobile ? 'mb-4' : 'mb-6 sm:mb-8 md:mb-14'
+            // Móvil: reducir margen inferior para eliminar espacios
+            isTabletHorizontal ? 'mb-0' : isMobile ? 'mb-2' : 'mb-6 sm:mb-8 md:mb-14'
           }`}>
             {/* Título principal */}
             <div className={`transition-all duration-1000 ease-out ${
@@ -123,8 +123,8 @@ export default function OfertaEducativaSection() {
 
           {/* Tarjetas de niveles educativos - Grid responsive */}
           <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 max-w-6xl mx-auto ${
-            // Móvil: más espacio entre tarjetas
-            isTabletHorizontal ? 'gap-0.5' : isMobile ? 'gap-4' : 'gap-3 sm:gap-4 md:gap-5 lg:gap-8'
+            // Móvil: reducir espacio entre tarjetas para compactar
+            isTabletHorizontal ? 'gap-0.5' : isMobile ? 'gap-1' : 'gap-3 sm:gap-4 md:gap-5 lg:gap-8'
           }`}>
             {educationalLevels.map((level, index) => {
               // Función para manejar la navegación

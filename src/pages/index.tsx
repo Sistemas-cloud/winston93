@@ -48,22 +48,22 @@ export default function Home() {
       {/* Navigation que recibe la sección actual */}
       <Navigation currentSection={currentSection} />
 
-      {/* Móvil: scroll nativo y espaciados mejorados. Desktop/Tablet: FullPageScroll */}
+      {/* Móvil: scroll nativo con secciones de pantalla completa. Desktop/Tablet: FullPageScroll */}
       {isHydrated && isMobile ? (
-        <div className="w-full mx-auto px-4 pt-2 pb-8 space-y-8 sm:space-y-10">
-          <section className="min-h-[70vh]">
+        <div className="w-full">
+          <section className="h-screen w-full">
             <HeroSection />
           </section>
-          <section className="py-2">
+          <section className="h-[50vh] w-full">
             <SliderSection />
           </section>
-          <section className="py-2">
+          <section className="h-screen w-full">
             <EducationalOfferSection />
           </section>
-          <section className="py-2">
+          <section className="h-[33vh] w-full">
             <ConveniosSection />
           </section>
-          <section className="py-2">
+          <section className="min-h-screen w-full">
             <OfertaEducativaSection />
           </section>
         </div>

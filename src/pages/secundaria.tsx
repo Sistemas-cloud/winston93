@@ -237,7 +237,7 @@ export default function SecundariaPage() {
       {/* Navigation - transparente al inicio, azul al hacer scroll */}
       <Navigation currentSection={scrolled ? 1 : 0} />
 
-      {/* Hero Section con imagen de fondo fija */}
+      {/* Hero Section con imagen de fondo fija - pantalla completa */}
       <section className="relative h-screen w-full overflow-hidden">
         {/* Imagen de fondo fija con fundido suave */}
         <motion.div 
@@ -264,7 +264,7 @@ export default function SecundariaPage() {
           transition={{ duration: 1.5, delay: 0.8, ease: "easeOut" }}
         >
           <div className="transform translate-y-32">
-            <h1 className="text-white text-5xl md:text-7xl font-bold tracking-wider drop-shadow-2xl">
+            <h1 className="text-white text-4xl md:text-7xl font-bold tracking-wider drop-shadow-2xl">
               SECUNDARIA
             </h1>
           </div>
@@ -273,23 +273,23 @@ export default function SecundariaPage() {
       </section>
 
       {/* Sección de Pensamiento Crítico e Idiomas */}
-      <section className="py-20 bg-white relative overflow-hidden">
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="flex gap-80 items-start justify-center">
+      <section className="py-8 md:py-20 bg-white relative overflow-hidden">
+        <div className="container mx-auto px-4 md:px-6 relative z-10">
+          <div className="flex flex-col md:flex-row gap-8 md:gap-80 items-start justify-center">
             {/* Título a la izquierda */}
-            <div className="flex-shrink-0 text-left">
-              <h2 className="text-4xl md:text-6xl font-bold text-blue-900">PENSAMIENTO</h2>
-              <h3 className="text-4xl md:text-6xl font-bold text-blue-600">CRÍTICO</h3>
+            <div className="flex-shrink-0 text-center md:text-left mb-6 md:mb-0">
+              <h2 className="text-2xl md:text-6xl font-bold text-blue-900">PENSAMIENTO</h2>
+              <h3 className="text-2xl md:text-6xl font-bold text-blue-600">CRÍTICO</h3>
               <div className="ml-0">
-                <p className="text-xl md:text-2xl text-blue-700 font-medium">IDIOMAS Y</p>
-                <p className="text-xl md:text-2xl text-blue-700 font-medium">FORMACIÓN INTEGRAL</p>
+                <p className="text-lg md:text-2xl text-blue-700 font-medium">IDIOMAS Y</p>
+                <p className="text-lg md:text-2xl text-blue-700 font-medium">FORMACIÓN INTEGRAL</p>
               </div>
             </div>
 
             {/* Texto descriptivo a la derecha */}
-            <div className="w-96 relative">
-              {/* Plaquita naranja decorativa */}
-              <div className="absolute -right-32 -top-8 w-20 h-64 pointer-events-none">
+            <div className="w-full md:w-96 relative">
+              {/* Plaquita naranja decorativa - oculta en móvil */}
+              <div className="hidden md:block absolute -right-32 -top-8 w-20 h-64 pointer-events-none">
                 <div className="relative w-full h-full">
                   {/* Tira naranja vertical principal */}
                   <div 
@@ -300,7 +300,7 @@ export default function SecundariaPage() {
                   <div className="absolute bottom-0 right-0 w-20 h-20 bg-white rounded-tl-full"></div>
                 </div>
               </div>
-              <div className="space-y-2 text-gray-600 leading-relaxed text-justify">
+              <div className="space-y-2 text-gray-600 leading-relaxed text-justify px-4 md:px-0">
                 <p>
                   En nuestra secundaria, fomentamos que nuestros alumnos piensen, cuestionen y resuelvan problemas, 
                   construyendo conocimiento a través del análisis, la reflexión y la experimentación en un ambiente 
@@ -339,13 +339,13 @@ export default function SecundariaPage() {
         </motion.div>
         
         {/* Sección de Materias Extracurriculares */}
-        <section className="py-20 relative z-10">
-          <div className="container mx-auto px-6">
-          <div className="text-center mb-16 flex flex-col items-center justify-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-blue-900 mb-4 text-center">
+        <section className="py-8 md:py-20 relative z-10">
+          <div className="container mx-auto px-4 md:px-6">
+          <div className="text-center mb-8 md:mb-16 flex flex-col items-center justify-center">
+            <h2 className="text-2xl md:text-4xl font-bold text-blue-900 mb-2 md:mb-4 text-center">
               Materias extracurriculares que
             </h2>
-            <h3 className="text-3xl md:text-4xl font-bold text-blue-600 text-center">
+            <h3 className="text-2xl md:text-4xl font-bold text-blue-600 text-center">
               enriquecen su formación:
             </h3>
           </div>
@@ -437,8 +437,8 @@ export default function SecundariaPage() {
       </section>
 
       {/* Sección de Francés */}
-      <section className="py-16 relative z-10">
-        <div className="container mx-auto px-6">
+      <section className="py-8 md:py-16 relative z-10">
+        <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-6xl mx-auto relative overflow-hidden rounded-2xl shadow-xl group cursor-pointer transition-all duration-500 hover:shadow-2xl">
             {/* Imagen de fondo que abarca todo el contenedor */}
             <div className="absolute inset-0">
@@ -456,7 +456,7 @@ export default function SecundariaPage() {
             {/* Contenido superpuesto */}
             <div className="relative z-10 flex items-center justify-center px-16 py-20">
               <div className="text-center">
-                <h2 className="text-5xl md:text-7xl font-bold text-white drop-shadow-lg transition-all duration-500 group-hover:scale-105">
+                <h2 className="text-3xl md:text-7xl font-bold text-white drop-shadow-lg transition-all duration-500 group-hover:scale-105">
                   FRANCÉS
                 </h2>
               </div>
@@ -467,8 +467,8 @@ export default function SecundariaPage() {
         </div>
 
       {/* Sección de Certificaciones */}
-      <section className="py-16">
-        <div className="container mx-auto px-6">
+      <section className="py-8 md:py-16">
+        <div className="container mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Certificación Internacional */}
             <div className="bg-blue-600 text-white p-8 rounded-2xl">

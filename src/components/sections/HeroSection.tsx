@@ -33,12 +33,20 @@ export default function HeroSection() {
     }
   }, [])
 
-  // Intentar autoplay; si falla (iOS/Safari), mostrar overlay de Play
+  // En móvil, forzar overlay de Play siempre para garantizar reproducción
   useEffect(() => {
     const tryAutoplay = async () => {
       if (!videoRef.current) return
+      
+      // En móvil, siempre mostrar overlay de Play para evitar problemas de autoplay
+      if (isMobile) {
+        setShowPlayOverlay(true)
+        setVideoLoaded(false)
+        return
+      }
+      
       try {
-        // Asegurar flags antes de intentar reproducir
+        // Asegurar flags antes de intentar reproducir (solo desktop/tablet)
         videoRef.current.muted = true
         videoRef.current.playsInline = true
         await videoRef.current.play()
@@ -54,19 +62,37 @@ export default function HeroSection() {
     if (typeof window !== 'undefined') {
       tryAutoplay()
     }
-  }, [])
+  }, [isMobile])
 
   const handlePlayClick = async () => {
     if (!videoRef.current) return
     try {
-      // Permitir sonido tras interacción si lo deseas: mantener muted para evitar bloqueos
-      videoRef.current.muted = false
+      // Mantener muted inicialmente para evitar bloqueos, luego permitir sonido
+      videoRef.current.muted = true
+      videoRef.current.playsInline = true
       await videoRef.current.play()
+      // Una vez que reproduce, permitir sonido
+      setTimeout(() => {
+        if (videoRef.current) {
+          videoRef.current.muted = false
+        }
+      }, 500)
       setVideoLoaded(true)
       setShowPlayOverlay(false)
     } catch (err) {
-      // Si aún falla, mantener controles visibles
-      setShowPlayOverlay(true)
+      console.error('Error al reproducir video:', err)
+      // Si falla, intentar con muted permanente
+      try {
+        if (videoRef.current) {
+          videoRef.current.muted = true
+          await videoRef.current.play()
+          setVideoLoaded(true)
+          setShowPlayOverlay(false)
+        }
+      } catch (err2) {
+        console.error('Error al reproducir video muted:', err2)
+        setShowPlayOverlay(true)
+      }
     }
   }
 
