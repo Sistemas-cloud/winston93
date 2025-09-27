@@ -11,7 +11,8 @@ import OfertaEducativaSection from '@/components/sections/OfertaEducativaSection
 
 export default function Home() {
   const [currentSection, setCurrentSection] = useState(0)
-  const [isMobile, setIsMobile] = useState(false)
+  // Por defecto asumimos móvil para SSR y evitamos bloqueos de scroll antes de hidratar
+  const [isMobile, setIsMobile] = useState(true)
   const [isHydrated, setIsHydrated] = useState(false)
 
   const handleSectionChange = (sectionIndex: number) => {

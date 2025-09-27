@@ -207,6 +207,8 @@ export default function FullPageScroll({ children, onSectionChange }: FullPageSc
         window.removeEventListener('keydown', handleKeyDown)
         window.removeEventListener('touchstart', handleTouchStart)
         window.removeEventListener('touchend', handleTouchEnd)
+        // Importante: restablecer el scroll del body al desmontar para no bloquear otras páginas
+        document.body.style.overflow = 'auto'
       }
     }
   }, [currentSection, isScrolling, children.length, actualViewportHeight, isMobile, isTablet, isTabletLandscape, scrollToSection])

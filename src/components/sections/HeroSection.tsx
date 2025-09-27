@@ -88,9 +88,9 @@ export default function HeroSection() {
         </div>
       )}
 
-      {/* Indicador de carga en desktop/tablet cuando no hay overlay */}
+      {/* Indicador de carga (no tapa overlay de play). Reducimos opacidad en móvil */}
       {!videoLoaded && !showPlayOverlay && (
-        <div className="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center z-20">
+        <div className="absolute inset-0 bg-white/80 md:bg-white/90 flex items-center justify-center z-20">
           <div className="text-center px-4">
             <div className="w-12 h-12 md:w-16 md:h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
             <p className="text-gray-800 text-base md:text-lg font-semibold">Cargando video...</p>
