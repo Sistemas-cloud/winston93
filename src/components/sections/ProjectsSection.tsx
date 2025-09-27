@@ -90,7 +90,7 @@ export default function SliderSection() {
   }, [currentSlide])
 
   return (
-    <div className="w-full h-full relative overflow-hidden">
+    <div className="w-full h-auto md:h-full relative overflow-hidden">
       {/* Slider de imágenes de fondo */}
       <div className="absolute inset-0">
         {slides.map((slide, index) => (
@@ -115,7 +115,7 @@ export default function SliderSection() {
 
       {/* Contenido superpuesto */}
       <div className="relative z-30 h-full flex items-center">
-        <div className="container mx-auto px-4 md:px-8">
+        <div className="container mx-auto px-4 md:px-8 py-6 md:py-0">
           <div className={`flex items-start justify-between h-full ${
             // Ajustar padding-top según el dispositivo
             isTabletLandscape 
@@ -130,16 +130,16 @@ export default function SliderSection() {
                 : 'w-full md:w-1/2 md:max-w-lg text-white md:pr-8'        // Slides 1 y 2: izquierda en desktop
             }`}>
               <AnimatedElement>
-                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-2 md:mb-4 tracking-wide">
+                <h2 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-2 md:mb-4 tracking-wide">
                   {slides[currentSlide].title}
                 </h2>
-                <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-3 md:mb-4 lg:mb-6 text-blue-300">
+                <h3 className="text-xl sm:text-2xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-3 md:mb-4 lg:mb-6 text-blue-300">
                   {slides[currentSlide].subtitle}
                 </h3>
-                <p className="text-xs sm:text-sm md:text-base lg:text-lg text-gray-200 leading-relaxed mb-4 md:mb-6 lg:mb-8 max-w-sm md:max-w-none">
+                <p className="text-sm sm:text-base md:text-base lg:text-lg text-gray-200 leading-relaxed mb-4 md:mb-6 lg:mb-8 max-w-sm md:max-w-none">
                   {slides[currentSlide].description}
                 </p>
-                <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 md:px-4 md:py-2 lg:px-6 lg:py-3 rounded-lg font-semibold transition-colors duration-300 text-xs sm:text-sm md:text-base">
+                <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 md:px-4 md:py-2 lg:px-6 lg:py-3 rounded-lg font-semibold transition-colors duration-300 text-sm sm:text-sm md:text-base">
                   Saber más
                 </button>
               </AnimatedElement>

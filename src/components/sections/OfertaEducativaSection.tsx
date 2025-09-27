@@ -77,20 +77,20 @@ export default function OfertaEducativaSection() {
   ]
 
   return (
-    <div ref={sectionRef} className="w-full relative h-full flex flex-col">
+    <div ref={sectionRef} className="w-full relative h-auto md:h-full flex flex-col">
       
       {/* Contenido de la sección */}
       <div className={`bg-white flex-1 flex flex-col justify-center ${
-        // Móvil: padding normal, Tablet horizontal: sin padding, Desktop: padding normal
-        isTabletHorizontal ? 'py-0' : isMobile ? 'py-2' : 'py-3 sm:py-4 md:py-6'
+        // Móvil: padding y separación un poco mayores para lectura
+        isTabletHorizontal ? 'py-0' : isMobile ? 'py-4' : 'py-3 sm:py-4 md:py-6'
       }`}>
         <div className={`container mx-auto ${
           // Móvil: padding normal, Tablet horizontal: mínimo, Desktop: normal
           isTabletHorizontal ? 'px-1' : isMobile ? 'px-3' : 'px-4 md:px-8'
         }`}>
           <div className={`text-center ${
-            // Móvil: margen normal, Tablet horizontal: sin margen, Desktop: margen normal
-            isTabletHorizontal ? 'mb-0' : isMobile ? 'mb-3' : 'mb-6 sm:mb-8 md:mb-14'
+            // Móvil: más margen inferior para aire
+            isTabletHorizontal ? 'mb-0' : isMobile ? 'mb-4' : 'mb-6 sm:mb-8 md:mb-14'
           }`}>
             {/* Título principal */}
             <div className={`transition-all duration-1000 ease-out ${
@@ -99,21 +99,21 @@ export default function OfertaEducativaSection() {
                 : 'opacity-0 -translate-y-8 scale-95'
             }`} style={{ transitionDelay: '100ms' }}>
               <h1 className={`font-bold text-blue-900 ${
-                // Móvil: text-lg (más grande), Tablet horizontal: text-sm (pequeño), Desktop: text-xl+
+                // Móvil: tamaño mayor y más interlineado
                 isTabletHorizontal 
                   ? 'text-sm mb-0' 
                   : isMobile 
-                    ? 'text-lg mb-1' 
+                    ? 'text-2xl mb-1' 
                     : 'text-xl sm:text-2xl md:text-4xl lg:text-5xl xl:text-6xl mb-1 sm:mb-2 md:mb-4'
               }`}>
                 OFERTA
               </h1>
               <h2 className={`font-bold text-blue-600 ${
-                // Móvil: text-lg (más grande), Tablet horizontal: text-sm (pequeño), Desktop: text-xl+
+                // Móvil: tamaño mayor
                 isTabletHorizontal 
                   ? 'text-sm' 
                   : isMobile 
-                    ? 'text-lg' 
+                    ? 'text-2xl' 
                     : 'text-xl sm:text-2xl md:text-4xl lg:text-5xl xl:text-6xl'
               }`}>
                 EDUCATIVA
@@ -123,8 +123,8 @@ export default function OfertaEducativaSection() {
 
           {/* Tarjetas de niveles educativos - Grid responsive */}
           <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 max-w-6xl mx-auto ${
-            // Móvil: gap normal, Tablet horizontal: gap mínimo, Desktop: gap normal
-            isTabletHorizontal ? 'gap-0.5' : isMobile ? 'gap-2' : 'gap-3 sm:gap-4 md:gap-5 lg:gap-8'
+            // Móvil: más espacio entre tarjetas
+            isTabletHorizontal ? 'gap-0.5' : isMobile ? 'gap-4' : 'gap-3 sm:gap-4 md:gap-5 lg:gap-8'
           }`}>
             {educationalLevels.map((level, index) => {
               // Función para manejar la navegación
@@ -152,11 +152,11 @@ export default function OfertaEducativaSection() {
                   style={{ transitionDelay: level.delay }}
                 >
                   {/* Imagen del nivel educativo que se ajusta a su tamaño natural */}
-                  <div className="relative overflow-hidden">
+                  <div className="relative overflow-hidden py-3 sm:py-4">
                     <img
                       src={level.image}
                       alt={`Estudiantes de ${level.name} - Instituto Winston Churchill`}
-                      className="w-full h-auto max-w-[200px] md:max-w-[240px] lg:max-w-[280px] mx-auto object-contain transition-all duration-200 ease-out group-hover:scale-105 group-hover:brightness-105"
+                      className="w-full h-auto max-w-[220px] md:max-w-[240px] lg:max-w-[280px] mx-auto object-contain transition-all duration-200 ease-out group-hover:scale-105 group-hover:brightness-105"
                     />
                     
 
@@ -166,11 +166,11 @@ export default function OfertaEducativaSection() {
                   <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center py-2">
                     <div className="text-center">
                       <h3 className={`font-bold ${level.textColor} tracking-wider transition-all duration-150 group-hover:scale-110 group-hover:tracking-widest drop-shadow-lg ${
-                        // Móvil: text-sm (más grande), Tablet horizontal: text-xs (pequeño), Desktop: text-sm+
+                        // Móvil: tamaño ligeramente mayor
                         isTabletHorizontal 
                           ? 'text-xs' 
                           : isMobile 
-                            ? 'text-sm' 
+                            ? 'text-base' 
                             : 'text-sm sm:text-base md:text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl'
                       }`}>
                         {level.name}

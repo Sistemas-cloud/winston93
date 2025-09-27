@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Navigation from '@/components/Navigation'
 import FullPageScroll from '@/components/FullPageScroll'
 import HeroSection from '@/components/sections/HeroSection'
@@ -11,10 +11,28 @@ import OfertaEducativaSection from '@/components/sections/OfertaEducativaSection
 
 export default function Home() {
   const [currentSection, setCurrentSection] = useState(0)
+  const [isMobile, setIsMobile] = useState(false)
+  const [isHydrated, setIsHydrated] = useState(false)
 
   const handleSectionChange = (sectionIndex: number) => {
     setCurrentSection(sectionIndex)
   }
+
+  useEffect(() => {
+    const updateDeviceType = () => {
+      if (typeof window !== 'undefined') {
+        setIsMobile(window.innerWidth < 768)
+      }
+    }
+    updateDeviceType()
+    setIsHydrated(true)
+    window.addEventListener('resize', updateDeviceType)
+    window.addEventListener('orientationchange', updateDeviceType)
+    return () => {
+      window.removeEventListener('resize', updateDeviceType)
+      window.removeEventListener('orientationchange', updateDeviceType)
+    }
+  }, [])
 
   return (
     <div className="home-page">
@@ -29,13 +47,34 @@ export default function Home() {
       {/* Navigation que recibe la sección actual */}
       <Navigation currentSection={currentSection} />
 
-      <FullPageScroll onSectionChange={handleSectionChange}>
-        <HeroSection />
-        <SliderSection />
-        <EducationalOfferSection />
-        <ConveniosSection />
-        <OfertaEducativaSection />
-      </FullPageScroll>
+      {/* Móvil: scroll nativo y espaciados mejorados. Desktop/Tablet: FullPageScroll */}
+      {isHydrated && isMobile ? (
+        <div className="w-full mx-auto px-4 pt-2 pb-8 space-y-8 sm:space-y-10">
+          <section className="min-h-[70vh]">
+            <HeroSection />
+          </section>
+          <section className="py-2">
+            <SliderSection />
+          </section>
+          <section className="py-2">
+            <EducationalOfferSection />
+          </section>
+          <section className="py-2">
+            <ConveniosSection />
+          </section>
+          <section className="py-2">
+            <OfertaEducativaSection />
+          </section>
+        </div>
+      ) : (
+        <FullPageScroll onSectionChange={handleSectionChange}>
+          <HeroSection />
+          <SliderSection />
+          <EducationalOfferSection />
+          <ConveniosSection />
+          <OfertaEducativaSection />
+        </FullPageScroll>
+      )}
       
 
     </div>

@@ -23,7 +23,7 @@ export default function EducationalOfferSection() {
   }, [])
 
   return (
-    <div ref={sectionRef} className="h-screen w-full relative overflow-hidden bg-white">
+    <div ref={sectionRef} className="min-h-screen md:h-screen w-full relative overflow-hidden bg-white">
       {/* Contenido principal */}
       <div className="h-full flex items-center py-4 sm:py-6 md:py-0">
         <div className="container mx-auto px-4 md:px-8">
