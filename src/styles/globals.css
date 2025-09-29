@@ -9,6 +9,20 @@
   initial-value: 0px;
 }
 
+/* Animación para cintilla infinita hacia la izquierda */
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll-left {
+  animation: scroll-left 20s linear infinite;
+}
+
 /* Estilos globales */
 html {
   scroll-behavior: smooth;

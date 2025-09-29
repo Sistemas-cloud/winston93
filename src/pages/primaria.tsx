@@ -122,11 +122,10 @@ export default function PrimariaPage() {
     robotica: {
       title: "ROBÓTICA",
       images: [
-        "/images/entrepreneurs/emprendedores5.JPG",
-        "/images/entrepreneurs/emprendedores6.JPG",
-        "/images/entrepreneurs/emprendedores7.JPG",
-        "/images/entrepreneurs/emprendedores8.JPG",
-        "/images/entrepreneurs/emprendedores9.JPG"
+        "/images/robotica/robotica1.jpg",
+        "/images/robotica/robotica2.jpg",
+        "/images/robotica/robotica3.jpg",
+        "/images/robotica/robotica4.jpg"
       ]
     },
     artes: {

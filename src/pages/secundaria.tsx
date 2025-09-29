@@ -154,10 +154,9 @@ export default function SecundariaPage() {
     mindfulness: {
       title: "MINDFULNESS",
       images: [
-        "/images/mindfulness/mindfulness1.jpg",
-        "/images/mindfulness/mindfulness2.png",
-        "/images/mindfulness/mindfulness3.jpg",
-        "/images/mindfulness/mindfulness4.jpg"
+        "/images/secundaria/mindfulness/mind1.jpg",
+        "/images/secundaria/mindfulness/mind2.png",
+        "/images/secundaria/mindfulness/mind3.jpg"
       ]
     },
     formacionSocial: {

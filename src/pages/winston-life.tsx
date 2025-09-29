@@ -344,7 +344,7 @@ export default function WinstonLife() {
         </section>
 
         {/* Sección ENTREPRENEURS */}
-        <section id="entrepreneurs" className="py-20 bg-white">
+        <section id="entrepreneurs" className="py-20 bg-white overflow-hidden">
           <div className="container mx-auto px-6">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-blue-900 mb-4">
@@ -352,18 +352,42 @@ export default function WinstonLife() {
               </h2>
             </div>
             
-            {/* Grid de imágenes - vacío por ahora */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              {/* Placeholder para futuras imágenes */}
-              <div className="bg-gray-200 h-64 rounded-2xl flex items-center justify-center">
-                <p className="text-gray-500 text-lg">Próximamente...</p>
+            {/* Cintilla con movimiento infinito hacia la izquierda */}
+            <div className="relative w-full overflow-hidden bg-gradient-to-r from-blue-600 via-[#ccfb00] to-blue-600 py-8 rounded-2xl shadow-lg">
+              {/* Contenedor de la cintilla infinita */}
+              <div className="flex animate-scroll-left">
+                {/* Primera serie de imágenes */}
+                {[1, 2, 3, 4, 5, 6, 7].map((num) => (
+                  <div key={`first-${num}`} className="flex-shrink-0 mx-4">
+                    <div className="relative group">
+                      <img
+                        src={`/images/Winston Life/emprendedores/emprendedores${num}.${num === 2 ? 'png' : 'jpg'}`}
+                        alt={`Entrepreneurs ${num}`}
+                        className="w-64 h-48 object-cover rounded-xl shadow-lg transition-transform duration-300 group-hover:scale-105 border-4 border-white"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </div>
+                  </div>
+                ))}
+                
+                {/* Segunda serie de imágenes (duplicada para efecto infinito) */}
+                {[1, 2, 3, 4, 5, 6, 7].map((num) => (
+                  <div key={`second-${num}`} className="flex-shrink-0 mx-4">
+                    <div className="relative group">
+                      <img
+                        src={`/images/Winston Life/emprendedores/emprendedores${num}.${num === 2 ? 'png' : 'jpg'}`}
+                        alt={`Entrepreneurs ${num}`}
+                        className="w-64 h-48 object-cover rounded-xl shadow-lg transition-transform duration-300 group-hover:scale-105 border-4 border-white"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div className="bg-gray-200 h-64 rounded-2xl flex items-center justify-center">
-                <p className="text-gray-500 text-lg">Próximamente...</p>
-              </div>
-              <div className="bg-gray-200 h-64 rounded-2xl flex items-center justify-center">
-                <p className="text-gray-500 text-lg">Próximamente...</p>
-              </div>
+              
+              {/* Gradientes laterales para efecto de desvanecimiento */}
+              <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-white to-transparent pointer-events-none z-10"></div>
+              <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-white to-transparent pointer-events-none z-10"></div>
             </div>
           </div>
         </section>
