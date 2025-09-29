@@ -352,7 +352,7 @@ export default function WinstonLife() {
           </div>
           
           {/* Cintilla con movimiento infinito hacia la izquierda - pantalla completa */}
-          <div className="relative w-full overflow-hidden bg-gradient-to-r from-blue-600/40 via-[#ccfb00]/40 to-blue-600/40 py-8">
+          <div className="relative w-full overflow-hidden bg-gradient-to-r from-blue-600/40 via-[#ccfb00]/40 to-blue-600/40 py-12">
               {/* Contenedor de la cintilla infinita */}
               <div className="flex animate-scroll-left">
                 {/* Primera serie de imágenes */}
