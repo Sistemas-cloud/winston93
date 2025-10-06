@@ -58,7 +58,7 @@ export default function OfertaEducativaSection() {
       image: '/images/education/kinder.png',
       textColor: 'text-white',
       delay: '200ms',
-      link: '/kinder'
+      link: 'https://winstonkinder.edu.mx/'
     },
     {
       name: 'PRIMARIA',

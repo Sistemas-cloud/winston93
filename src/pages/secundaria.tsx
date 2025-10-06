@@ -12,7 +12,8 @@ const GalleryModal = ({
   currentIndex, 
   onNext, 
   onPrev, 
-  title 
+  title,
+  description
 }: {
   isOpen: boolean
   onClose: () => void
@@ -21,6 +22,7 @@ const GalleryModal = ({
   onNext: () => void
   onPrev: () => void
   title: string
+  description?: string[]
 }) => {
   if (!isOpen) return null
 
@@ -30,10 +32,10 @@ const GalleryModal = ({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center"
+        className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center overflow-y-auto"
         onClick={onClose}
       >
-        <div className="relative max-w-6xl max-h-[95vh] w-full mx-4">
+        <div className="relative max-w-6xl w-full mx-4 my-8">
           {/* Botón de cerrar */}
           <button
             onClick={onClose}
@@ -43,54 +45,73 @@ const GalleryModal = ({
           </button>
 
           {/* Título */}
-          <div className="absolute top-4 left-4 z-10 text-white text-2xl font-bold">
+          <div className="absolute top-4 left-4 z-10 text-white text-2xl font-bold drop-shadow-lg">
             {title}
           </div>
 
-          {/* Imagen principal */}
-          <motion.div
-            key={currentIndex}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.3 }}
-            className="relative"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <img
-              src={images[currentIndex]}
-              alt={`${title} - Imagen ${currentIndex + 1}`}
-              className="w-full h-auto max-h-[85vh] object-contain rounded-lg"
-            />
-          </motion.div>
-
-          {/* Navegación */}
-          <div className="absolute inset-0 flex items-center justify-between p-4 pointer-events-none">
-            <button
-              onClick={(e) => {
-                e.stopPropagation()
-                onPrev()
-              }}
-              className="pointer-events-auto bg-black bg-opacity-50 text-white p-3 rounded-full hover:bg-opacity-70 transition-all transform hover:scale-110"
+          {/* Contenedor principal */}
+          <div className="flex flex-col gap-6" onClick={(e) => e.stopPropagation()}>
+            {/* Imagen principal */}
+            <motion.div
+              key={currentIndex}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.3 }}
+              className="relative mt-16"
             >
-              ‹
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation()
-                onNext()
-              }}
-              className="pointer-events-auto bg-black bg-opacity-50 text-white p-3 rounded-full hover:bg-opacity-70 transition-all transform hover:scale-110"
-            >
-              ›
-            </button>
-          </div>
+              <img
+                src={images[currentIndex]}
+                alt={`${title} - Imagen ${currentIndex + 1}`}
+                className="w-full h-auto max-h-[60vh] object-contain rounded-lg"
+              />
+              
+              {/* Navegación */}
+              <div className="absolute inset-0 flex items-center justify-between p-4">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onPrev()
+                  }}
+                  className="bg-black bg-opacity-50 text-white p-3 rounded-full hover:bg-opacity-70 transition-all transform hover:scale-110 text-3xl w-12 h-12 flex items-center justify-center"
+                >
+                  ‹
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onNext()
+                  }}
+                  className="bg-black bg-opacity-50 text-white p-3 rounded-full hover:bg-opacity-70 transition-all transform hover:scale-110 text-3xl w-12 h-12 flex items-center justify-center"
+                >
+                  ›
+                </button>
+              </div>
 
+              {/* Contador */}
+              <div className="absolute bottom-4 right-4 bg-black bg-opacity-50 text-white text-lg px-3 py-1 rounded-full">
+                {currentIndex + 1} / {images.length}
+              </div>
+            </motion.div>
 
-
-          {/* Contador */}
-          <div className="absolute bottom-4 right-4 text-white text-lg">
-            {currentIndex + 1} / {images.length}
+            {/* Descripción */}
+            {description && description.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="bg-white bg-opacity-95 rounded-lg p-6 md:p-8 shadow-xl"
+              >
+                <h3 className="text-2xl md:text-3xl font-bold text-blue-900 mb-4">{title}</h3>
+                <div className="space-y-3 text-gray-700 text-base md:text-lg leading-relaxed">
+                  {description.map((paragraph, index) => (
+                    <p key={index} className={index === 0 ? 'font-semibold text-blue-800' : ''}>
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+              </motion.div>
+            )}
           </div>
         </div>
       </motion.div>
@@ -109,9 +130,9 @@ export default function SecundariaPage() {
   const [currentGallery, setCurrentGallery] = useState<string | null>(null)
 
   // Configuración de galerías para secundaria
-  const galleries: Record<string, { title: string; images: string[] }> = {
+  const galleries: Record<string, { title: string; images: string[]; description: string[] }> = {
     educacionFinanciera: {
-      title: "EDUCACIÓN FINANCIERA",
+      title: "ENTREPRENEURS",
       images: [
         "/images/secundaria/emprende/emprendedores1.jpg",
         "/images/secundaria/emprende/emprendedores2.jpg",
@@ -120,13 +141,25 @@ export default function SecundariaPage() {
         "/images/secundaria/emprende/emprendedores5.jpg",
         "/images/secundaria/emprende/emprendedores6.jpg",
         "/images/secundaria/emprende/emprendedores7.jpg"
+      ],
+      description: [
+        "Fomentamos la cultura del emprendimiento desde edades tempranas.",
+        "Nuestros alumnos no sólo imaginan ideas innovadoras: aprenden a construir un negocio desde cero.",
+        "Desarrollan planes de negocio reales, crean estrategias de marketing, realizan proyecciones financieras básicas y presentan sus proyectos de forma profesional, todo esto con la finalidad de fortalecer su liderazgo, pensamiento estratégico y toma de decisiones."
       ]
     },
     robotica: {
       title: "ROBÓTICA",
       images: [
         "/images/secundaria/robotica/robotica1.jpg",
-        "/images/secundaria/robotica/robotica2.jpg"
+        "/images/secundaria/robotica/robotica2.jpg",
+        "/images/secundaria/robotica/robotica3.png",
+        "/images/secundaria/robotica/robotica4.jpg",
+        "/images/secundaria/robotica/robotica5.jpg"
+      ],
+      description: [
+        "Tecnología aplicada al pensamiento lógico y la creatividad.",
+        "A través de actividades prácticas, los alumnos diseñan, construyen y programan, desarrollando habilidades de resolución de problemas y trabajo en equipo."
       ]
     },
     artes: {
@@ -137,18 +170,22 @@ export default function SecundariaPage() {
         "/images/secundaria/arte/arte3.JPG",
         "/images/secundaria/arte/arte4.jpg",
         "/images/secundaria/arte/arte5.jpg",
-        "/images/secundaria/arte/arte6.jpg",
-        "/images/secundaria/arte/arte7.jpg"
-      ]
+        "/images/secundaria/arte/arte6.jpg"
+      ],
+      description: []
     },
     tecnologia: {
-      title: "TECNOLOGÍA",
+      title: "EDUCACIÓN FINANCIERA",
       images: [
         "/images/entrepreneurs/emprendedores5.jpg",
         "/images/entrepreneurs/emprendedores6.jpg",
         "/images/entrepreneurs/emprendedores7.jpg",
         "/images/entrepreneurs/emprendedores8.jpg",
         "/images/entrepreneurs/emprendedores9.jpg"
+      ],
+      description: [
+        "Herramientas para tomar decisiones responsables desde hoy.",
+        "Nuestros alumnos aprenden sobre el valor del dinero, ahorro, inversión y consumo consciente de forma práctica y adaptada a su edad."
       ]
     },
     mindfulness: {
@@ -157,6 +194,10 @@ export default function SecundariaPage() {
         "/images/secundaria/mindfulness/mind1.jpg",
         "/images/secundaria/mindfulness/mind2.png",
         "/images/secundaria/mindfulness/mind3.jpg"
+      ],
+      description: [
+        "Atención plena para el bienestar emocional y la concentración.",
+        "Con ejercicios de respiración, enfoque y relajación, nuestros alumnos aprenden a gestionar sus emociones y mejorar su rendimiento académico."
       ]
     },
     formacionSocial: {
@@ -168,6 +209,10 @@ export default function SecundariaPage() {
         "/images/secundaria/formacion/formacion4.png",
         "/images/secundaria/formacion/formacion5.JPG",
         "/images/secundaria/formacion/formacion6.JPG"
+      ],
+      description: [
+        "Entendimiento del mundo a través del respeto y la participación.",
+        "Promovemos la conciencia social, la identidad cultural y el compromiso con la comunidad mediante actividades integradoras y experiencias significativas."
       ]
     }
   }
@@ -262,10 +307,13 @@ export default function SecundariaPage() {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 1.5, delay: 0.8, ease: "easeOut" }}
         >
-          <div className="transform translate-y-32">
-            <h1 className="text-white text-4xl md:text-7xl font-bold tracking-wider drop-shadow-2xl">
+          <div className="transform translate-y-32 max-w-4xl px-4 md:px-8 text-center">
+            <h1 className="text-white text-4xl md:text-7xl font-bold tracking-wider drop-shadow-2xl mb-4 md:mb-8">
               SECUNDARIA
             </h1>
+            <div className="text-white text-sm md:text-lg leading-relaxed drop-shadow-lg">
+              <p>Formación en inglés con respaldo Cambridge para una titulación internacional y formación en francés, preparamos a nuestros estudiantes para destacar en un entorno global y en constante evolución.</p>
+            </div>
           </div>
         </motion.div>
 
@@ -351,15 +399,15 @@ export default function SecundariaPage() {
 
           {/* Grid de materias extracurriculares */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16 max-w-7xl mx-auto justify-items-center">
-            {/* Educación Financiera */}
+            {/* Entrepreneurs */}
             <div className="relative group overflow-hidden rounded-2xl cursor-pointer" onClick={() => openGallery('educacionFinanciera')}>
               <img
                 src="/images/secundaria/emprende.png"
-                alt="Educación Financiera"
+                alt="Entrepreneurs"
                 className="w-auto h-auto max-h-80 object-contain transition-transform duration-500 group-hover:scale-105"
               />
               <div className="absolute bottom-0 left-0 right-0 bg-blue-900 bg-opacity-40 p-3 transition-all duration-700 ease-in-out group-hover:bottom-0 group-hover:top-0 group-hover:bg-opacity-90 group-hover:flex group-hover:items-center group-hover:justify-center">
-                <h4 className="text-white text-xl font-bold transition-all duration-700 group-hover:text-2xl">EDUCACIÓN FINANCIERA</h4>
+                <h4 className="text-white text-xl font-bold transition-all duration-700 group-hover:text-2xl">ENTREPRENEURS</h4>
               </div>
 
             </div>
@@ -393,15 +441,15 @@ export default function SecundariaPage() {
 
           {/* Segunda fila */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto justify-items-center">
-            {/* Tecnología */}
+            {/* Educación Financiera */}
             <div className="relative group overflow-hidden rounded-2xl cursor-pointer" onClick={() => openGallery('tecnologia')}>
               <img
                 src="/images/secundaria/TECNOLOGIA.png"
-                alt="Tecnología"
+                alt="Educación Financiera"
                 className="w-auto h-auto max-h-80 object-contain transition-transform duration-500 group-hover:scale-105"
               />
               <div className="absolute bottom-0 left-0 right-0 bg-[#ff9d49] bg-opacity-60 p-3 transition-all duration-700 ease-in-out group-hover:bottom-0 group-hover:top-0 group-hover:bg-opacity-90 group-hover:flex group-hover:items-center group-hover:justify-center">
-                <h4 className="text-black text-xl font-bold transition-all duration-700 group-hover:text-2xl">TECNOLOGÍA</h4>
+                <h4 className="text-black text-xl font-bold transition-all duration-700 group-hover:text-2xl">EDUCACIÓN FINANCIERA</h4>
               </div>
 
             </div>
@@ -514,6 +562,7 @@ export default function SecundariaPage() {
           onNext={nextImage}
           onPrev={prevImage}
           title={galleries[currentGallery].title}
+          description={galleries[currentGallery].description}
         />
       )}
     </div>

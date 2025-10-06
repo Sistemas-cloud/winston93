@@ -269,8 +269,12 @@ export default function PrimariaPage() {
             className="w-full h-full object-cover"
           />
           {/* Texto PRIMARIA sobre la banda azul */}
-          <div className="absolute bottom-1/3 right-4 md:right-1/4 transform translate-y-1/2">
-            <h1 className="text-white text-2xl md:text-6xl font-bold tracking-wider">PRIMARIA</h1>
+          <div className="absolute bottom-[38%] left-[58%] md:left-[62%] lg:left-[64%] xl:left-[66%] transform -translate-x-1/2 translate-y-1/2 max-w-md md:max-w-xl lg:max-w-2xl px-4 md:px-6">
+            <h1 className="text-white text-2xl md:text-6xl font-bold tracking-wider mb-3 md:mb-6">PRIMARIA</h1>
+            <div className="text-white text-xs md:text-base leading-relaxed space-y-2 drop-shadow-lg">
+              <p className="font-semibold">Etapa avalada por el respaldo académico de Cambridge.</p>
+              <p>Con una formación académica de calidad y el inglés como parte esencial del aprendizaje, acompañamos a nuestros alumnos en una etapa clave para fortalecer su pensamiento crítico y sus valores.</p>
+            </div>
           </div>
         </motion.div>
 

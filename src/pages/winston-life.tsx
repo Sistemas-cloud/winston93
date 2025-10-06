@@ -112,24 +112,27 @@ export default function WinstonLife() {
         "/images/Winston Life/galeria soy winston/navidad_primaria.png",
         "/images/Winston Life/galeria soy winston/navidad.png",
         "/images/Winston Life/galeria soy winston/halloween.png",
-        "/images/Winston Life/galeria soy winston/acción.png"
+        "/images/Winston Life/galeria soy winston/acción.png",
+        "/images/Winston Life/galeria soy winston/estudiante.png"
       ],
       galleryImages: [
-        "/images/Winston Life/galeria soy winston/xantolo_banner.png",
+        "/images/Winston Life/galeria soy winston/xantolo_banner.jpg",
         "/images/Winston Life/galeria soy winston/xantolo1_banner.jpg",
         "/images/Winston Life/galeria soy winston/posada_banner.jpg",
         "/images/Winston Life/galeria soy winston/niño_banner.jpg",
         "/images/Winston Life/galeria soy winston/navidad_primaria_banner.jpg",
         "/images/Winston Life/galeria soy winston/navidad_banner.jpg",
         "/images/Winston Life/galeria soy winston/halloween_banner.jpg",
-        "/images/Winston Life/galeria soy winston/accion_banner.png"
+        "/images/Winston Life/galeria soy winston/accion_banner.png",
+        "/images/Winston Life/galeria soy winston/estudiante_banner.JPG"
       ]
     }
   }
 
-  const openGallery = (galleryName: string) => {
+
+  const openGallery = (galleryName: string, imageIndex = 0) => {
     setCurrentGallery(galleryName)
-    setCurrentImageIndex(0)
+    setCurrentImageIndex(imageIndex)
     setGalleryOpen(true)
   }
 
@@ -464,7 +467,7 @@ export default function WinstonLife() {
                 <div
                   key={index}
                   className="relative group overflow-hidden rounded-2xl cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-300"
-                  onClick={() => openGallery('soyWinston')}
+                  onClick={() => openGallery('soyWinston', index)}
                 >
                   <img
                     src={image}
