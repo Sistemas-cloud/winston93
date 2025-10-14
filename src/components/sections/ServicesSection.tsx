@@ -82,11 +82,6 @@ export default function EducationalOfferSection() {
           </div>
         </div>
       </div>
-
-      {/* Elementos decorativos adicionales - Ocultos en móvil */}
-      <div className="hidden md:block absolute top-20 right-40 w-3 h-3 bg-blue-400 rounded-full animate-bounce opacity-60"></div>
-      <div className="hidden md:block absolute bottom-32 left-32 w-2 h-2 bg-yellow-300 rounded-full animate-pulse opacity-70"></div>
-      <div className="hidden md:block absolute top-1/3 right-1/4 w-1 h-1 bg-green-400 rounded-full animate-ping opacity-50"></div>
     </div>
   )
 } 

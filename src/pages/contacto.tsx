@@ -198,7 +198,7 @@ export default function ContactoPage() {
             <button
               type="submit"
               disabled={submitting}
-              className={`w-full h-12 rounded-md bg-[#dafb00] text-black font-bold uppercase tracking-wide hover:shadow-lg transition ${submitting ? 'opacity-70 cursor-not-allowed' : ''}`}
+              className={`w-full h-12 rounded-md bg-[#E3FB07] text-black font-bold uppercase tracking-wide hover:shadow-lg transition ${submitting ? 'opacity-70 cursor-not-allowed' : ''}`}
             >
               {submitting ? 'Enviando...' : 'Agendar cita'}
             </button>

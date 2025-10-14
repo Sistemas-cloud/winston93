@@ -355,9 +355,9 @@ export default function PrimariaPage() {
         </div>
 
         {/* Contenido de Materias Extracurriculares */}
-        <div className="py-8 md:py-20 relative z-10">
+        <div className="py-2 md:py-4 relative z-10">
           <div className="container mx-auto px-4 md:px-6">
-          <div className="text-center mb-8 md:mb-16">
+          <div className="text-center mb-2 md:mb-4">
             <h2 className="text-2xl md:text-4xl font-bold text-blue-900 mb-2 md:mb-4">
               Materias extracurriculares que
             </h2>
@@ -367,13 +367,13 @@ export default function PrimariaPage() {
           </div>
 
           {/* Grid de materias extracurriculares */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16 max-w-7xl mx-auto justify-items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1 mb-4 max-w-7xl mx-auto justify-items-center">
             {/* Mindfulness */}
-            <div className="relative group overflow-hidden rounded-2xl cursor-pointer" onClick={() => openGallery('mindfulness')}>
+            <div className="relative group overflow-hidden rounded-none cursor-pointer" onClick={() => openGallery('mindfulness')}>
               <img
                 src="/images/extracurriculares/mindfulness.jpg"
                 alt="Mindfulness"
-                className="w-auto h-auto max-h-80 object-contain transition-transform duration-500 group-hover:scale-105"
+                className="w-80 h-80 object-cover transition-transform duration-500 group-hover:scale-105"
               />
               <div className="absolute bottom-0 left-0 right-0 bg-blue-900 bg-opacity-60 p-3 transition-all duration-700 ease-in-out group-hover:bottom-0 group-hover:top-0 group-hover:bg-opacity-90 group-hover:flex group-hover:items-center group-hover:justify-center">
                 <h4 className="text-white text-xl font-bold transition-all duration-700 group-hover:text-2xl">MINDFULNESS</h4>
@@ -381,23 +381,23 @@ export default function PrimariaPage() {
             </div>
 
             {/* Robótica */}
-            <div className="relative group overflow-hidden rounded-2xl cursor-pointer" onClick={() => openGallery('robotica')}>
+            <div className="relative group overflow-hidden rounded-none cursor-pointer" onClick={() => openGallery('robotica')}>
               <img
                 src="/images/extracurriculares/robotica.png"
                 alt="Robótica"
-                className="w-auto h-auto max-h-80 object-contain transition-transform duration-500 group-hover:scale-105"
+                className="w-80 h-80 object-cover transition-transform duration-500 group-hover:scale-105"
               />
-              <div className="absolute bottom-0 left-0 right-0 bg-[#dafb00] bg-opacity-60 p-3 transition-all duration-700 ease-in-out group-hover:bottom-0 group-hover:top-0 group-hover:bg-opacity-90 group-hover:flex group-hover:items-center group-hover:justify-center">
+              <div className="absolute bottom-0 left-0 right-0 bg-[#E3FB07] bg-opacity-60 p-3 transition-all duration-700 ease-in-out group-hover:bottom-0 group-hover:top-0 group-hover:bg-opacity-90 group-hover:flex group-hover:items-center group-hover:justify-center">
                 <h4 className="text-black text-xl font-bold transition-all duration-700 group-hover:text-2xl">ROBÓTICA</h4>
               </div>
             </div>
 
             {/* Artes */}
-            <div className="relative group overflow-hidden rounded-2xl cursor-pointer" onClick={() => openGallery('artes')}>
+            <div className="relative group overflow-hidden rounded-none cursor-pointer" onClick={() => openGallery('artes')}>
               <img
                 src="/images/extracurriculares/artes.jpg"
                 alt="Artes"
-                className="w-auto h-auto max-h-80 object-contain transition-transform duration-500 group-hover:scale-105"
+                className="w-80 h-80 object-cover transition-transform duration-500 group-hover:scale-105"
               />
               <div className="absolute bottom-0 left-0 right-0 bg-blue-900 bg-opacity-60 p-3 transition-all duration-700 ease-in-out group-hover:bottom-0 group-hover:top-0 group-hover:bg-opacity-90 group-hover:flex group-hover:items-center group-hover:justify-center">
                 <h4 className="text-white text-xl font-bold transition-all duration-700 group-hover:text-2xl">ARTES</h4>
@@ -406,25 +406,25 @@ export default function PrimariaPage() {
           </div>
 
           {/* Segunda fila */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto justify-items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1 max-w-7xl mx-auto justify-items-center">
             {/* Tecnología */}
-            <div className="relative group overflow-hidden rounded-2xl cursor-pointer" onClick={() => openGallery('tecnologia')}>
+            <div className="relative group overflow-hidden rounded-none cursor-pointer" onClick={() => openGallery('tecnologia')}>
               <img
                 src="/images/extracurriculares/tecnologia.png"
                 alt="Tecnología"
-                className="w-auto h-auto max-h-80 object-contain transition-transform duration-500 group-hover:scale-105"
+                className="w-80 h-80 object-cover transition-transform duration-500 group-hover:scale-105"
               />
-              <div className="absolute bottom-0 left-0 right-0 bg-[#dafb00] bg-opacity-60 p-3 transition-all duration-700 ease-in-out group-hover:bottom-0 group-hover:top-0 group-hover:bg-opacity-90 group-hover:flex group-hover:items-center group-hover:justify-center">
+              <div className="absolute bottom-0 left-0 right-0 bg-[#E3FB07] bg-opacity-60 p-3 transition-all duration-700 ease-in-out group-hover:bottom-0 group-hover:top-0 group-hover:bg-opacity-90 group-hover:flex group-hover:items-center group-hover:justify-center">
                 <h4 className="text-black text-xl font-bold transition-all duration-700 group-hover:text-2xl">TECNOLOGÍA</h4>
               </div>
             </div>
 
             {/* Entrepreneurs */}
-            <div className="relative group overflow-hidden rounded-2xl cursor-pointer" onClick={() => openGallery('entrepreneurs')}>
+            <div className="relative group overflow-hidden rounded-none cursor-pointer" onClick={() => openGallery('entrepreneurs')}>
               <img
                 src="/images/extracurriculares/entrepreneurs.jpg"
                 alt="Entrepreneurs"
-                className="w-auto h-auto max-h-80 object-contain transition-transform duration-500 group-hover:scale-105"
+                className="w-80 h-80 object-cover transition-transform duration-500 group-hover:scale-105"
               />
               <div className="absolute bottom-0 left-0 right-0 bg-blue-900 bg-opacity-60 p-3 transition-all duration-700 ease-in-out group-hover:bottom-0 group-hover:top-0 group-hover:bg-opacity-90 group-hover:flex group-hover:items-center group-hover:justify-center">
                 <h4 className="text-white text-xl font-bold transition-all duration-700 group-hover:text-2xl">ENTREPRENEURS</h4>
@@ -432,13 +432,13 @@ export default function PrimariaPage() {
             </div>
 
             {/* Educación en la Fe */}
-            <div className="relative group overflow-hidden rounded-2xl cursor-pointer" onClick={() => openGallery('fe')}>
+            <div className="relative group overflow-hidden rounded-none cursor-pointer" onClick={() => openGallery('fe')}>
               <img
                 src="/images/extracurriculares/fe.png"
                 alt="Educación en la Fe"
-                className="w-auto h-auto max-h-80 object-contain transition-transform duration-500 group-hover:scale-105"
+                className="w-80 h-80 object-cover transition-transform duration-500 group-hover:scale-105"
               />
-              <div className="absolute bottom-0 left-0 right-0 bg-[#dafb00] bg-opacity-60 p-3 transition-all duration-700 ease-in-out group-hover:bottom-0 group-hover:top-0 group-hover:bg-opacity-90 group-hover:flex group-hover:items-center group-hover:justify-center">
+              <div className="absolute bottom-0 left-0 right-0 bg-[#E3FB07] bg-opacity-60 p-3 transition-all duration-700 ease-in-out group-hover:bottom-0 group-hover:top-0 group-hover:bg-opacity-90 group-hover:flex group-hover:items-center group-hover:justify-center">
                 <h4 className="text-lg font-bold transition-all duration-700 group-hover:text-xl">EDUCACIÓN EN LA FE</h4>
                 <span className="text-xs ml-2 transition-all duration-700 group-hover:text-sm">(OPCIONAL)</span>
               </div>
@@ -448,16 +448,16 @@ export default function PrimariaPage() {
       </div>
 
         {/* Contenido de Certificaciones */}
-        <div className="py-8 md:py-16 relative z-10">
+        <div className="py-2 md:py-4 relative z-10">
           <div className="container mx-auto px-4 md:px-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Certificación Internacional */}
-              <div className="bg-blue-600 text-white p-8 rounded-2xl">
+              <div className="bg-blue-600 text-white p-8 rounded-2xl relative">
                 <h3 className="text-2xl font-bold mb-4">CERTIFICACIÓN INTERNACIONAL</h3>
                 <p className="mb-6 leading-relaxed">
                   Contamos con el respaldo del prestigioso programa de Cambridge diseñado para elevar la excelencia académica en el idioma inglés y proporcionar a nuestros estudiantes las mejores herramientas para su desarrollo.
                 </p>
-                <div className="flex items-center">
+                <div className="absolute bottom-4 right-4">
                   <img
                     src="/images/logos/cambridge.png"
                     alt="University of Cambridge"
@@ -467,7 +467,7 @@ export default function PrimariaPage() {
               </div>
 
               {/* Servicio de Estancia */}
-              <div className="bg-[#dafb00] text-black p-8 rounded-2xl">
+              <div className="bg-[#E3FB07] text-black p-8 rounded-2xl">
                 <h3 className="text-2xl font-bold mb-4">SERVICIO DE ESTANCIA</h3>
                 <p className="mb-4 leading-relaxed">
                   <strong>FLEXIBILIDAD PARA EL ACOMPAÑAMIENTO PARA ELLOS</strong>

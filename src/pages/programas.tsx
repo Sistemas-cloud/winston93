@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import { useState, useEffect, useRef } from 'react'
 import Navigation from '@/components/Navigation'
+import Footer from '@/components/Footer'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 
@@ -85,6 +86,7 @@ interface Section {
   accentColor: string
   image?: string
   imageEffect?: 'slide' | 'zoom' | 'zoom-organic' | 'fade' | 'rotate'
+  fadeImage?: string
 }
 
 export default function ProgramasPage() {
@@ -97,8 +99,21 @@ export default function ProgramasPage() {
   // Configuración de las tres secciones
   const sectionsData: Section[] = [
     {
+      id: 'educacion-financiera',
+      title: 'Educación Financiera',
+      subtitle: 'Entrepreneurs',
+      description: 'Fomentamos la cultura del emprendimiento desde edades tempranas.',
+      longDescription: 'Nuestros alumnos no sólo imaginan ideas innovadoras: Aprenden a construir un negocio desde cero. Desarrollan planes de negocio reales, crean estrategias de marketing, realizan proyecciones financieras básicas y presentan sus proyectos de forma profesional, todo esto con la finalidad de fortalecer su liderazgo, pensamiento estratégico y toma de decisiones.',
+      bgColor: 'from-yellow-400 to-yellow-500',
+      textColor: 'text-black',
+      accentColor: 'bg-blue-600',
+      image: '/images/PROGRAMAS/emprende.jpg',
+      imageEffect: 'fade',
+      fadeImage: '/images/PROGRAMAS/fundidos/fondo_naranja.png'
+    },
+    {
       id: 'mindfulness',
-      title: 'MINDFULNESS',
+      title: 'MIND FUL NESS',
       subtitle: '',
       description: 'Atención plena para el bienestar emocional y la concentración.',
       longDescription: 'Con ejercicios de respiración, enfoque y relajación, nuestros alumnos aprenden a gestionar sus emociones y mejorar su rendimiento académico.',
@@ -106,7 +121,8 @@ export default function ProgramasPage() {
       textColor: 'text-white',
       accentColor: 'bg-yellow-400',
       image: '/images/PROGRAMAS/socioemocional.jpg',
-      imageEffect: 'slide'
+      imageEffect: 'slide',
+      fadeImage: '/images/PROGRAMAS/fundidos/fondo_azul.png'
     },
     {
       id: 'formacion-social',
@@ -118,19 +134,8 @@ export default function ProgramasPage() {
       textColor: 'text-white',
       accentColor: 'bg-yellow-400',
       image: '/images/PROGRAMAS/donativo.jpg',
-      imageEffect: 'zoom-organic'
-    },
-    {
-      id: 'educacion-financiera',
-      title: 'Educación Financiera',
-      subtitle: 'Entrepreneurs',
-      description: 'Fomentamos la cultura del emprendimiento desde edades tempranas.',
-      longDescription: 'Nuestros alumnos no sólo imaginan ideas innovadoras: Aprenden a construir un negocio desde cero. Desarrollan planes de negocio reales, crean estrategias de marketing, realizan proyecciones financieras básicas y presentan sus proyectos de forma profesional, todo esto con la finalidad de fortalecer su liderazgo, pensamiento estratégico y toma de decisiones.',
-      bgColor: 'from-yellow-400 to-yellow-500',
-      textColor: 'text-black',
-      accentColor: 'bg-blue-600',
-      image: '/images/PROGRAMAS/emprende.jpg',
-      imageEffect: 'fade'
+      imageEffect: 'zoom-organic',
+      fadeImage: '/images/PROGRAMAS/fundidos/fondo_verde.png'
     }
   ]
 
@@ -147,27 +152,27 @@ export default function ProgramasPage() {
   const getFadeColor = (bgColor: string) => {
     if (bgColor.includes('blue-500') || bgColor.includes('blue-600')) {
       return {
-        light: 'rgba(59, 130, 246, 0.01)',
-        medium: 'rgba(59, 130, 246, 0.03)',
-        strong: 'rgba(59, 130, 246, 0.08)',
-        veryStrong: 'rgba(59, 130, 246, 0.2)',
-        solid: 'rgba(59, 130, 246, 0.6)'
+        light: 'rgba(1, 59, 223, 0.01)',
+        medium: 'rgba(1, 59, 223, 0.03)',
+        strong: 'rgba(1, 59, 223, 0.08)',
+        veryStrong: 'rgba(1, 59, 223, 0.2)',
+        solid: 'rgba(1, 59, 223, 0.6)'
       }
     } else if (bgColor.includes('blue-800')) {
       return {
-        light: 'rgba(30, 58, 138, 0.01)',
-        medium: 'rgba(30, 58, 138, 0.03)',
-        strong: 'rgba(30, 58, 138, 0.08)',
-        veryStrong: 'rgba(30, 58, 138, 0.2)',
-        solid: 'rgba(30, 58, 138, 0.6)'
+        light: 'rgba(1, 59, 223, 0.01)',
+        medium: 'rgba(1, 59, 223, 0.03)',
+        strong: 'rgba(1, 59, 223, 0.08)',
+        veryStrong: 'rgba(1, 59, 223, 0.2)',
+        solid: 'rgba(1, 59, 223, 0.6)'
       }
     } else if (bgColor.includes('yellow-400') || bgColor.includes('yellow-500')) {
       return {
-        light: 'rgba(234, 179, 8, 0.01)',
-        medium: 'rgba(234, 179, 8, 0.03)',
-        strong: 'rgba(234, 179, 8, 0.08)',
-        veryStrong: 'rgba(234, 179, 8, 0.2)',
-        solid: 'rgba(234, 179, 8, 0.6)'
+        light: 'rgba(227, 251, 7, 0.01)',
+        medium: 'rgba(227, 251, 7, 0.03)',
+        strong: 'rgba(227, 251, 7, 0.08)',
+        veryStrong: 'rgba(227, 251, 7, 0.2)',
+        solid: 'rgba(227, 251, 7, 0.6)'
       }
     }
     // Color por defecto (negro) para otros casos
@@ -293,21 +298,70 @@ export default function ProgramasPage() {
                         delay={0.3}
                       />
                     )}
+                    
+                    {/* Imagen de fundido superpuesta */}
+                    {section.fadeImage && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 0.5 }}
+                        transition={{ duration: 1.5, delay: 0.8, ease: "easeOut" }}
+                        viewport={{ once: true, margin: "-50px" }}
+                        className="absolute inset-0 z-10"
+                      >
+                        <Image
+                          src={section.fadeImage}
+                          alt={`Fundido ${section.title}`}
+                          fill
+                          className="object-cover"
+                          priority={true}
+                        />
+                      </motion.div>
+                    )}
                   </div>
                   
-                  {/* Overlay con gradiente suave para desvanecer la parte derecha de la imagen */}
+                  {/* Overlay con gradiente que coincide con el color del fondo */}
                   <div 
                     className="absolute inset-0"
                     style={{
-                      background: `linear-gradient(
-                        to right,
-                        transparent 0%,
-                        transparent 30%,
-                        rgba(0, 0, 0, 0.1) 50%,
-                        rgba(0, 0, 0, 0.3) 70%,
-                        rgba(0, 0, 0, 0.5) 85%,
-                        rgba(0, 0, 0, 0.7) 100%
-                      )`,
+                      background: section.fadeImage?.includes('naranja') ? 
+                        `linear-gradient(
+                          to right,
+                          transparent 0%,
+                          transparent 30%,
+                          rgba(255, 180, 42, 0.1) 50%,
+                          rgba(255, 180, 42, 0.3) 70%,
+                          rgba(255, 180, 42, 0.5) 85%,
+                          rgba(255, 180, 42, 0.7) 100%
+                        )` :
+                        section.fadeImage?.includes('azul') ?
+                        `linear-gradient(
+                          to right,
+                          transparent 0%,
+                          transparent 30%,
+                          rgba(122, 220, 243, 0.1) 50%,
+                          rgba(122, 220, 243, 0.3) 70%,
+                          rgba(122, 220, 243, 0.5) 85%,
+                          rgba(122, 220, 243, 0.7) 100%
+                        )` :
+                        section.fadeImage?.includes('verde') ?
+                        `linear-gradient(
+                          to right,
+                          transparent 0%,
+                          transparent 30%,
+                          rgba(234, 249, 128, 0.1) 50%,
+                          rgba(234, 249, 128, 0.3) 70%,
+                          rgba(234, 249, 128, 0.5) 85%,
+                          rgba(234, 249, 128, 0.7) 100%
+                        )` :
+                        `linear-gradient(
+                          to right,
+                          transparent 0%,
+                          transparent 30%,
+                          rgba(0, 0, 0, 0.1) 50%,
+                          rgba(0, 0, 0, 0.3) 70%,
+                          rgba(0, 0, 0, 0.5) 85%,
+                          rgba(0, 0, 0, 0.7) 100%
+                        )`,
                       border: 'none',
                       outline: 'none',
                       boxShadow: 'none'
@@ -318,76 +372,203 @@ export default function ProgramasPage() {
 
               {/* Panel de texto derecho con fondo sólido que se extiende sobre la imagen */}
               <div 
-                className={`w-4/5 h-full absolute right-0 top-0 flex items-center justify-end pr-8 md:pr-16 lg:pr-24`}
+                className={`w-4/5 h-full absolute right-0 top-0 flex items-center justify-end pr-8 md:pr-16 lg:pr-24 z-20`}
                 style={{
                   border: 'none',
                   outline: 'none',
                   boxShadow: 'none',
-                  background: `linear-gradient(
-                    to left,
-                    ${section.bgColor.includes('from-') ? 
-                      section.bgColor.includes('blue-500') ? 'rgba(59, 130, 246, 1)' :
-                      section.bgColor.includes('blue-800') ? 'rgba(30, 58, 138, 1)' :
-                      section.bgColor.includes('yellow-400') ? 'rgba(234, 179, 8, 1)' :
-                      'rgba(0, 0, 0, 1)' : 'rgba(0, 0, 0, 1)'
-                    } 0%,
-                    ${section.bgColor.includes('from-') ? 
-                      section.bgColor.includes('blue-500') ? 'rgba(59, 130, 246, 0.95)' :
-                      section.bgColor.includes('blue-800') ? 'rgba(30, 58, 138, 0.95)' :
-                      section.bgColor.includes('yellow-400') ? 'rgba(234, 179, 8, 0.95)' :
-                      'rgba(0, 0, 0, 0.95)' : 'rgba(0, 0, 0, 0.95)'
-                    } 15%,
-                    ${section.bgColor.includes('from-') ? 
-                      section.bgColor.includes('blue-500') ? 'rgba(59, 130, 246, 0.8)' :
-                      section.bgColor.includes('blue-800') ? 'rgba(30, 58, 138, 0.8)' :
-                      section.bgColor.includes('yellow-400') ? 'rgba(234, 179, 8, 0.8)' :
-                      'rgba(0, 0, 0, 0.8)' : 'rgba(0, 0, 0, 0.8)'
-                    } 35%,
-                    ${section.bgColor.includes('from-') ? 
-                      section.bgColor.includes('blue-500') ? 'rgba(59, 130, 246, 0.4)' :
-                      section.bgColor.includes('blue-800') ? 'rgba(30, 58, 138, 0.4)' :
-                      section.bgColor.includes('yellow-400') ? 'rgba(234, 179, 8, 0.4)' :
-                      'rgba(0, 0, 0, 0.4)' : 'rgba(0, 0, 0, 0.4)'
-                    } 60%,
-                    transparent 100%
-                  )`
+                  background: section.fadeImage?.includes('naranja') ? 
+                    `linear-gradient(
+                      to left,
+                      rgba(255, 180, 42, 1) 0%,
+                      rgba(255, 180, 42, 0.95) 15%,
+                      rgba(255, 180, 42, 0.8) 35%,
+                      rgba(255, 180, 42, 0.4) 60%,
+                      transparent 100%
+                    )` :
+                    section.fadeImage?.includes('azul') ?
+                    `linear-gradient(
+                      to left,
+                      rgba(122, 220, 243, 1) 0%,
+                      rgba(122, 220, 243, 0.95) 15%,
+                      rgba(122, 220, 243, 0.8) 35%,
+                      rgba(122, 220, 243, 0.4) 60%,
+                      transparent 100%
+                    )` :
+                    section.fadeImage?.includes('verde') ?
+                    `linear-gradient(
+                      to left,
+                      rgba(234, 249, 128, 1) 0%,
+                      rgba(234, 249, 128, 0.95) 15%,
+                      rgba(234, 249, 128, 0.8) 35%,
+                      rgba(234, 249, 128, 0.4) 60%,
+                      transparent 100%
+                    )` :
+                    `linear-gradient(
+                      to left,
+                      ${section.bgColor.includes('from-') ? 
+                        section.bgColor.includes('blue-500') ? 'rgba(1, 59, 223, 1)' :
+                        section.bgColor.includes('blue-800') ? 'rgba(1, 59, 223, 1)' :
+                        section.bgColor.includes('yellow-400') ? 'rgba(227, 251, 7, 1)' :
+                        'rgba(0, 0, 0, 1)' : 'rgba(0, 0, 0, 1)'
+                      } 0%,
+                      ${section.bgColor.includes('from-') ? 
+                        section.bgColor.includes('blue-500') ? 'rgba(1, 59, 223, 0.95)' :
+                        section.bgColor.includes('blue-800') ? 'rgba(1, 59, 223, 0.95)' :
+                        section.bgColor.includes('yellow-400') ? 'rgba(227, 251, 7, 0.95)' :
+                        'rgba(0, 0, 0, 0.95)' : 'rgba(0, 0, 0, 0.95)'
+                      } 15%,
+                      ${section.bgColor.includes('from-') ? 
+                        section.bgColor.includes('blue-500') ? 'rgba(1, 59, 223, 0.8)' :
+                        section.bgColor.includes('blue-800') ? 'rgba(1, 59, 223, 0.8)' :
+                        section.bgColor.includes('yellow-400') ? 'rgba(227, 251, 7, 0.8)' :
+                        'rgba(0, 0, 0, 0.8)' : 'rgba(0, 0, 0, 0.8)'
+                      } 35%,
+                      ${section.bgColor.includes('from-') ? 
+                        section.bgColor.includes('blue-500') ? 'rgba(1, 59, 223, 0.4)' :
+                        section.bgColor.includes('blue-800') ? 'rgba(1, 59, 223, 0.4)' :
+                        section.bgColor.includes('yellow-400') ? 'rgba(227, 251, 7, 0.4)' :
+                        'rgba(0, 0, 0, 0.4)' : 'rgba(0, 0, 0, 0.4)'
+                      } 60%,
+                      transparent 100%
+                    )`
                 } as React.CSSProperties}
               >
-                <div className="text-center max-w-sm">
-                  {/* Título principal */}
-                  <motion.h2 
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.2 }}
-                    viewport={{ once: true }}
-                    className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 ${section.textColor}`}
-                  >
-                    {section.title}
-                  </motion.h2>
-                  
-                  {/* Subtítulo */}
-                  <motion.h3 
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.4 }}
-                    viewport={{ once: true }}
-                    className={`text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-4 md:mb-6 ${section.textColor}`}
-                  >
-                    {section.subtitle}
-                  </motion.h3>
+                <div className={`max-w-sm ${section.fadeImage?.includes('naranja') ? 'text-left -ml-8 md:-ml-12 lg:-ml-' : 'text-center'}`}>
+                  {/* Título principal - Solo para sección naranja */}
+                  {section.fadeImage?.includes('naranja') ? (
+                    <div className="mb-4">
+                      <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.2 }}
+                        viewport={{ once: true }}
+                        className="text-white font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-tight -ml-12 md:-ml-16 lg:-ml-20"
+                      >
+                        <div className="-ml-12 md:-ml-16 lg:-ml-35">Educación</div>
+                        <div className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl -ml-12 md:-ml-16 lg:-ml-10">Financiera</div>
+                      </motion.div>
+                      
+                      {/* Subtítulo */}
+                      <motion.h3 
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.4 }}
+                        viewport={{ once: true }}
+                        className="text-white font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl mt-2 -ml-12 md:-ml-16 lg:-ml-20"
+                      >
+                        Entrepreneurs
+                      </motion.h3>
+                    </div>
+                  ) : section.fadeImage?.includes('azul') ? (
+                    /* Título para sección azul (Mindfulness) */
+                    <div className="mb-4">
+                      <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.2 }}
+                        viewport={{ once: true }}
+                        className="text-white font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-tight"
+                      >
+                        <div className="-ml-12 md:-ml-16 lg:-ml-40">MIND</div>
+                        <div className="-ml-12 md:-ml-16 lg:-ml-10">FUL</div>
+                        <div className="-mr-12 md:-mr-16 lg:-mr-20">NESS</div>
+                      </motion.div>
+                    </div>
+                  ) : section.fadeImage?.includes('verde') ? (
+                    /* Título para sección verde (Formación Social) */
+                    <div className="mb-4">
+                      <motion.h2 
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.2 }}
+                        viewport={{ once: true }}
+                        className="font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-2"
+                        style={{ color: '#97b664' }}
+                      >
+                        {section.title}
+                      </motion.h2>
+                      
+                      <motion.h3 
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.4 }}
+                        viewport={{ once: true }}
+                        className="font-bold text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-4 md:mb-6"
+                        style={{ color: '#97b664' }}
+                      >
+                        {section.subtitle}
+                      </motion.h3>
+                    </div>
+                  ) : (
+                    <>
+                      {/* Título principal para otras secciones */}
+                      <motion.h2 
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.2 }}
+                        viewport={{ once: true }}
+                        className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 ${section.textColor}`}
+                      >
+                        {section.title}
+                      </motion.h2>
+                      
+                      {/* Subtítulo para otras secciones */}
+                      <motion.h3 
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.4 }}
+                        viewport={{ once: true }}
+                        className={`text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-4 md:mb-6 ${section.textColor}`}
+                      >
+                        {section.subtitle}
+                      </motion.h3>
+                    </>
+                  )}
 
                   {/* Descripción en caja */}
-                  <motion.div 
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.6 }}
-                    viewport={{ once: true }}
-                    className={`${section.accentColor} bg-opacity-20 border border-current border-opacity-30 rounded-lg p-3 md:p-4 mb-4 md:mb-6`}
-                  >
-                    <p className={`text-sm md:text-lg ${section.textColor} font-medium`}>
-                      {section.description}
-                    </p>
-                  </motion.div>
+                  {section.fadeImage?.includes('azul') ? (
+                    /* Recuadro transparente con borde blanco para Mindfulness */
+                    <motion.div 
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.8, delay: 0.6 }}
+                      viewport={{ once: true }}
+                      className="bg-transparent border border-white p-3 md:p-4 mb-4 md:mb-6"
+                    >
+                      <p className="text-sm md:text-lg text-white font-medium">
+                        {section.description}
+                      </p>
+                    </motion.div>
+                  ) : section.fadeImage?.includes('verde') ? (
+                    /* Recuadro transparente con borde verde oscuro para Formación Social */
+                    <motion.div 
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.8, delay: 0.6 }}
+                      viewport={{ once: true }}
+                      className="bg-transparent p-3 md:p-4 mb-4 md:mb-6"
+                      style={{ borderColor: '#97b664', border: '1px solid' }}
+                    >
+                      <p className="text-sm md:text-lg font-medium"
+                         style={{ color: '#97b664' }}>
+                        {section.description}
+                      </p>
+                    </motion.div>
+                  ) : !section.fadeImage?.includes('naranja') && (
+                    /* Recuadro normal para otras secciones */
+                    <motion.div 
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.8, delay: 0.6 }}
+                      viewport={{ once: true }}
+                      className={`${section.accentColor} bg-opacity-20 border border-current border-opacity-30 p-3 md:p-4 mb-4 md:mb-6`}
+                    >
+                      <p className={`text-sm md:text-lg ${section.textColor} font-medium`}>
+                        {section.description}
+                      </p>
+                    </motion.div>
+                  )}
 
                   {/* Descripción larga */}
                   <motion.p 
@@ -395,7 +576,8 @@ export default function ProgramasPage() {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.8 }}
                     viewport={{ once: true }}
-                    className={`text-sm md:text-base leading-relaxed ${section.textColor} opacity-90`}
+                    className={`text-sm md:text-base leading-relaxed text-left ${section.fadeImage?.includes('naranja') ? 'text-white -ml-12 md:-ml-16 lg:-ml-20' : section.fadeImage?.includes('azul') ? 'text-white' : section.fadeImage?.includes('verde') ? '' : section.textColor} opacity-90`}
+                    style={section.fadeImage?.includes('verde') ? { color: '#97b664' } : {}}
                   >
                     {section.longDescription}
                   </motion.p>
@@ -409,7 +591,8 @@ export default function ProgramasPage() {
                     className="absolute bottom-8 left-8"
                   >
                     <svg 
-                      className={`w-8 h-8 ${section.textColor} opacity-60`} 
+                      className={`w-8 h-8 ${section.fadeImage?.includes('naranja') ? 'text-white' : section.fadeImage?.includes('azul') ? 'text-white' : section.textColor} opacity-60`}
+                      style={section.fadeImage?.includes('verde') ? { color: '#97b664' } : {}} 
                       fill="none" 
                       stroke="currentColor" 
                       viewBox="0 0 24 24"
@@ -424,29 +607,45 @@ export default function ProgramasPage() {
                   </motion.div>
 
                   {/* Flechas de navegación */}
-                  <div className="absolute right-8 top-1/2 transform -translate-y-1/2 space-y-4">
-                    <button
+                  <div className="absolute right-6 top-1/2 transform -translate-y-1/2 space-y-6 z-30">
+                    <motion.button
                       onClick={() => goToSection(Math.max(0, index - 1))}
-                      className={`w-10 h-10 rounded-full ${section.textColor} hover:bg-white hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center transform hover:scale-110 ${
-                        index === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-lg'
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      className={`w-14 h-14 rounded-full backdrop-blur-sm transition-all duration-300 flex items-center justify-center shadow-xl ${
+                        section.fadeImage?.includes('naranja') ? 'bg-white bg-opacity-20 text-white hover:bg-opacity-30' :
+                        section.fadeImage?.includes('azul') ? 'bg-white bg-opacity-20 text-white hover:bg-opacity-30' :
+                        section.fadeImage?.includes('verde') ? 'bg-white bg-opacity-20 hover:bg-opacity-30' :
+                        'bg-white bg-opacity-10 text-white hover:bg-opacity-20'
+                      } ${
+                        index === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-2xl'
                       }`}
+                      style={section.fadeImage?.includes('verde') ? { color: '#97b664' } : {}}
                       disabled={index === 0}
                     >
-                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 15l7-7 7 7" />
                       </svg>
-                    </button>
-                    <button
+                    </motion.button>
+                    <motion.button
                       onClick={() => goToSection(Math.min(sectionsData.length - 1, index + 1))}
-                      className={`w-10 h-10 rounded-full ${section.textColor} hover:bg-white hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center transform hover:scale-110 ${
-                        index === sectionsData.length - 1 ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-lg'
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      className={`w-14 h-14 rounded-full backdrop-blur-sm transition-all duration-300 flex items-center justify-center shadow-xl ${
+                        section.fadeImage?.includes('naranja') ? 'bg-white bg-opacity-20 text-white hover:bg-opacity-30' :
+                        section.fadeImage?.includes('azul') ? 'bg-white bg-opacity-20 text-white hover:bg-opacity-30' :
+                        section.fadeImage?.includes('verde') ? 'bg-white bg-opacity-20 hover:bg-opacity-30' :
+                        'bg-white bg-opacity-10 text-white hover:bg-opacity-20'
+                      } ${
+                        index === sectionsData.length - 1 ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-2xl'
                       }`}
+                      style={section.fadeImage?.includes('verde') ? { color: '#97b664' } : {}}
                       disabled={index === sectionsData.length - 1}
                     >
-                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
                       </svg>
-                    </button>
+                    </motion.button>
                   </div>
 
                   {/* Aviso de privacidad */}
@@ -468,7 +667,8 @@ export default function ProgramasPage() {
         ))}
       </div>
 
-
+      {/* Footer al final de todas las secciones */}
+      <Footer />
     </div>
   )
 } 

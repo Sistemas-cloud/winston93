@@ -193,22 +193,15 @@ export default function WinstonLife() {
           
           <div className="relative z-10 h-full flex flex-col items-center justify-center">
             <div className="text-center text-white mb-16">
-              <motion.h1
+              <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1 }}
-                className="text-6xl md:text-8xl font-bold mb-4"
+                className="text-6xl md:text-8xl font-bold leading-tight"
               >
-                WINSTON
-              </motion.h1>
-              <motion.h2
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.3 }}
-                className="text-4xl md:text-6xl font-bold text-[#ccfb00]"
-              >
-                LIFE
-              </motion.h2>
+                <div className="text-white">WINSTON</div>
+                <div className="text-[#E3FB07] text-4xl md:text-6xl">LIFE</div>
+              </motion.div>
             </div>
 
             {/* Cintilla con iconos - Completamente unida con colores sólidos */}
@@ -239,12 +232,12 @@ export default function WinstonLife() {
                     }`}
                   />
                 </div>
-                <span className="text-sm font-bold text-center relative z-40">WINSTON OLYMPICS</span>
+                <span className="text-xl text-center relative z-40 text-white">WINSTON OLYMPICS</span>
               </div>
 
               {/* Entrepreneurs - Verde lima sólido */}
               <div
-                className="relative flex-1 cursor-pointer transition-all duration-700 ease-in-out flex flex-col items-center justify-center text-black bg-[#ccfb00] bg-opacity-80 overflow-visible"
+                className="relative flex-1 cursor-pointer transition-all duration-700 ease-in-out flex flex-col items-center justify-center text-black bg-[#E3FB07] bg-opacity-80 overflow-visible"
                 onClick={() => handleRibbonClick('entrepreneurs')}
                 style={{
                   maskImage: 'radial-gradient(circle var(--hole-r) at 50% 0%, transparent var(--hole-r), black var(--hole-r))',
@@ -263,7 +256,7 @@ export default function WinstonLife() {
                     }`}
                   />
                 </div>
-                <span className="text-sm font-bold text-center relative z-40">ENTREPRENEURS</span>
+                <span className="text-xl text-center relative z-40 text-blue-600">ENTREPRENEURS</span>
               </div>
 
               {/* #Soy Winston - Azul sólido */}
@@ -287,7 +280,7 @@ export default function WinstonLife() {
                     }`}
                   />
                 </div>
-                <span className="text-sm font-bold text-center relative z-40">#SOYWINSTON</span>
+                <span className="text-xl text-center relative z-40 text-white">#SOYWINSTON</span>
               </div>
               {/* Iconos superpuestos para evitar ser enmascarados y asegurar visibilidad */}
               <div
@@ -349,7 +342,7 @@ export default function WinstonLife() {
         {/* Sección ENTREPRENEURS */}
         <section id="entrepreneurs" className="py-20 bg-white overflow-hidden">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-blue-900 mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-600 mb-4">
               ENTREPRENEURS
             </h2>
           </div>
@@ -364,12 +357,12 @@ export default function WinstonLife() {
                       <div className="relative group">
                         <div className="bg-gradient-to-br from-white via-blue-50 to-blue-100 p-4 rounded-2xl shadow-lg border-2 border-blue-200 transition-all duration-500 group-hover:shadow-2xl group-hover:border-blue-400 group-hover:bg-gradient-to-br group-hover:from-blue-50 group-hover:via-white group-hover:to-blue-50 group-hover:-translate-y-2">
                           <img src={`/images/Winston Life/emprendedores/emprendedores${num}.${num === 2 ? 'png' : 'jpg'}`} alt={`Programa Entrepreneurs - Actividad ${num}`} className="w-[420px] h-[300px] object-cover rounded-xl transition-all duration-500 group-hover:scale-105 group-hover:brightness-110" />
-                          <div className="absolute inset-4 bg-gradient-to-t from-blue-700/60 via-blue-500/20 to-[#ccfb00]/25 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+                          <div className="absolute inset-4 bg-gradient-to-t from-blue-700/60 via-blue-500/20 to-[#E3FB07]/25 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
                           <div className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-md rounded-lg p-3 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
                             <p className="text-blue-900 text-sm font-bold text-center uppercase tracking-wide">Programa Entrepreneurs</p>
                             <div className="w-12 h-0.5 bg-blue-600 mx-auto mt-1 rounded-full"></div>
                           </div>
-                          <div className="absolute top-2 left-2 w-3 h-3 bg-[#ccfb00] rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 delay-100"></div>
+                          <div className="absolute top-2 left-2 w-3 h-3 bg-[#E3FB07] rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 delay-100"></div>
                           <div className="absolute top-2 right-2 w-3 h-3 bg-blue-600 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 delay-200"></div>
                         </div>
                       </div>
@@ -383,12 +376,12 @@ export default function WinstonLife() {
                       <div className="relative group">
                         <div className="bg-gradient-to-br from-white via-blue-50 to-blue-100 p-4 rounded-2xl shadow-lg border-2 border-blue-200 transition-all duration-500 group-hover:shadow-2xl group-hover:border-blue-400 group-hover:bg-gradient-to-br group-hover:from-blue-50 group-hover:via-white group-hover:to-blue-50 group-hover:-translate-y-2">
                           <img src={`/images/Winston Life/emprendedores/emprendedores${num}.${num === 2 ? 'png' : 'jpg'}`} alt={`Programa Entrepreneurs - Actividad ${num}`} className="w-[420px] h-[300px] object-cover rounded-xl transition-all duration-500 group-hover:scale-105 group-hover:brightness-110" />
-                          <div className="absolute inset-4 bg-gradient-to-t from-blue-700/60 via-blue-500/20 to-[#ccfb00]/25 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+                          <div className="absolute inset-4 bg-gradient-to-t from-blue-700/60 via-blue-500/20 to-[#E3FB07]/25 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
                           <div className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-md rounded-lg p-3 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
                             <p className="text-blue-900 text-sm font-bold text-center uppercase tracking-wide">Programa Entrepreneurs</p>
                             <div className="w-12 h-0.5 bg-blue-600 mx-auto mt-1 rounded-full"></div>
                           </div>
-                          <div className="absolute top-2 left-2 w-3 h-3 bg-[#ccfb00] rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 delay-100"></div>
+                          <div className="absolute top-2 left-2 w-3 h-3 bg-[#E3FB07] rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 delay-100"></div>
                           <div className="absolute top-2 right-2 w-3 h-3 bg-blue-600 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 delay-200"></div>
                         </div>
                       </div>
@@ -398,44 +391,39 @@ export default function WinstonLife() {
               </div>
             </div>
             
-            {/* Elementos decorativos flotantes */}
-            <div className="absolute top-8 left-1/4 w-2 h-2 bg-[#ccfb00] rounded-full animate-bounce opacity-60"></div>
-            <div className="absolute bottom-8 right-1/3 w-3 h-3 bg-blue-600 rounded-full animate-pulse opacity-50"></div>
-            <div className="absolute top-12 right-1/4 w-1.5 h-1.5 bg-[#ccfb00] rounded-full animate-ping opacity-40"></div>
-            
             {/* Bordes sutiles y desvanecidos full-bleed */}
             <div className="pointer-events-none absolute inset-x-0 top-0 h-2 z-20">
               <div className="wl-cintilla-track flex w-max">
                 <div className="w-[320px] h-full bg-gradient-to-r from-blue-100/60 to-transparent"></div>
-                <div className="w-[320px] h-full bg-gradient-to-r from-[#ccfb00]/40 to-blue-100/20"></div>
+                <div className="w-[320px] h-full bg-gradient-to-r from-[#E3FB07]/40 to-blue-100/20"></div>
                 <div className="w-[320px] h-full bg-gradient-to-r from-blue-100/60 to-transparent"></div>
-                <div className="w-[320px] h-full bg-gradient-to-r from-[#ccfb00]/40 to-blue-100/20"></div>
+                <div className="w-[320px] h-full bg-gradient-to-r from-[#E3FB07]/40 to-blue-100/20"></div>
                 <div className="w-[320px] h-full bg-gradient-to-r from-blue-100/60 to-transparent"></div>
-                <div className="w-[320px] h-full bg-gradient-to-r from-[#ccfb00]/40 to-blue-100/20"></div>
+                <div className="w-[320px] h-full bg-gradient-to-r from-[#E3FB07]/40 to-blue-100/20"></div>
                 {/* duplicado */}
                 <div className="w-[320px] h-full bg-gradient-to-r from-blue-100/60 to-transparent" aria-hidden="true"></div>
-                <div className="w-[320px] h-full bg-gradient-to-r from-[#ccfb00]/40 to-blue-100/20" aria-hidden="true"></div>
+                <div className="w-[320px] h-full bg-gradient-to-r from-[#E3FB07]/40 to-blue-100/20" aria-hidden="true"></div>
                 <div className="w-[320px] h-full bg-gradient-to-r from-blue-100/60 to-transparent" aria-hidden="true"></div>
-                <div className="w-[320px] h-full bg-gradient-to-r from-[#ccfb00]/40 to-blue-100/20" aria-hidden="true"></div>
+                <div className="w-[320px] h-full bg-gradient-to-r from-[#E3FB07]/40 to-blue-100/20" aria-hidden="true"></div>
                 <div className="w-[320px] h-full bg-gradient-to-r from-blue-100/60 to-transparent" aria-hidden="true"></div>
-                <div className="w-[320px] h-full bg-gradient-to-r from-[#ccfb00]/40 to-blue-100/20" aria-hidden="true"></div>
+                <div className="w-[320px] h-full bg-gradient-to-r from-[#E3FB07]/40 to-blue-100/20" aria-hidden="true"></div>
               </div>
             </div>
             <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2 z-20">
               <div className="wl-cintilla-track flex w-max">
                 <div className="w-[320px] h-full bg-gradient-to-r from-transparent to-blue-100/60"></div>
-                <div className="w-[320px] h-full bg-gradient-to-r from-blue-100/20 to-[#ccfb00]/40"></div>
+                <div className="w-[320px] h-full bg-gradient-to-r from-blue-100/20 to-[#E3FB07]/40"></div>
                 <div className="w-[320px] h-full bg-gradient-to-r from-transparent to-blue-100/60"></div>
-                <div className="w-[320px] h-full bg-gradient-to-r from-blue-100/20 to-[#ccfb00]/40"></div>
+                <div className="w-[320px] h-full bg-gradient-to-r from-blue-100/20 to-[#E3FB07]/40"></div>
                 <div className="w-[320px] h-full bg-gradient-to-r from-transparent to-blue-100/60"></div>
-                <div className="w-[320px] h-full bg-gradient-to-r from-blue-100/20 to-[#ccfb00]/40"></div>
+                <div className="w-[320px] h-full bg-gradient-to-r from-blue-100/20 to-[#E3FB07]/40"></div>
                 {/* duplicado */}
                 <div className="w-[320px] h-full bg-gradient-to-r from-transparent to-blue-100/60" aria-hidden="true"></div>
-                <div className="w-[320px] h-full bg-gradient-to-r from-blue-100/20 to-[#ccfb00]/40" aria-hidden="true"></div>
+                <div className="w-[320px] h-full bg-gradient-to-r from-blue-100/20 to-[#E3FB07]/40" aria-hidden="true"></div>
                 <div className="w-[320px] h-full bg-gradient-to-r from-transparent to-blue-100/60" aria-hidden="true"></div>
-                <div className="w-[320px] h-full bg-gradient-to-r from-blue-100/20 to-[#ccfb00]/40" aria-hidden="true"></div>
+                <div className="w-[320px] h-full bg-gradient-to-r from-blue-100/20 to-[#E3FB07]/40" aria-hidden="true"></div>
                 <div className="w-[320px] h-full bg-gradient-to-r from-transparent to-blue-100/60" aria-hidden="true"></div>
-                <div className="w-[320px] h-full bg-gradient-to-r from-blue-100/20 to-[#ccfb00]/40" aria-hidden="true"></div>
+                <div className="w-[320px] h-full bg-gradient-to-r from-blue-100/20 to-[#E3FB07]/40" aria-hidden="true"></div>
               </div>
             </div>
           </div>
@@ -456,7 +444,7 @@ export default function WinstonLife() {
         <section id="soy-winston" className="py-20 bg-gray-50">
           <div className="container mx-auto px-6">
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold text-blue-900 mb-4">
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-600 mb-4">
                 #SOY WINSTON
               </h2>
             </div>
@@ -518,7 +506,6 @@ export default function WinstonLife() {
           />
         )}
       </div>
-      
       
     </>
   )

@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
 import AnimatedElement from '@/components/AnimatedElement'
 
 export default function SliderSection() {
+  const router = useRouter()
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isMobile, setIsMobile] = useState(false)
   const [isTablet, setIsTablet] = useState(false)
@@ -139,8 +141,11 @@ export default function SliderSection() {
                 <p className="text-sm sm:text-base md:text-base lg:text-lg text-gray-200 leading-relaxed mb-4 md:mb-6 lg:mb-8 max-w-sm md:max-w-none">
                   {slides[currentSlide].description}
                 </p>
-                <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 md:px-4 md:py-2 lg:px-6 lg:py-3 rounded-lg font-semibold transition-colors duration-300 text-sm sm:text-sm md:text-base">
-                  Saber más
+                <button 
+                  onClick={() => router.push('/contacto')}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 md:px-4 md:py-2 lg:px-6 lg:py-3 rounded-lg font-semibold transition-colors duration-300 text-sm sm:text-sm md:text-base"
+                >
+                  Agenda ahora
                 </button>
               </AnimatedElement>
             </div>

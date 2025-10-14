@@ -87,11 +87,6 @@ export default function ConveniosSection() {
           </div>
         </div>
       </div>
-
-      {/* Elementos decorativos adicionales - Solo en desktop */}
-      <div className="hidden lg:block absolute top-20 left-20 w-3 h-3 bg-blue-400 rounded-full animate-bounce opacity-60"></div>
-      <div className="hidden lg:block absolute bottom-32 right-32 w-2 h-2 bg-green-400 rounded-full animate-pulse opacity-70"></div>
-      <div className="hidden lg:block absolute top-1/3 left-1/4 w-1 h-1 bg-yellow-400 rounded-full animate-ping opacity-50"></div>
     </div>
   )
 } 

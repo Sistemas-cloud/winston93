@@ -46,13 +46,13 @@ export default function Navigation({ currentSection = 0 }: NavigationProps) {
   const isHomePage = router.pathname === '/'
   
   let navPosition = 'sticky'
-  let navBackground = 'bg-[#0038e4] shadow-lg backdrop-blur-sm'
+  let navBackground = 'bg-[#013BDF] shadow-lg backdrop-blur-sm'
   
   if (isMobile || isTablet) {
     // Móvil o tablet horizontal: fixed
     navPosition = 'fixed'
     // Transparente en primera sección, azul después
-    navBackground = isFirstSection ? 'bg-transparent' : 'bg-[#0038e4] shadow-lg backdrop-blur-sm'
+    navBackground = isFirstSection ? 'bg-transparent' : 'bg-[#013BDF] shadow-lg backdrop-blur-sm'
   } else if (!isContactPage && isFirstSection) {
     // Desktop, primera sección: absolute
     navPosition = 'absolute'
@@ -85,7 +85,7 @@ export default function Navigation({ currentSection = 0 }: NavigationProps) {
           {/* Desktop Menu - Solo en desktop y tablet horizontal */}
           <div className="hidden lg:block">
             <div className="flex items-center space-x-2">
-                          <Link href="#conocenos" className="text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide px-4 py-2 rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#dafb00'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(218, 251, 0, 0.5), 0 4px 6px -2px rgba(218, 251, 0, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
+                          <Link href="#conocenos" className="text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide px-4 py-2 rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
               CONÓCENOS
             </Link>
               
@@ -93,7 +93,7 @@ export default function Navigation({ currentSection = 0 }: NavigationProps) {
               <div className="relative group">
                 <a href="#oferta-educativa" className="text-white group-hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide px-4 py-2 rounded-md hover:shadow-lg flex items-center group-hover:shadow-lg" 
                    style={{backgroundColor: 'transparent', boxShadow: 'none'}}
-                   onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#dafb00'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(218, 251, 0, 0.5), 0 4px 6px -2px rgba(218, 251, 0, 0.3)'}} 
+                   onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} 
                    onMouseLeave={(e) => {
                      // Solo restaurar si no estamos sobre el grupo
                      if (!e.currentTarget.parentElement?.matches(':hover')) {
@@ -106,8 +106,8 @@ export default function Navigation({ currentSection = 0 }: NavigationProps) {
                        const parent = el.parentElement;
                        if (parent) {
                          parent.addEventListener('mouseenter', () => {
-                           el.style.backgroundColor = '#dafb00';
-                           el.style.boxShadow = '0 10px 15px -3px rgba(218, 251, 0, 0.5), 0 4px 6px -2px rgba(218, 251, 0, 0.3)';
+                           el.style.backgroundColor = '#E3FB07';
+                           el.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)';
                          });
                          parent.addEventListener('mouseleave', () => {
                            el.style.backgroundColor = 'transparent';
@@ -123,7 +123,7 @@ export default function Navigation({ currentSection = 0 }: NavigationProps) {
                 </a>
                 
                 {/* Submenu desplegable */}
-                <div className="absolute top-full left-0 mt-1 w-48 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50" style={{backgroundColor: '#dafb00'}}>
+                <div className="absolute top-full left-0 mt-1 w-48 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50" style={{backgroundColor: '#E3FB07'}}>
                   <div className="py-2">
                     <Link href="/primaria" className="block px-4 py-2 text-black hover:text-white hover:bg-black hover:bg-opacity-20 transition-colors duration-200 text-sm uppercase tracking-wide font-medium">
                       PRIMARIA
@@ -135,16 +135,16 @@ export default function Navigation({ currentSection = 0 }: NavigationProps) {
                 </div>
               </div>
               
-              <Link href="/servicios-en-linea" className="text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide px-4 py-2 rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#dafb00'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(218, 251, 0, 0.5), 0 4px 6px -2px rgba(218, 251, 0, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
+              <Link href="/servicios-en-linea" className="text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide px-4 py-2 rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
                 SERVICIOS EN LÍNEA
               </Link>
-              <Link href="/programas" className="text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide px-4 py-2 rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#dafb00'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(218, 251, 0, 0.5), 0 4px 6px -2px rgba(218, 251, 0, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
+              <Link href="/programas" className="text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide px-4 py-2 rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
                 PROGRAMAS
               </Link>
-              <Link href="/winston-life" className="text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide px-4 py-2 rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#dafb00'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(218, 251, 0, 0.5), 0 4px 6px -2px rgba(218, 251, 0, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
+              <Link href="/winston-life" className="text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide px-4 py-2 rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
                 WINSTON LIFE
               </Link>
-              <Link href="/contacto" className="text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide px-4 py-2 rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#dafb00'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(218, 251, 0, 0.5), 0 4px 6px -2px rgba(218, 251, 0, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
+              <Link href="/contacto" className="text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide px-4 py-2 rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
                 CONTACTO
               </Link>
             </div>
@@ -154,16 +154,16 @@ export default function Navigation({ currentSection = 0 }: NavigationProps) {
           <div className="hidden md:block lg:hidden">
             {isTablet && (
               <div className="flex items-center space-x-2">
-                <Link href="/primaria" className="text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide px-3 py-2 rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#dafb00'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(218, 251, 0, 0.5), 0 4px 6px -2px rgba(218, 251, 0, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
+                <Link href="/primaria" className="text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide px-3 py-2 rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
                   PRIMARIA
                 </Link>
-                <Link href="/secundaria" className="text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide px-3 py-2 rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#dafb00'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(218, 251, 0, 0.5), 0 4px 6px -2px rgba(218, 251, 0, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
+                <Link href="/secundaria" className="text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide px-3 py-2 rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
                   SECUNDARIA
                 </Link>
-                <Link href="/programas" className="text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide px-3 py-2 rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#dafb00'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(218, 251, 0, 0.5), 0 4px 6px -2px rgba(218, 251, 0, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
+                <Link href="/programas" className="text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide px-3 py-2 rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
                   PROGRAMAS
                 </Link>
-                <Link href="/contacto" className="text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide px-3 py-2 rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#dafb00'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(218, 251, 0, 0.5), 0 4px 6px -2px rgba(218, 251, 0, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
+                <Link href="/contacto" className="text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide px-3 py-2 rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
                   CONTACTO
                 </Link>
               </div>
@@ -176,7 +176,7 @@ export default function Navigation({ currentSection = 0 }: NavigationProps) {
               <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="text-white hover:text-black focus:outline-none focus:text-black transition-all duration-300 p-2 rounded-md hover:shadow-lg"
-                onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#dafb00'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(218, 251, 0, 0.5), 0 4px 6px -2px rgba(218, 251, 0, 0.3)'}} 
+                onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} 
                 onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}
               >
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -195,28 +195,28 @@ export default function Navigation({ currentSection = 0 }: NavigationProps) {
         {isOpen && (isMobile || (isTablet && window.innerHeight > window.innerWidth)) && (
           <div className="md:hidden lg:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 bg-black/80 backdrop-blur-sm rounded-lg mt-2">
-              <Link href="#conocenos" className="block px-3 py-2 text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#dafb00'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(218, 251, 0, 0.5), 0 4px 6px -2px rgba(218, 251, 0, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
+              <Link href="#conocenos" className="block px-3 py-2 text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
                 CONÓCENOS
               </Link>
-              <Link href="#oferta-educativa" className="block px-3 py-2 text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#dafb00'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(218, 251, 0, 0.5), 0 4px 6px -2px rgba(218, 251, 0, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
+              <Link href="#oferta-educativa" className="block px-3 py-2 text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
                 OFERTA EDUCATIVA
               </Link>
-              <Link href="/primaria" className="block px-3 py-2 text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#dafb00'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(218, 251, 0, 0.5), 0 4px 6px -2px rgba(218, 251, 0, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
+              <Link href="/primaria" className="block px-3 py-2 text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
                 PRIMARIA
               </Link>
-              <Link href="/secundaria" className="block px-3 py-2 text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#dafb00'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(218, 251, 0, 0.5), 0 4px 6px -2px rgba(218, 251, 0, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
+              <Link href="/secundaria" className="block px-3 py-2 text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
                 SECUNDARIA
               </Link>
-              <Link href="/servicios-en-linea" className="block px-3 py-2 text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#dafb00'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(218, 251, 0, 0.5), 0 4px 6px -2px rgba(218, 251, 0, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
+              <Link href="/servicios-en-linea" className="block px-3 py-2 text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
                 SERVICIOS EN LÍNEA
               </Link>
-              <Link href="/programas" className="block px-3 py-2 text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#dafb00'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(218, 251, 0, 0.5), 0 4px 6px -2px rgba(218, 251, 0, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
+              <Link href="/programas" className="block px-3 py-2 text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
                 PROGRAMAS
               </Link>
-              <Link href="/winston-life" className="block px-3 py-2 text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#dafb00'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(218, 251, 0, 0.5), 0 4px 6px -2px rgba(218, 251, 0, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
+              <Link href="/winston-life" className="block px-3 py-2 text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
                 WINSTON LIFE
               </Link>
-              <Link href="/contacto" className="block px-3 py-2 text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#dafb00'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(218, 251, 0, 0.5), 0 4px 6px -2px rgba(218, 251, 0, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
+              <Link href="/contacto" className="block px-3 py-2 text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
                 CONTACTO
               </Link>
             </div>

@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react'
 
 export default function Footer() {
   const router = useRouter()
-  const isWinstonLife = router.pathname === '/winston-life'
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
@@ -21,22 +20,11 @@ export default function Footer() {
     <footer className={`relative text-white overflow-hidden ${
       isMobile ? 'h-[220px]' : 'min-h-[220px]'
     }`}>
-      {/* Fondo: imagen por defecto; azul sólido solo en Winston Life */}
-      {isWinstonLife ? (
-        <div
-          className="absolute inset-0"
-          style={{ backgroundColor: '#063ce6' }}
-        />
-      ) : (
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: 'url(/images/hero/footer.png)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
-          }}
-        />
-      )}
+      {/* Fondo: azul sólido en todas las páginas */}
+      <div
+        className="absolute inset-0"
+        style={{ backgroundColor: '#013BDF' }}
+      />
 
       {/* Contenido principal - Layout móvil optimizado */}
       {isMobile ? (
@@ -58,6 +46,11 @@ export default function Footer() {
                 <p>CALLE 3 #309</p>
                 <p>COL. JARDÍN 20 DE NOVIEMBRE,</p>
                 <p>CD. MADERO TAMPS.</p>
+                <p className="mt-2 font-semibold">
+                  <a href="tel:8332150951" className="hover:text-yellow-400 transition-colors">
+                    📞 833 215 0951
+                  </a>
+                </p>
               </div>
             </AnimatedElement>
           </div>
@@ -125,6 +118,11 @@ export default function Footer() {
                 <p>CALLE 3 #309</p>
                 <p>COL. JARDÍN 20  DE NOVIEMBRE,</p>
                 <p>CD. MADERO TAMPS.</p>
+                <p className="mt-2 sm:mt-3 font-semibold">
+                  <a href="tel:8332150951" className="hover:text-yellow-400 transition-colors">
+                    📞 833 215 0951
+                  </a>
+                </p>
               </div>
             </AnimatedElement>
           </div>

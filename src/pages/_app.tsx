@@ -8,6 +8,14 @@ import PageLoadingScreen from '@/components/PageLoadingScreen'
 import Layout from '@/components/Layout'
 import { useRouter } from 'next/router'
 import AmoCRM from '@/components/AmoCRM'
+import { Poppins } from 'next/font/google'
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700', '800', '900'],
+  variable: '--font-poppins',
+  display: 'swap',
+})
 
 export default function App({ Component, pageProps }: AppProps) {
   const [isLoading, setIsLoading] = useState(true)
@@ -48,7 +56,7 @@ export default function App({ Component, pageProps }: AppProps) {
   }, [router])
 
   return (
-    <>
+    <div className={`${poppins.variable} font-sans`}>
       {/* Componente AmoCRM para métricas y contacto con usuarios */}
       <AmoCRM />
       
@@ -59,12 +67,14 @@ export default function App({ Component, pageProps }: AppProps) {
           <PageLoadingScreen key="page-loading" />
         ) : router.pathname === '/' || router.pathname === '/programas' ? (
           <Component {...pageProps} />
+        ) : router.pathname === '/oferta-educativa' ? (
+          <Component {...pageProps} />
         ) : (
           <Layout key="layout" showFooter={true}>
             <Component {...pageProps} />
           </Layout>
         )}
       </AnimatePresence>
-    </>
+    </div>
   )
 } // Updated: vie 08 ago 2025 11:02:42 CST
