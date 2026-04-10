@@ -92,19 +92,20 @@ export default function Home() {
       {isHydrated && useNativeScroll ? (
         // 2026-03-27: Espaciado y alturas fluidas para mejorar legibilidad en móvil/tablet sin alterar orden de secciones.
         // 2026-04-10: Eliminado pt-16 del contenedor; la sección hero arranca en y=0 para que el nav transparente la superponga.
+        // 2026-04-10: Se diferencian alturas tablet (md:) vs desktop (lg:) para reducir espacios muertos en tablet.
         <div className="w-full">
-          <section className="min-h-[85vh] md:h-screen w-full">
+          <section className="min-h-[85vh] md:min-h-[90vh] lg:h-screen w-full">
             <HeroSection />
           </section>
-          <section className={`w-full ${isMobile ? 'min-h-[70vh]' : 'h-screen'}`}>
+          <section className="w-full min-h-[70vh] md:min-h-[75vh] lg:h-screen">
             <div className="h-full">
               <SliderSection />
             </div>
           </section>
-          <section className="min-h-[85vh] md:h-screen w-full">
+          <section className="min-h-[85vh] md:min-h-[90vh] lg:h-screen w-full">
             <EducationalOfferSection />
           </section>
-          <section className={`w-full ${isMobile ? 'min-h-[360px]' : 'h-screen'}`}>
+          <section className="w-full min-h-[360px] md:min-h-[450px] lg:h-screen">
             <ConveniosSection />
           </section>
           <section className="min-h-screen w-full">

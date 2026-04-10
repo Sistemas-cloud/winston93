@@ -1,8 +1,97 @@
+import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
-import { useState, useEffect } from 'react'
 import Navigation from '@/components/Navigation'
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
+
+// 2026-04-10: Overlay de carga con slogan institucional animado — brillo tipo shimmer y flotación juguetona por palabra.
+const SloganLoadingOverlay = ({ visible }: { visible: boolean }) => {
+  const words = [
+    { text: 'WORKING',  delay: '0s',    ml: '-10px', size: '1.5rem',  rot: '-2deg'  },
+    { text: 'FOR A',    delay: '0.25s', ml: '16px',  size: '1.05rem', rot: '1.5deg' },
+    { text: 'BRIGHTER', delay: '0.5s',  ml: '0px',   size: '1.35rem', rot: '-1deg'  },
+    { text: 'FUTURE',   delay: '0.75s', ml: '12px',  size: '1.6rem',  rot: '2deg'   },
+  ]
+  return (
+    <div
+      className={`absolute inset-0 z-10 flex items-center justify-center overflow-hidden transition-opacity duration-700 ${visible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+      style={{ background: 'linear-gradient(150deg, #010f3a 0%, #013BDF 55%, #0050ff 100%)' }}
+    >
+      <style>{`
+        @keyframes wfbf-shimmer {
+          0%   { background-position: -400% center; }
+          100% { background-position: 400% center; }
+        }
+        @keyframes wfbf-fa { 0%,100%{transform:translateY(0) rotate(-2deg)}  50%{transform:translateY(-7px) rotate(-2deg)}  }
+        @keyframes wfbf-fb { 0%,100%{transform:translateY(0) rotate(1.5deg)} 50%{transform:translateY(-5px) rotate(1.5deg)} }
+        @keyframes wfbf-fc { 0%,100%{transform:translateY(0) rotate(-1deg)}  50%{transform:translateY(-8px) rotate(-1deg)}  }
+        @keyframes wfbf-fd { 0%,100%{transform:translateY(0) rotate(2deg)}   50%{transform:translateY(-6px) rotate(2deg)}   }
+        @keyframes wfbf-star { 0%,100%{opacity:.3;transform:scale(.7) rotate(0deg)} 50%{opacity:1;transform:scale(1.4) rotate(180deg)} }
+      `}</style>
+      <div className="flex flex-col items-center select-none px-4 gap-0.5">
+        {words.map(({ text, delay, ml, size, rot }, i) => (
+          <span
+            key={text}
+            style={{
+              fontSize: size,
+              fontWeight: 900,
+              letterSpacing: '0.13em',
+              marginLeft: ml,
+              display: 'block',
+              background: 'linear-gradient(90deg,#fff 15%,#E3FB07 32%,#fff 50%,#b8d8ff 65%,#fff 78%,#E3FB07 94%)',
+              backgroundSize: '400% auto',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              animation: `wfbf-f${['a','b','c','d'][i]} 2.2s ease-in-out infinite, wfbf-shimmer 2.6s linear infinite`,
+              animationDelay: delay,
+            }}
+          >
+            {text}
+          </span>
+        ))}
+        <span style={{ fontSize: '1rem', marginTop: '6px', color: '#E3FB07', animation: 'wfbf-star 1.8s ease-in-out infinite', display: 'block' }}>
+          ✦
+        </span>
+      </div>
+    </div>
+  )
+}
+
+// 2026-04-10: Tarjeta extracurricular con overlay de slogan animado mientras carga la imagen.
+const ExtracurricularCard = ({
+  src,
+  alt,
+  overlayColor,
+  textColor = 'text-white',
+  onClick,
+  children,
+}: {
+  src: string
+  alt: string
+  overlayColor: string
+  textColor?: string
+  onClick: () => void
+  children: React.ReactNode
+}) => {
+  const [loaded, setLoaded] = useState(false)
+  return (
+    <div className="relative group overflow-hidden rounded-none cursor-pointer" onClick={onClick}>
+      <SloganLoadingOverlay visible={!loaded} />
+      <img
+        src={src}
+        alt={alt}
+        className="w-80 h-80 object-cover transition-transform duration-500 group-hover:scale-105"
+        onLoad={() => setLoaded(true)}
+      />
+      <div className={`absolute bottom-0 left-0 right-0 ${overlayColor} p-3 transition-all duration-700 ease-in-out group-hover:bottom-0 group-hover:top-0 group-hover:bg-opacity-90 group-hover:flex group-hover:items-center group-hover:justify-center`}>
+        <div className={`${textColor} text-xl font-bold transition-all duration-700 group-hover:text-2xl flex items-center`}>
+          {children}
+        </div>
+      </div>
+    </div>
+  )
+}
 
 // Componente de Galería Modal
 const GalleryModal = ({ 
@@ -269,8 +358,8 @@ export default function PrimariaPage() {
             height={1080}
             className="w-full h-full object-cover"
           />
-          {/* 2026-04-10: En móvil solo mostrar "PRIMARIA"; en tablet subir el bloque descriptivo sin afectar desktop. */}
-          <div className="absolute bottom-[38%] left-[66%] md:bottom-[66%] lg:bottom-[38%] md:left-[62%] lg:left-[64%] xl:left-[66%] transform -translate-x-1/2 translate-y-1/2 max-w-md md:max-w-xl lg:max-w-2xl px-4 md:px-6">
+          {/* 2026-04-10: En móvil solo mostrar "PRIMARIA"; en tablet subir considerablemente el bloque sin afectar desktop. */}
+          <div className="absolute bottom-[38%] left-[66%] md:bottom-[80%] lg:bottom-[38%] md:left-[62%] lg:left-[64%] xl:left-[66%] transform -translate-x-1/2 translate-y-1/2 max-w-md md:max-w-xl lg:max-w-2xl px-4 md:px-6">
             <h1 className="text-white text-2xl md:text-6xl font-bold tracking-wider mb-3 md:mb-6">PRIMARIA</h1>
             <div className="hidden md:block text-white text-xs md:text-base leading-relaxed space-y-2 drop-shadow-lg">
               <p className="font-semibold">Etapa avalada por el respaldo académico de Cambridge.</p>
@@ -367,83 +456,35 @@ export default function PrimariaPage() {
             </h3>
           </div>
 
+          {/* 2026-04-10: Tarjetas migradas a ExtracurricularCard para mostrar overlay de carga por imagen. */}
           {/* Grid de materias extracurriculares */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1 mb-4 max-w-7xl mx-auto justify-items-center">
-            {/* Mindfulness */}
-            <div className="relative group overflow-hidden rounded-none cursor-pointer" onClick={() => openGallery('mindfulness')}>
-              <img
-                src="/images/extracurriculares/mindfulness.jpg"
-                alt="Mindfulness"
-                className="w-80 h-80 object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-              <div className="absolute bottom-0 left-0 right-0 bg-blue-900 bg-opacity-60 p-3 transition-all duration-700 ease-in-out group-hover:bottom-0 group-hover:top-0 group-hover:bg-opacity-90 group-hover:flex group-hover:items-center group-hover:justify-center">
-                <h4 className="text-white text-xl font-bold transition-all duration-700 group-hover:text-2xl">MINDFULNESS</h4>
-              </div>
-            </div>
+            <ExtracurricularCard src="/images/extracurriculares/mindfulness.jpg" alt="Mindfulness" overlayColor="bg-blue-900 bg-opacity-60" onClick={() => openGallery('mindfulness')}>
+              MINDFULNESS
+            </ExtracurricularCard>
 
-            {/* Robótica */}
-            <div className="relative group overflow-hidden rounded-none cursor-pointer" onClick={() => openGallery('robotica')}>
-              <img
-                src="/images/extracurriculares/robotica.png"
-                alt="Robótica"
-                className="w-80 h-80 object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-              <div className="absolute bottom-0 left-0 right-0 bg-[#E3FB07] bg-opacity-60 p-3 transition-all duration-700 ease-in-out group-hover:bottom-0 group-hover:top-0 group-hover:bg-opacity-90 group-hover:flex group-hover:items-center group-hover:justify-center">
-                <h4 className="text-black text-xl font-bold transition-all duration-700 group-hover:text-2xl">ROBÓTICA</h4>
-              </div>
-            </div>
+            <ExtracurricularCard src="/images/extracurriculares/robotica.png" alt="Robótica" overlayColor="bg-[#E3FB07] bg-opacity-60" textColor="text-black" onClick={() => openGallery('robotica')}>
+              ROBÓTICA
+            </ExtracurricularCard>
 
-            {/* Artes */}
-            <div className="relative group overflow-hidden rounded-none cursor-pointer" onClick={() => openGallery('artes')}>
-              <img
-                src="/images/extracurriculares/artes.jpg"
-                alt="Artes"
-                className="w-80 h-80 object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-              <div className="absolute bottom-0 left-0 right-0 bg-blue-900 bg-opacity-60 p-3 transition-all duration-700 ease-in-out group-hover:bottom-0 group-hover:top-0 group-hover:bg-opacity-90 group-hover:flex group-hover:items-center group-hover:justify-center">
-                <h4 className="text-white text-xl font-bold transition-all duration-700 group-hover:text-2xl">ARTES</h4>
-              </div>
-            </div>
+            <ExtracurricularCard src="/images/extracurriculares/artes.jpg" alt="Artes" overlayColor="bg-blue-900 bg-opacity-60" onClick={() => openGallery('artes')}>
+              ARTES
+            </ExtracurricularCard>
           </div>
 
           {/* Segunda fila */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1 max-w-7xl mx-auto justify-items-center">
-            {/* Tecnología */}
-            <div className="relative group overflow-hidden rounded-none cursor-pointer" onClick={() => openGallery('tecnologia')}>
-              <img
-                src="/images/extracurriculares/tecnologia.png"
-                alt="Tecnología"
-                className="w-80 h-80 object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-              <div className="absolute bottom-0 left-0 right-0 bg-[#E3FB07] bg-opacity-60 p-3 transition-all duration-700 ease-in-out group-hover:bottom-0 group-hover:top-0 group-hover:bg-opacity-90 group-hover:flex group-hover:items-center group-hover:justify-center">
-                <h4 className="text-black text-xl font-bold transition-all duration-700 group-hover:text-2xl">TECNOLOGÍA</h4>
-              </div>
-            </div>
+            <ExtracurricularCard src="/images/extracurriculares/tecnologia.png" alt="Tecnología" overlayColor="bg-[#E3FB07] bg-opacity-60" textColor="text-black" onClick={() => openGallery('tecnologia')}>
+              TECNOLOGÍA
+            </ExtracurricularCard>
 
-            {/* Entrepreneurs */}
-            <div className="relative group overflow-hidden rounded-none cursor-pointer" onClick={() => openGallery('entrepreneurs')}>
-              <img
-                src="/images/extracurriculares/entrepreneurs.jpg"
-                alt="Entrepreneurs"
-                className="w-80 h-80 object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-              <div className="absolute bottom-0 left-0 right-0 bg-blue-900 bg-opacity-60 p-3 transition-all duration-700 ease-in-out group-hover:bottom-0 group-hover:top-0 group-hover:bg-opacity-90 group-hover:flex group-hover:items-center group-hover:justify-center">
-                <h4 className="text-white text-xl font-bold transition-all duration-700 group-hover:text-2xl">ENTREPRENEURS</h4>
-              </div>
-            </div>
+            <ExtracurricularCard src="/images/extracurriculares/entrepreneurs.jpg" alt="Entrepreneurs" overlayColor="bg-blue-900 bg-opacity-60" onClick={() => openGallery('entrepreneurs')}>
+              ENTREPRENEURS
+            </ExtracurricularCard>
 
-            {/* Educación en la Fe */}
-            <div className="relative group overflow-hidden rounded-none cursor-pointer" onClick={() => openGallery('fe')}>
-              <img
-                src="/images/extracurriculares/fe.png"
-                alt="Educación en la Fe"
-                className="w-80 h-80 object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-              <div className="absolute bottom-0 left-0 right-0 bg-[#E3FB07] bg-opacity-60 p-3 transition-all duration-700 ease-in-out group-hover:bottom-0 group-hover:top-0 group-hover:bg-opacity-90 group-hover:flex group-hover:items-center group-hover:justify-center">
-                <h4 className="text-lg font-bold transition-all duration-700 group-hover:text-xl">EDUCACIÓN EN LA FE</h4>
-                <span className="text-xs ml-2 transition-all duration-700 group-hover:text-sm">(OPCIONAL)</span>
-              </div>
-            </div>
+            <ExtracurricularCard src="/images/extracurriculares/fe.png" alt="Educación en la Fe" overlayColor="bg-[#E3FB07] bg-opacity-60" textColor="text-black" onClick={() => openGallery('fe')}>
+              EDUCACIÓN EN LA FE <span className="text-xs ml-2">(OPCIONAL)</span>
+            </ExtracurricularCard>
           </div>
         </div>
       </div>
