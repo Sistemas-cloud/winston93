@@ -78,11 +78,13 @@ const ExtracurricularCard = ({
   return (
     <div className="relative group overflow-hidden rounded-none cursor-pointer" onClick={onClick}>
       <SloganLoadingOverlay visible={!loaded} />
+      {/* 2026-04-10: opacity-0 hasta carga completa; evita renderizado progresivo visible detrás del overlay */}
       <img
         src={src}
         alt={alt}
-        className="w-80 h-80 object-cover transition-transform duration-500 group-hover:scale-105"
+        className={`w-80 h-80 object-cover transition-all duration-700 group-hover:scale-105 ${loaded ? 'opacity-100' : 'opacity-0'}`}
         onLoad={() => setLoaded(true)}
+        onError={() => setLoaded(true)}
       />
       <div className={`absolute bottom-0 left-0 right-0 ${overlayColor} p-3 transition-all duration-700 ease-in-out group-hover:bottom-0 group-hover:top-0 group-hover:bg-opacity-90 group-hover:flex group-hover:items-center group-hover:justify-center`}>
         <div className={`${textColor} text-xl font-bold transition-all duration-700 group-hover:text-2xl flex items-center`}>
