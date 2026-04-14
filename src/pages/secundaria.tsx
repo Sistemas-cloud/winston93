@@ -414,11 +414,12 @@ export default function SecundariaPage() {
           <div className="flex flex-col md:flex-row gap-8 md:gap-80 items-start justify-center">
             {/* Título a la izquierda */}
             <div className="flex-shrink-0 text-center md:text-left mb-6 md:mb-0">
-              <h2 className="text-2xl md:text-6xl font-bold text-blue-900">PENSAMIENTO</h2>
-              <h3 className="text-2xl md:text-6xl font-bold text-blue-600">CRÍTICO</h3>
+              {/* 2026-04-14: Ajuste de color solicitado; "PENSAMIENTO" en #0038e4 y el resto en gris de párrafos, manteniendo formato. */}
+              <h2 className="text-2xl md:text-6xl font-bold text-[#0038e4]">PENSAMIENTO</h2>
+              <h3 className="text-2xl md:text-6xl font-bold text-gray-600">CRÍTICO</h3>
               <div className="ml-0">
-                <p className="text-lg md:text-2xl text-blue-700 font-medium">IDIOMAS Y</p>
-                <p className="text-lg md:text-2xl text-blue-700 font-medium">FORMACIÓN INTEGRAL</p>
+                <p className="text-lg md:text-2xl text-gray-600 font-medium">IDIOMAS Y</p>
+                <p className="text-lg md:text-2xl text-gray-600 font-medium">FORMACIÓN INTEGRAL</p>
               </div>
             </div>
 
@@ -436,18 +437,17 @@ export default function SecundariaPage() {
                   <div className="absolute bottom-0 right-0 w-20 h-20 bg-white rounded-tl-full"></div>
                 </div>
               </div>
-              <div className="space-y-2 text-gray-600 leading-relaxed text-justify px-4 md:px-0">
-                <p>
+              {/* 2026-04-14: Se simplifica formato del texto lateral para corregir desalineación y mantenerlo justificado. */}
+              <div className="text-gray-600 px-4 md:px-0">
+                <p className="leading-relaxed text-justify mb-4">
                   En nuestra secundaria, fomentamos que nuestros alumnos piensen, cuestionen y resuelvan problemas, 
                   construyendo conocimiento a través del análisis, la reflexión y la experimentación en un ambiente 
                   que estimula la curiosidad y la toma de decisiones independientes.
-                </p>                
-                <div className="ml-8">
-                  <p>
-                    Además del programa oficial de la SEP, fortalecemos su educación con inglés avanzado y francés, 
-                    integrando el desarrollo cívico, social, deportivo y de valores.
-                  </p>
-                </div>
+                </p>
+                <p className="leading-relaxed text-justify">
+                  Además del programa oficial de la SEP, fortalecemos su educación con inglés avanzado y francés, 
+                  integrando el desarrollo cívico, social, deportivo y de valores.
+                </p>
               </div>
             </div>
           </div>
@@ -478,10 +478,12 @@ export default function SecundariaPage() {
         <section className="py-2 md:py-4 relative z-10">
           <div className="container mx-auto px-4 md:px-6">
           <div className="text-center mb-2 md:mb-4 flex flex-col items-center justify-center">
-            <h2 className="text-2xl md:text-4xl font-bold text-blue-900 mb-2 md:mb-4 text-center">
+            {/* 2026-04-14: Se unifica el color del título de extracurriculares al azul institucional usado en títulos. */}
+            <h2 className="text-2xl md:text-4xl font-bold text-[#0038e4] mb-2 md:mb-4 text-center">
               Materias extracurriculares que
             </h2>
-            <h3 className="text-2xl md:text-4xl font-bold text-blue-600 text-center">
+            {/* 2026-04-14: Segunda línea del título sin negrita por solicitud del usuario. */}
+            <h3 className="text-2xl md:text-4xl font-normal text-[#0038e4] text-center">
               enriquecen su formación:
             </h3>
           </div>
@@ -489,30 +491,32 @@ export default function SecundariaPage() {
           {/* 2026-04-10: Tarjetas migradas a ExtracurricularCard para mostrar overlay de carga por imagen. */}
           {/* Grid de materias extracurriculares */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1 mb-4 max-w-7xl mx-auto justify-items-center">
-            <ExtracurricularCard src="/images/secundaria/emprende.png" alt="Entrepreneurs" overlayColor="bg-blue-900 bg-opacity-40" onClick={() => openGallery('educacionFinanciera')}>
+            {/* 2026-04-14: Ajuste de tono azul en hover de extracurriculares al color institucional #0038e4. */}
+            <ExtracurricularCard src="/images/secundaria/emprende.png" alt="Entrepreneurs" overlayColor="bg-[#0038e4] bg-opacity-40" onClick={() => openGallery('educacionFinanciera')}>
               ENTREPRENEURS
             </ExtracurricularCard>
 
-            <ExtracurricularCard src="/images/secundaria/robotica.png" alt="Robótica" overlayColor="bg-[#ffb600] bg-opacity-60" textColor="text-black" onClick={() => openGallery('robotica')}>
+            {/* 2026-04-14: Ajuste de tono naranja en hover de extracurriculares al color exacto #ff7c00. */}
+            <ExtracurricularCard src="/images/secundaria/robotica.png" alt="Robótica" overlayColor="bg-[#ff7c00] bg-opacity-60" textColor="text-black" onClick={() => openGallery('robotica')}>
               ROBÓTICA
             </ExtracurricularCard>
 
-            <ExtracurricularCard src="/images/secundaria/artes.png" alt="Artes" overlayColor="bg-blue-900 bg-opacity-40" onClick={() => openGallery('artes')}>
+            <ExtracurricularCard src="/images/secundaria/artes.png" alt="Artes" overlayColor="bg-[#0038e4] bg-opacity-40" onClick={() => openGallery('artes')}>
               ARTES
             </ExtracurricularCard>
           </div>
 
           {/* Segunda fila */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1 max-w-7xl mx-auto justify-items-center">
-            <ExtracurricularCard src="/images/secundaria/TECNOLOGIA.png" alt="Educación Financiera" overlayColor="bg-[#ffb600] bg-opacity-60" textColor="text-black" onClick={() => openGallery('tecnologia')}>
+            <ExtracurricularCard src="/images/secundaria/TECNOLOGIA.png" alt="Educación Financiera" overlayColor="bg-[#ff7c00] bg-opacity-60" textColor="text-black" onClick={() => openGallery('tecnologia')}>
               EDUCACIÓN FINANCIERA
             </ExtracurricularCard>
 
-            <ExtracurricularCard src="/images/extracurriculares/mindfulness.jpg" alt="Mindfulness" overlayColor="bg-blue-900 bg-opacity-40" onClick={() => openGallery('mindfulness')}>
+            <ExtracurricularCard src="/images/extracurriculares/mindfulness.jpg" alt="Mindfulness" overlayColor="bg-[#0038e4] bg-opacity-40" onClick={() => openGallery('mindfulness')}>
               MINDFULNESS
             </ExtracurricularCard>
 
-            <ExtracurricularCard src="/images/secundaria/emprende.png" alt="Formación Social y Humana" overlayColor="bg-[#ffb600] bg-opacity-60" textColor="text-black" onClick={() => openGallery('formacionSocial')}>
+            <ExtracurricularCard src="/images/secundaria/emprende.png" alt="Formación Social y Humana" overlayColor="bg-[#ff7c00] bg-opacity-60" textColor="text-black" onClick={() => openGallery('formacionSocial')}>
               FORMACIÓN SOCIAL Y HUMANA
             </ExtracurricularCard>
           </div>
@@ -533,7 +537,8 @@ export default function SecundariaPage() {
               {/* Overlay para mejorar la legibilidad del texto */}
               <div className="absolute inset-0 bg-black bg-opacity-20 transition-all duration-500 group-hover:bg-opacity-10"></div>
               {/* Filtro naranja siempre presente */}
-              <div className="absolute inset-0 bg-[#ffb600] bg-opacity-30 transition-all duration-500 group-hover:bg-opacity-40"></div>
+              {/* 2026-04-14: Se unifica la tonalidad naranja de Francés al color #ff7c00. */}
+              <div className="absolute inset-0 bg-[#ff7c00] bg-opacity-30 transition-all duration-500 group-hover:bg-opacity-40"></div>
             </div>
             
             {/* Contenido superpuesto */}
@@ -556,10 +561,12 @@ export default function SecundariaPage() {
             {/* Certificación Internacional */}
             <div className="bg-blue-600 text-white p-8 rounded-2xl relative">
               <h3 className="text-2xl font-bold mb-4">CERTIFICACIÓN INTERNACIONAL</h3>
-              <p className="mb-6 leading-relaxed">
+              {/* 2026-04-14: Se justifica el texto informativo de ambas tarjetas. */}
+              <p className="mb-6 leading-relaxed text-justify">
                 Contamos con el respaldo del prestigioso programa de Cambridge diseñado para elevar la excelencia académica en el idioma inglés y proporcionar a nuestros estudiantes las mejores herramientas para su desarrollo.
               </p>
-              <div className="absolute bottom-4 right-4">
+              {/* 2026-04-14: Logo Cambridge centrado horizontalmente dentro del bloque de certificación. */}
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2">
                 <img
                   src="/images/logos/cambridge.png"
                   alt="University of Cambridge"
@@ -569,12 +576,13 @@ export default function SecundariaPage() {
             </div>
 
             {/* Servicio de Estancia */}
-            <div className="bg-[#ffb600] text-black p-8 rounded-2xl">
+            {/* 2026-04-14: Texto del bloque "Servicio de Estancia" en blanco por solicitud del usuario. */}
+            <div className="bg-[#ffb600] text-white p-8 rounded-2xl">
               <h3 className="text-2xl font-bold mb-4">SERVICIO DE ESTANCIA</h3>
-              <p className="mb-4 leading-relaxed">
+              <p className="mb-4 leading-relaxed text-justify">
                 <strong>FLEXIBILIDAD PARA TI, ACOMPAÑAMIENTO PARA ELLOS</strong>
               </p>
-              <p className="leading-relaxed">
+              <p className="leading-relaxed text-justify">
                 Sabemos que cada familia tiene diferentes horarios por eso ofrecemos servicio de estancia para cuidar, acompañar y apoyar a nuestros alumnos después de su jornada escolar.
               </p>
               <div className="mt-4">

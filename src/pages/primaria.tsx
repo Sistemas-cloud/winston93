@@ -454,10 +454,11 @@ export default function PrimariaPage() {
         <div className="py-2 md:py-4 relative z-10">
           <div className="container mx-auto px-4 md:px-6">
           <div className="text-center mb-2 md:mb-4">
-            <h2 className="text-2xl md:text-4xl font-bold text-blue-900 mb-2 md:mb-4">
+            {/* 2026-04-14: Se unifica color del título de extracurriculares y se quita negrita en la segunda línea. */}
+            <h2 className="text-2xl md:text-4xl font-bold text-[#0038e4] mb-2 md:mb-4">
               Materias extracurriculares que
             </h2>
-            <h3 className="text-2xl md:text-4xl font-bold text-blue-600">
+            <h3 className="text-2xl md:text-4xl font-normal text-[#0038e4]">
               enriquecen su formación:
             </h3>
           </div>
@@ -465,7 +466,8 @@ export default function PrimariaPage() {
           {/* 2026-04-10: Tarjetas migradas a ExtracurricularCard para mostrar overlay de carga por imagen. */}
           {/* Grid de materias extracurriculares */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1 mb-4 max-w-7xl mx-auto justify-items-center">
-            <ExtracurricularCard src="/images/extracurriculares/mindfulness.jpg" alt="Mindfulness" overlayColor="bg-blue-900 bg-opacity-60" onClick={() => openGallery('mindfulness')}>
+            {/* 2026-04-14: Ajuste de tono azul en hover de extracurriculares al color institucional #0038e4. */}
+            <ExtracurricularCard src="/images/extracurriculares/mindfulness.jpg" alt="Mindfulness" overlayColor="bg-[#0038e4] bg-opacity-60" onClick={() => openGallery('mindfulness')}>
               MINDFULNESS
             </ExtracurricularCard>
 
@@ -473,7 +475,7 @@ export default function PrimariaPage() {
               ROBÓTICA
             </ExtracurricularCard>
 
-            <ExtracurricularCard src="/images/extracurriculares/artes.jpg" alt="Artes" overlayColor="bg-blue-900 bg-opacity-60" onClick={() => openGallery('artes')}>
+            <ExtracurricularCard src="/images/extracurriculares/artes.jpg" alt="Artes" overlayColor="bg-[#0038e4] bg-opacity-60" onClick={() => openGallery('artes')}>
               ARTES
             </ExtracurricularCard>
           </div>
@@ -484,7 +486,7 @@ export default function PrimariaPage() {
               TECNOLOGÍA
             </ExtracurricularCard>
 
-            <ExtracurricularCard src="/images/extracurriculares/entrepreneurs.jpg" alt="Entrepreneurs" overlayColor="bg-blue-900 bg-opacity-60" onClick={() => openGallery('entrepreneurs')}>
+            <ExtracurricularCard src="/images/extracurriculares/entrepreneurs.jpg" alt="Entrepreneurs" overlayColor="bg-[#0038e4] bg-opacity-60" onClick={() => openGallery('entrepreneurs')}>
               ENTREPRENEURS
             </ExtracurricularCard>
 
@@ -502,10 +504,12 @@ export default function PrimariaPage() {
               {/* Certificación Internacional */}
               <div className="bg-blue-600 text-white p-8 rounded-2xl relative">
                 <h3 className="text-2xl font-bold mb-4">CERTIFICACIÓN INTERNACIONAL</h3>
-                <p className="mb-6 leading-relaxed">
+                {/* 2026-04-14: Se justifica el texto informativo de ambas tarjetas. */}
+                <p className="mb-6 leading-relaxed text-justify">
                   Contamos con el respaldo del prestigioso programa de Cambridge diseñado para elevar la excelencia académica en el idioma inglés y proporcionar a nuestros estudiantes las mejores herramientas para su desarrollo.
                 </p>
-                <div className="absolute bottom-4 right-4">
+                {/* 2026-04-14: Logo Cambridge centrado horizontalmente dentro del bloque de certificación. */}
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2">
                   <img
                     src="/images/logos/cambridge.png"
                     alt="University of Cambridge"
@@ -515,12 +519,13 @@ export default function PrimariaPage() {
               </div>
 
               {/* Servicio de Estancia */}
-              <div className="bg-[#E3FB07] text-black p-8 rounded-2xl">
+              {/* 2026-04-14: Ajuste de legibilidad en bloque verde fosforescente usando tono negro-gris para el texto. */}
+              <div className="bg-[#E3FB07] text-gray-900 p-8 rounded-2xl">
                 <h3 className="text-2xl font-bold mb-4">SERVICIO DE ESTANCIA</h3>
-                <p className="mb-4 leading-relaxed">
+                <p className="mb-4 leading-relaxed text-justify">
                   <strong>FLEXIBILIDAD PARA EL ACOMPAÑAMIENTO PARA ELLOS</strong>
                 </p>
-                <p className="leading-relaxed">
+                <p className="leading-relaxed text-justify">
                   Sabemos que cada familia tiene diferentes horarios por eso ofrecemos servicio de estancia para brindar acompañamiento y apoyo a nuestros alumnos en tareas de desarrollo de su autonomía.
                 </p>
                 <div className="mt-4">

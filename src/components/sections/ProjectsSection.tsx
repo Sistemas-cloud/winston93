@@ -1,9 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
-import { useRouter } from 'next/router'
 import AnimatedElement from '@/components/AnimatedElement'
 
 export default function SliderSection() {
-  const router = useRouter()
   const [currentSlide, setCurrentSlide] = useState(0)
   // 2026-04-14: Ref para swipe táctil en móvil, elimina dependencia de estado JS para detectar dispositivo.
   const touchStartX = useRef<number>(0)
@@ -128,10 +126,13 @@ export default function SliderSection() {
                 {slides[currentSlide].subtitle}
               </h3>
               <button
-                onClick={() => router.push('/contacto')}
+                // 2026-04-14: El CTA del slider ahora dirige al sistema de agenda externo.
+                onClick={() => {
+                  window.location.href = 'https://agendaw.vercel.app/'
+                }}
                 className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-5 py-2.5 md:px-6 md:py-3 rounded-lg font-semibold transition-colors duration-300 text-sm md:text-base shadow-lg"
               >
-                Agenda ahora
+                Agendar cita
               </button>
             </AnimatedElement>
           </div>

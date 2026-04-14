@@ -51,43 +51,26 @@ export default function Navigation({ currentSection = 0 }: NavigationProps) {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
   
-  // El header será sobrepuesto (absolute) SOLO en la primera sección (index 0) de cada página
-  // EXCEPTO en la página de contacto, donde siempre será sticky
-  // En móviles y tablets horizontales, siempre será fixed para scroll nativo
-  const isContactPage = router.pathname === '/contacto'
-  const isFirstSection = currentSection === 0
-  const isServiciosPage = router.pathname === '/servicios-en-linea'
   const isHomePage = router.pathname === '/'
+  const isProgramasPage = router.pathname === '/programas'
   const isMobileMenu = isMobile || (isTablet && isPortrait)
-  
-  let navPosition = 'sticky'
-  let navBackground = 'bg-[#013BDF] shadow-lg backdrop-blur-sm'
-  
-  if (isMobile || isTablet) {
-    // Móvil o tablet horizontal: fixed
-    navPosition = 'fixed'
-    navBackground = 'bg-[#013BDF] shadow-lg backdrop-blur-sm'
-  } else if (!isContactPage && isFirstSection) {
-    // Desktop, primera sección: absolute
-    navPosition = 'absolute'
-    navBackground = 'bg-transparent'
-  }
 
-  // 2026-04-10: Transparencia consistente para desktop/tablet/móvil.
-  // En top real el navbar inicia transparente y al hacer scroll pasa a azul;
-  // servicios-en-linea se mantiene sólido para conservar contraste sobre fondo claro.
-  const shouldBeTransparent = isServiciosPage ? false : isAtTop
+  // 2026-04-14: Lógica unificada de transparencia.
+  // - /programas: siempre transparente.
+  // - Home en desktop: usa currentSection (FullPageScroll no mueve window.scrollY).
+  // - Resto de páginas (incluyendo móvil/tablet en home): usa isAtTop (scroll nativo).
+  const isDesktopFullPage = isHomePage && !isMobile && !isTablet
+  const shouldBeTransparent = isProgramasPage
+    ? true
+    : isDesktopFullPage
+      ? currentSection === 0
+      : isAtTop
 
-  if (shouldBeTransparent) {
-    navBackground = 'bg-transparent shadow-none backdrop-blur-0'
-    if (!isMobile && !isTablet) {
-      navPosition = 'absolute'
-    } else {
-      navPosition = 'fixed'
-    }
-  } else {
-    navBackground = 'bg-[#013BDF]/95 shadow-lg backdrop-blur-sm'
-  }
+  // Siempre fixed para que quede anclado al tope al hacer scroll.
+  const navPosition = 'fixed'
+  const navBackground = shouldBeTransparent
+    ? 'bg-transparent shadow-none'
+    : 'bg-[#013BDF]/95 shadow-lg backdrop-blur-sm'
 
   return (
     <nav className={`${navPosition} top-0 left-0 right-0 z-50 transition-[background-color,box-shadow,backdrop-filter] duration-500 ease-in-out ${navBackground}`}>
@@ -115,7 +98,8 @@ export default function Navigation({ currentSection = 0 }: NavigationProps) {
           {/* Desktop Menu - Solo en desktop y tablet horizontal */}
           <div className="hidden lg:block">
             <div className="flex items-center space-x-2">
-                          <Link href="#conocenos" className="text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide px-4 py-2 rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
+                          {/* 2026-04-14: Conócenos ahora apunta a la página dedicada /conocenos. */}
+                          <Link href="/conocenos" className="text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide px-4 py-2 rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
               CONÓCENOS
             </Link>
               
@@ -226,7 +210,7 @@ export default function Navigation({ currentSection = 0 }: NavigationProps) {
           <div className="md:hidden lg:hidden">
             {/* 2026-03-27: Mejora responsive/táctil para menú móvil sin cambiar estructura de navegación */}
             <div className="px-2 pt-2 pb-3 space-y-1 bg-black/80 backdrop-blur-sm rounded-lg mt-2">
-              <Link href="#conocenos" className="block px-3 py-3 text-white hover:text-black font-medium transition-all duration-300 text-base uppercase tracking-wide rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
+              <Link href="/conocenos" className="block px-3 py-3 text-white hover:text-black font-medium transition-all duration-300 text-base uppercase tracking-wide rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
                 CONÓCENOS
               </Link>
               <Link href="#oferta-educativa" className="block px-3 py-3 text-white hover:text-black font-medium transition-all duration-300 text-base uppercase tracking-wide rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>

@@ -650,18 +650,26 @@ export default function ProgramasPage() {
                     </motion.button>
                   </div>
 
-                  {/* Aviso de privacidad */}
-                  <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 1.2 }}
-                    viewport={{ once: true }}
-                    className="hidden md:block absolute bottom-8 right-8"
-                  >
-                    <p className={`text-sm ${section.textColor} opacity-70 font-medium`}>
-                      AVISO DE PRIVACIDAD
-                    </p>
-                  </motion.div>
+                  {/* 2026-04-14: El aviso de privacidad solo se muestra en la última sección. */}
+                  {index === sectionsData.length - 1 && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.8, delay: 1.2 }}
+                      viewport={{ once: true }}
+                      className="hidden md:block absolute bottom-8 right-8"
+                    >
+                      {/* 2026-04-14: En la sección verde, el aviso usa el mismo tono azul oscuro del texto para mantener contraste. */}
+                      <p
+                        className={`text-sm opacity-70 font-medium ${
+                          section.fadeImage?.includes('verde') ? '' : section.textColor
+                        }`}
+                        style={section.fadeImage?.includes('verde') ? { color: '#0A1F44' } : {}}
+                      >
+                        AVISO DE PRIVACIDAD
+                      </p>
+                    </motion.div>
+                  )}
                 </div>
               </div>
             </div>
