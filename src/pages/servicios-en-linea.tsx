@@ -46,7 +46,18 @@ export default function ServiciosEnLinea() {
       id: 'registro-para-examen',
       nombre: 'REGISTRO PARA EXAMEN',
       icono: '/images/servicios/registro.png',
-      link: 'https://www.winston93.edu.mx/agenda/inicio/',
+      link: 'https://agendaw.vercel.app/',
+      destacado: false
+    },
+    {
+      // 2026-04-14: Nuevo acceso directo al portal SSIW con icono institucional de "caminando a la escuela".
+      id: 'ssiw-login',
+      // 2026-04-14: Ajuste de copy solicitado por el usuario para mostrar el nombre correcto del servicio.
+      nombre: 'ENTREGA A PIE',
+      icono: '/images/servicios/caminando-a-la-escuela.png',
+      link: 'https://ssiw.vercel.app/login',
+      // 2026-04-14: Bandera para marcar visualmente este servicio como nuevo.
+      isNuevo: true,
       destacado: false
     }
   ]
@@ -119,7 +130,9 @@ export default function ServiciosEnLinea() {
             {servicios.map((servicio) => (
               <motion.div
                 key={servicio.id}
-                className="flex flex-col items-center p-6 md:p-8 transition-all duration-300 hover:scale-105 hover:bg-blue-600 hover:shadow-lg rounded-lg cursor-pointer group service-card"
+                className={`flex flex-col items-center p-6 md:p-8 transition-all duration-300 hover:scale-105 hover:bg-blue-600 hover:shadow-lg rounded-lg cursor-pointer group service-card relative overflow-hidden ${
+                  servicio.id === 'ssiw-login' ? 'md:col-span-2 lg:col-span-3 md:max-w-md lg:max-w-sm md:mx-auto lg:justify-self-center' : ''
+                }`}
                 initial={prefersReducedMotion ? false : { opacity: 0, y: 28, scale: 0.97 }}
                 animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
                 transition={prefersReducedMotion ? undefined : { duration: 0.45, ease: [0.25, 1, 0.5, 1] }}
@@ -140,6 +153,24 @@ export default function ServiciosEnLinea() {
                   }
                 }}
               >
+                {servicio.isNuevo && (
+                  // 2026-04-14: Badge animado para destacar visualmente el nuevo servicio.
+                  <motion.span
+                    className="absolute top-3 right-3 z-10 rounded-full bg-yellow-400 px-3 py-1 text-[10px] md:text-xs font-bold uppercase tracking-wider text-gray-900 shadow-md"
+                    animate={
+                      prefersReducedMotion
+                        ? undefined
+                        : { scale: [1, 1.12, 1], rotate: [0, -4, 4, 0], boxShadow: ['0 0 0 0 rgba(250,204,21,0.55)', '0 0 0 8px rgba(250,204,21,0)', '0 0 0 0 rgba(250,204,21,0)'] }
+                    }
+                    transition={
+                      prefersReducedMotion
+                        ? undefined
+                        : { duration: 1.6, repeat: Infinity, ease: 'easeInOut' }
+                    }
+                  >
+                    Nuevo
+                  </motion.span>
+                )}
                 <motion.div
                   className="mb-5 p-5 md:p-6 rounded-lg bg-gray-100 group-hover:bg-blue-600 transition-colors duration-300"
                   animate={

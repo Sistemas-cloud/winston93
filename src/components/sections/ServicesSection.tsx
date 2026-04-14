@@ -37,11 +37,7 @@ export default function EducationalOfferSection() {
                   : 'opacity-0 -translate-x-12'
               }`} style={{ transitionDelay: '200ms' }}>
                 {/* Formas geométricas de fondo - Responsive */}
-                <div className="absolute -top-2 -left-2 sm:-top-4 sm:-left-4 md:-top-10 md:-left-10 w-8 h-8 sm:w-12 sm:h-12 md:w-32 md:h-32 bg-blue-600 rounded-lg transform rotate-12"></div>
-                <div className="absolute -bottom-1 left-6 sm:-bottom-2 sm:left-10 md:-bottom-5 md:left-20 w-6 h-6 sm:w-9 sm:h-9 md:w-24 md:h-24 bg-yellow-400 rounded-lg transform -rotate-6"></div>
-                <div className="absolute top-1 -right-1 sm:top-2 sm:-right-2 md:top-5 md:-right-5 w-5 h-5 sm:w-8 sm:h-8 md:w-20 md:h-20 bg-green-500 rounded-lg transform rotate-45"></div>
-                
-                {/* 2026-03-27: Escala responsive de imagen para evitar recortes en móvil/tablet manteniendo el diseño base. */}
+                 {/* 2026-03-27: Escala responsive de imagen para evitar recortes en móvil/tablet manteniendo el diseño base. */}
                 <img
                   src="/images/students/niños_left.jpg"
                   alt="Estudiantes del Instituto Winston Churchill"
@@ -58,10 +54,11 @@ export default function EducationalOfferSection() {
                   ? 'opacity-100 translate-y-0 scale-100' 
                   : 'opacity-0 -translate-y-8 scale-95'
               }`} style={{ transitionDelay: '400ms' }}>
-                <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-blue-900 leading-tight mb-2 md:mb-4">
+                {/* 2026-04-14: Ajuste solicitado del título: color #0050ce, nombre del colegio en bold y subtítulo en peso normal. */}
+                <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-[#0050ce] leading-tight mb-2 md:mb-4">
                   INSTITUTO WINSTON CHURCHILL
                 </h1>
-                <h2 className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold text-blue-700 mb-2 md:mb-6">
+                <h2 className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-normal text-[#0050ce] mb-2 md:mb-6">
                   Formando líderes con visión global desde hace más de 30 años.
                 </h2>
               </div>

@@ -2,6 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  /* 2026-04-13: Tonalidad de texto #909090 para todos los <p> del sitio */
+  p {
+    color: #909090;
+  }
+
+  /* 2026-04-13: En footer y bloques con texto claro, el párrafo hereda el color del contenedor (evita gris sobre fondo oscuro) */
+  footer p,
+  .text-white p,
+  .text-blue-50 p,
+  .text-blue-100 p,
+  .text-gray-100 p,
+  .text-gray-200 p {
+    color: inherit;
+  }
+}
+
 /* Animación tipada para la mueca de la cintilla */
 @property --hole-r {
   syntax: '<length>';
