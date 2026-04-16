@@ -437,12 +437,11 @@ export default function PrimariaPage() {
                 </div>
                 <div className="space-y-2 text-gray-600 leading-relaxed text-justify px-4 md:px-0">
                   <p>
-                    En nuestra primaria, nuestros alumnos aprenden un modelo bilingüe con inmersión total en inglés, logrando comprender y expresarse con fluidez.
-                    La otra mitad se imparte en español cumpliendo con el programa oficial de la SEP.
+                    En primaria, nuestros alumnos aprenden en un modelo bilingüe con inmersión total en inglés, logrando comprender y expresarse con fluidez. La otra mitad se imparte en español, cumpliendo con el programa oficial de la SEP.
                   </p>                
                   <div className="ml-8">
                     <p>
-                      Desde esta etapa, promovemos el pensamiento emprendedor, la autonomía, fortaleciendo su seguridad, creatividad y habilidades para enfrentar con éxito los retos del mundo actual.
+                      Desde esta etapa, promovemos el pensamiento emprendedor y la autonomía, fortaleciendo su seguridad, creatividad y habilidades para enfrentar con éxito los retos del mundo actual.
                     </p>
                   </div>
                 </div>
@@ -508,7 +507,7 @@ export default function PrimariaPage() {
                 <h3 className="text-2xl font-bold mb-4">CERTIFICACIÓN INTERNACIONAL</h3>
                 {/* 2026-04-14: Se justifica el texto informativo de ambas tarjetas. */}
                 <p className="mb-6 leading-relaxed text-justify">
-                  Contamos con el respaldo del prestigioso programa de Cambridge diseñado para elevar la excelencia académica en el idioma inglés y proporcionar a nuestros estudiantes las mejores herramientas para su desarrollo.
+                  Contamos con el respaldo del prestigioso programa de Cambridge, diseñado para elevar los estándares educativos en el idioma inglés y proporcionar a nuestros estudiantes las mejores herramientas para su aprendizaje.
                 </p>
                 {/* 2026-04-14: Logo Cambridge centrado horizontalmente dentro del bloque de certificación. */}
                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2">

@@ -8,6 +8,7 @@ import PageLoadingScreen from '@/components/PageLoadingScreen'
 import Layout from '@/components/Layout'
 import { useRouter } from 'next/router'
 import AmoCRM from '@/components/AmoCRM'
+import WhatsAppFAB from '@/components/WhatsAppFAB'
 import { Poppins } from 'next/font/google'
 
 const poppins = Poppins({
@@ -75,6 +76,8 @@ export default function App({ Component, pageProps }: AppProps) {
           </Layout>
         )}
       </AnimatePresence>
+      {/* 2026-04-16: Botón flotante WhatsApp visible en todas las páginas, fuera del AnimatePresence para que no desaparezca en transiciones. */}
+      <WhatsAppFAB />
     </div>
   )
 } // Updated: vie 08 ago 2025 11:02:42 CST

@@ -561,7 +561,7 @@ export default function SecundariaPage() {
               <h3 className="text-2xl font-bold mb-4">CERTIFICACIÓN INTERNACIONAL</h3>
               {/* 2026-04-14: Se justifica el texto informativo de ambas tarjetas. */}
               <p className="mb-6 leading-relaxed text-justify">
-                Contamos con el respaldo del prestigioso programa de Cambridge diseñado para elevar la excelencia académica en el idioma inglés y proporcionar a nuestros estudiantes las mejores herramientas para su desarrollo.
+                Contamos con el respaldo del prestigioso programa de Cambridge, diseñado para elevar los estándares educativos en el idioma inglés y proporcionar a nuestros estudiantes las mejores herramientas para su aprendizaje.
               </p>
               {/* 2026-04-14: Logo Cambridge centrado horizontalmente dentro del bloque de certificación. */}
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2">
