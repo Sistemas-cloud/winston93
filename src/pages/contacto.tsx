@@ -13,6 +13,10 @@ export default function ContactoPage() {
   const [feedback, setFeedback] = useState<{ type: 'ok' | 'error' | null; text: string }>({ type: null, text: '' })
 
   const address = 'C. 3 309, Jardín 20 de Noviembre, 89440 Cd Madero, Tamps.'
+  const officePhone = '833 215 0951'
+  // 2026-04-16: Se actualiza el horario de atención con el nuevo rango semanal y de sábado.
+  const officeScheduleWeekdays = 'Lunes a viernes: 7:00 am - 7:30 pm'
+  const officeScheduleSaturday = 'Sábado: 9:00 am - 1:00 pm'
   const encodedAddress = encodeURIComponent(address)
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -238,6 +242,22 @@ export default function ContactoPage() {
               <p className="font-semibold">Dirección</p>
               <p>{address}</p>
             </div>
+
+            {/* 2026-04-16: Se agrega teléfono y horario para replicar la información de contacto visible en el footer. */}
+            <div className="mt-4 space-y-3 text-sm text-gray-600">
+              <div>
+                <p className="font-semibold">Teléfono</p>
+                <a href="tel:8332150951" className="text-blue-700 hover:text-blue-800 transition-colors">
+                  + 52 ({officePhone.slice(0, 3)}) {officePhone.slice(4)}
+                </a>
+              </div>
+              <div>
+                <p className="font-semibold">Horario de Atención</p>
+                <p>{officeScheduleWeekdays}</p>
+                <p>{officeScheduleSaturday}</p>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
