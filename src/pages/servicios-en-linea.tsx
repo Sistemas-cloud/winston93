@@ -12,7 +12,8 @@ export default function ServiciosEnLinea() {
       id: 'alta-de-facturacion',
       nombre: 'ALTA DE FACTURACIÓN',
       icono: '/images/servicios/alta.png',
-      link: 'https://www.winston93.edu.mx/pagos/login.php',
+      // 2026-04-28: URL de alta de facturación migrada a la app desplegada en Vercel.
+      link: 'https://winston-facturacion.vercel.app/',
       destacado: false
     },
     {
