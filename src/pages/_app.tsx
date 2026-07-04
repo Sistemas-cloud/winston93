@@ -60,36 +60,24 @@ export default function App({ Component, pageProps }: AppProps) {
     <div className={`${poppins.variable} font-sans`}>
       {/* Componente AmoCRM para métricas y contacto con usuarios */}
       <AmoCRM />
-
-      {/* 2026-07-03: Auditoría SEO — antes la página solo se montaba cuando
-          isLoading/isPageLoading eran false. Como isLoading arranca en true
-          y solo cambia dentro de un useEffect (que nunca corre en SSR/SSG),
-          el <Component> (y el <Head> de Seo.tsx con title/description/OG/
-          Twitter) nunca llegaba a renderizarse en el HTML servido a los
-          crawlers (SE Ranking reportaba "Missing Title/Description").
-          Ahora <Component> se monta siempre para que el HTML inicial
-          incluya la metadata, y la pantalla de carga (LoadingScreen ya usa
-          "fixed inset-0 z-50") se superpone visualmente encima, sin cambiar
-          el diseño ni la experiencia de carga. */}
-      {router.pathname === '/' ||
-      router.pathname === '/programas' ||
-      router.pathname === '/oferta-educativa' ? (
-        <Component {...pageProps} />
-      ) : (
-        <Layout key="layout" showFooter={true}>
-          <Component {...pageProps} />
-        </Layout>
-      )}
-
-      <AnimatePresence>
-        {isLoading && <LoadingScreen key="initial-loading" />}
-        {!isLoading && isPageLoading && (
+      
+      <AnimatePresence mode="wait">
+        {isLoading ? (
+          <LoadingScreen key="initial-loading" />
+        ) : isPageLoading ? (
           <PageLoadingScreen key="page-loading" />
+        ) : router.pathname === '/' || router.pathname === '/programas' ? (
+          <Component {...pageProps} />
+        ) : router.pathname === '/oferta-educativa' ? (
+          <Component {...pageProps} />
+        ) : (
+          <Layout key="layout" showFooter={true}>
+            <Component {...pageProps} />
+          </Layout>
         )}
       </AnimatePresence>
-
       {/* 2026-04-16: Botón flotante WhatsApp visible en todas las páginas, fuera del AnimatePresence para que no desaparezca en transiciones. */}
       <WhatsAppFAB />
     </div>
   )
-} // Updated: 2026-07-03 (fix de SEO: render de Component siempre activo para SSR/SSG)
+} // Updated: vie 08 ago 2025 11:02:42 CST

@@ -8,8 +8,6 @@ export default function WhatsAppFAB() {
       aria-label="Contactar por WhatsApp"
       className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-[#25D366] shadow-xl flex items-center justify-center hover:scale-110 transition-transform duration-200"
     >
-      {/* 2026-07-04: Texto de ancla oculto para crawlers que no leen aria-label (auditoría SEO). */}
-      <span className="sr-only">Contactar por WhatsApp</span>
       {/* Anillo pulse animado */}
       <span className="absolute w-full h-full rounded-full bg-[#25D366] animate-ping opacity-30" />
 
