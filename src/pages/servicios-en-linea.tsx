@@ -23,22 +23,24 @@ export default function ServiciosEnLinea() {
       id: 'alta-de-facturacion',
       nombre: 'ALTA DE FACTURACIÓN',
       icono: '/images/servicios/alta.png',
-      // 2026-04-28: URL de alta de facturación migrada a la app desplegada en Vercel.
-      link: 'https://winston-facturacion.vercel.app/',
+      // 2026-07-22: Redirigido al portal unificado de servicios administrativos.
+      link: 'https://servicios-admin.vercel.app/',
       destacado: false
     },
     {
       id: 'colegiaturas',
       nombre: 'COLEGIATURAS',
       icono: '/images/servicios/colegiaturas.png',
-      link: 'https://www.winston93.edu.mx/enlinea3',
+      // 2026-07-22: Redirigido al portal unificado de servicios administrativos.
+      link: 'https://servicios-admin.vercel.app/',
       destacado: false
     },
     {
       id: 'inscripciones',
       nombre: 'INSCRIPCIONES',
       icono: '/images/servicios/usuario.png',
-      link: 'https://www.winston93.edu.mx/admisiones',
+      // 2026-07-22: Redirigido al portal unificado de servicios administrativos.
+      link: 'https://servicios-admin.vercel.app/',
       destacado: false
     },
     {
