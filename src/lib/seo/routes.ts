@@ -135,13 +135,14 @@ export const SITE_ROUTES: readonly SiteRoute[] = [
   {
     path: '/servicios-en-linea',
     title: 'Servicios en Línea - Instituto Winston Churchill',
+    // 2026-08-04: SEO sin "tareas"; servicios internos queda como acceso en construcción.
     description:
-      'Accede a nuestros servicios en línea: colegiaturas, inscripciones, tareas y más.',
+      'Accede a nuestros servicios en línea: colegiaturas, inscripciones, facturación y más.',
     keywords: [
       'servicios en línea',
       'colegiaturas',
       'inscripciones',
-      'tareas',
+      'facturación',
       'Winston Churchill',
     ],
     changeFrequency: 'monthly',
