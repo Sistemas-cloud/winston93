@@ -107,9 +107,10 @@ const PageLoadingScreen = () => {
           transition={{ delay: 0.2, duration: 0.5 }}
           className="mb-6"
         >
-          <h1 className="text-white text-lg font-bold mb-1 tracking-wide">
+          {/* 2026-08-15: Sin H1 en pantallas de carga (evita múltiples H1 en auditoría SEO). */}
+          <p className="text-white text-lg font-bold mb-1 tracking-wide">
             INSTITUTO WINSTON CHURCHILL
-          </h1>
+          </p>
           
           <p className="text-blue-200 text-sm font-medium mb-3">
             Working for a Brighter Future

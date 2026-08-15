@@ -1,5 +1,6 @@
 import AnimatedElement from '@/components/AnimatedElement'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
@@ -58,8 +59,14 @@ export default function Footer() {
 
           {/* Aviso de privacidad e iconos en la parte inferior */}
           <div className="flex flex-col items-center space-y-2 mt-2">
-            {/* Aviso de privacidad arriba */}
-            <div className="text-center">
+            {/* 2026-08-15: Enlace interno a /oferta-educativa para SEO (evitar página huérfana). */}
+            <div className="text-center space-y-1">
+              <Link
+                href="/oferta-educativa"
+                className="font-medium uppercase tracking-wide text-[10px] hover:text-yellow-400 transition-colors block"
+              >
+                OFERTA EDUCATIVA
+              </Link>
               <a
                 href="#"
                 className="font-medium uppercase tracking-wide text-[10px] hover:text-yellow-400 transition-colors block"
@@ -73,7 +80,7 @@ export default function Footer() {
             {/* 2026-07-04: Texto de ancla oculto (sr-only) para crawlers que no leen aria-label. */}
             <AnimatedElement animation="fadeInUp" delay={500}>
               <div className="flex items-center gap-3">
-                <a href="https://www.facebook.com/institutowinstonchurchill/?locale=es_LA" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition">
+                <a href="https://www.facebook.com/institutowinstonchurchill/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition">
                   <span className="sr-only">Facebook</span>
                   <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
@@ -143,7 +150,7 @@ export default function Footer() {
           <div className="absolute bottom-14 md:bottom-16 left-1/2 transform -translate-x-1/2 z-20">
             <AnimatedElement animation="fadeInUp" delay={500}>
               <div className="flex items-center gap-3 md:gap-4">
-                <a href="https://www.facebook.com/institutowinstonchurchill/?locale=es_LA" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition">
+                <a href="https://www.facebook.com/institutowinstonchurchill/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition">
                   <span className="sr-only">Facebook</span>
                   <svg className="w-4 h-4 md:w-4 md:h-4" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
@@ -177,12 +184,21 @@ export default function Footer() {
             </AnimatedElement>
           </div>
 
-          <a
-            href="#"
-            className="absolute right-4 md:right-10 bottom-10 md:bottom-16 font-semibold uppercase tracking-wide text-xs sm:text-sm hover:text-yellow-400 transition-colors"
-          >
-            AVISO DE PRIVACIDAD
-          </a>
+          {/* 2026-08-15: Enlace interno a oferta educativa en footer desktop. */}
+          <div className="absolute right-4 md:right-10 bottom-10 md:bottom-16 flex flex-col items-end gap-2">
+            <Link
+              href="/oferta-educativa"
+              className="font-semibold uppercase tracking-wide text-xs sm:text-sm hover:text-yellow-400 transition-colors"
+            >
+              OFERTA EDUCATIVA
+            </Link>
+            <a
+              href="#"
+              className="font-semibold uppercase tracking-wide text-xs sm:text-sm hover:text-yellow-400 transition-colors"
+            >
+              AVISO DE PRIVACIDAD
+            </a>
+          </div>
         </>
       )}
     </footer>

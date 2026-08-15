@@ -18,7 +18,8 @@ export default function OfertaEducativaPage() {
       
       <div className="oferta-educativa-page">
         <Navigation />
-        <OfertaEducativaSection />
+        {/* 2026-08-15: isPageTitle para H1 único en esta ruta. */}
+        <OfertaEducativaSection isPageTitle />
       </div>
     </>
   )

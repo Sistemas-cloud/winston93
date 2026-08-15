@@ -2,7 +2,12 @@ import { useEffect, useRef, useState } from 'react'
 import Footer from '@/components/Footer'
 import AnimatedElement from '@/components/AnimatedElement'
 
-export default function OfertaEducativaSection() {
+export default function OfertaEducativaSection({
+  // 2026-08-15: En /oferta-educativa el título es H1; en home (sección) es H2 para no duplicar H1.
+  isPageTitle = false,
+}: {
+  isPageTitle?: boolean
+}) {
   const [isVisible, setIsVisible] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [isTabletHorizontal, setIsTabletHorizontal] = useState(false)
@@ -93,8 +98,8 @@ export default function OfertaEducativaSection() {
           {/* 2026-07-03: Dimensiones explícitas en pleca decorativa para reducir CLS. */}
           <img
             src="/images/primaria/pleca_verde.png"
-            alt=""
-            aria-hidden="true"
+            // 2026-08-15: Alt descriptivo para auditoría SEO (pleca decorativa).
+            alt="Detalle decorativo verde de la oferta educativa"
             width={80}
             height={200}
             className={`absolute z-0 pointer-events-none select-none ${
@@ -111,35 +116,30 @@ export default function OfertaEducativaSection() {
           }`}>
             {/* 2026-04-14: Título ajustado para coincidir con la imagen de referencia:
                 "OFERTA" en peso normal y "EDUCATIVA" en bold, ambos en #0050ce. */}
+            {/* 2026-08-15: Un solo heading (H1 en página dedicada / H2 en home) para evitar H1 múltiples. */}
             <div className={`transition-all duration-1000 ease-out ${
               isVisible 
                 ? 'opacity-100 translate-y-0 scale-100' 
                 : 'opacity-0 -translate-y-8 scale-95'
             }`} style={{ transitionDelay: '100ms' }}>
-              <h1
-                className={`font-normal leading-tight ${
-                  isTabletHorizontal 
-                    ? 'text-sm mb-0' 
-                    : isMobile 
-                      ? 'text-2xl mb-0' 
-                      : 'text-xl sm:text-2xl md:text-4xl lg:text-5xl xl:text-6xl mb-0 sm:mb-1 md:mb-2'
-                }`}
-                style={{ color: '#0050ce' }}
-              >
-                OFERTA
-              </h1>
-              <h2
-                className={`font-bold leading-tight ${
+              {(() => {
+                const TitleTag = isPageTitle ? 'h1' : 'h2'
+                const titleSize = `leading-tight ${
                   isTabletHorizontal 
                     ? 'text-sm' 
                     : isMobile 
                       ? 'text-2xl' 
                       : 'text-xl sm:text-2xl md:text-4xl lg:text-5xl xl:text-6xl'
-                }`}
-                style={{ color: '#0050ce' }}
-              >
-                EDUCATIVA
-              </h2>
+                }`
+                return (
+                  <TitleTag className={titleSize} style={{ color: '#0050ce' }}>
+                    <span className={`font-normal block ${isTabletHorizontal || isMobile ? 'mb-0' : 'mb-0 sm:mb-1 md:mb-2'}`}>
+                      OFERTA
+                    </span>
+                    <span className="font-bold block">EDUCATIVA</span>
+                  </TitleTag>
+                )
+              })()}
             </div>
           </div>
 
@@ -251,7 +251,7 @@ export default function OfertaEducativaSection() {
                 {/* Iconos sociales abajo */}
             {/* 2026-07-04: Texto de ancla oculto (sr-only) para crawlers que no leen aria-label. */}
                 <div className="flex items-center gap-2">
-                  <a href="https://www.facebook.com/institutowinstonchurchill/?locale=es_LA" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="w-6 h-6 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition">
+                  <a href="https://www.facebook.com/institutowinstonchurchill/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="w-6 h-6 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition">
                     <span className="sr-only">Facebook</span>
                     <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
@@ -315,7 +315,7 @@ export default function OfertaEducativaSection() {
             <>
               <div className="absolute bottom-20 md:bottom-24 left-1/2 transform -translate-x-1/2 z-20">
                 <div className="flex items-center gap-1.5 md:gap-2">
-                  <a href="https://www.facebook.com/institutowinstonchurchill/?locale=es_LA" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="w-6 h-6 md:w-7 md:h-7 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition">
+                  <a href="https://www.facebook.com/institutowinstonchurchill/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="w-6 h-6 md:w-7 md:h-7 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition">
                     <span className="sr-only">Facebook</span>
                     <svg className="w-3 h-3 md:w-4 md:h-4" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>

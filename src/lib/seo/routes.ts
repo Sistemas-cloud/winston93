@@ -24,7 +24,8 @@ export const SITE_ROUTES: readonly SiteRoute[] = [
     path: '/',
     title: 'Instituto Winston Churchill - Working for a Brighter Future',
     description:
-      'Instituto educativo con 30 años de experiencia. Educación bilingüe integral: Kínder, Primaria y Secundaria. Respaldados por Oxford University Press y University of Cambridge.',
+      // 2026-08-15: Meta description ~155 chars (atractiva + keywords; antes ~174).
+      'Colegio bilingüe en Cd. Madero con más de 30 años. Kínder, Primaria y Secundaria. Educación integral respaldada por Oxford y Cambridge.',
     keywords: [
       'instituto',
       'educación',
@@ -104,7 +105,7 @@ export const SITE_ROUTES: readonly SiteRoute[] = [
   },
   {
     path: '/programas',
-    title: 'Programas - Instituto Winston Churchill',
+    title: 'Programas de Mindfulness y Emprendimiento | Winston Churchill',
     description:
       'Descubre nuestros programas especializados en formación social, educación financiera y mindfulness en el Instituto Winston Churchill.',
     keywords: [

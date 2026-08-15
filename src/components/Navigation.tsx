@@ -105,7 +105,8 @@ export default function Navigation({ currentSection = 0 }: NavigationProps) {
               
               {/* Menú desplegable de Oferta Educativa */}
               <div className="relative group">
-                <a href="#oferta-educativa" className="text-white group-hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide px-4 py-2 rounded-md hover:shadow-lg flex items-center group-hover:shadow-lg" 
+                {/* 2026-08-15: Enlace real a /oferta-educativa (antes #oferta-educativa dejaba la página huérfana para SEO). */}
+                <Link href="/oferta-educativa" className="text-white group-hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide px-4 py-2 rounded-md hover:shadow-lg flex items-center group-hover:shadow-lg" 
                    style={{backgroundColor: 'transparent', boxShadow: 'none'}}
                    onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} 
                    onMouseLeave={(e) => {
@@ -134,11 +135,14 @@ export default function Navigation({ currentSection = 0 }: NavigationProps) {
                   <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
-                </a>
+                </Link>
                 
                 {/* Submenu desplegable */}
                 <div className="absolute top-full left-0 mt-1 w-48 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50" style={{backgroundColor: '#E3FB07'}}>
                   <div className="py-2">
+                    <Link href="/oferta-educativa" className="block px-4 py-2 text-black hover:text-white hover:bg-black hover:bg-opacity-20 transition-colors duration-200 text-sm uppercase tracking-wide font-medium">
+                      VER OFERTA
+                    </Link>
                     <Link href="/primaria" className="block px-4 py-2 text-black hover:text-white hover:bg-black hover:bg-opacity-20 transition-colors duration-200 text-sm uppercase tracking-wide font-medium">
                       PRIMARIA
                     </Link>
@@ -216,7 +220,8 @@ export default function Navigation({ currentSection = 0 }: NavigationProps) {
               <Link href="/conocenos" className="block px-3 py-3 text-white hover:text-black font-medium transition-all duration-300 text-base uppercase tracking-wide rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
                 CONÓCENOS
               </Link>
-              <Link href="#oferta-educativa" className="block px-3 py-3 text-white hover:text-black font-medium transition-all duration-300 text-base uppercase tracking-wide rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
+              {/* 2026-08-15: Menú móvil apunta a la página /oferta-educativa (evita página huérfana). */}
+              <Link href="/oferta-educativa" className="block px-3 py-3 text-white hover:text-black font-medium transition-all duration-300 text-base uppercase tracking-wide rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
                 OFERTA EDUCATIVA
               </Link>
               <Link href="/primaria" className="block px-3 py-3 text-white hover:text-black font-medium transition-all duration-300 text-base uppercase tracking-wide rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>

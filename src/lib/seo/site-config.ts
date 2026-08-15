@@ -8,7 +8,8 @@ export const SITE_NAME = 'Instituto Winston Churchill' as const
 export const SITE_TAGLINE = 'Working for a Brighter Future' as const
 
 export const SITE_DESCRIPTION =
-  'Instituto educativo con 30 años de experiencia. Educación bilingüe integral: Kínder, Primaria y Secundaria. Respaldados por Oxford University Press y University of Cambridge.' as const
+  // 2026-08-15: Alineada a meta description del home (~155 chars).
+  'Colegio bilingüe en Cd. Madero con más de 30 años. Kínder, Primaria y Secundaria. Educación integral respaldada por Oxford y Cambridge.' as const
 
 export const SITE_KEYWORDS = [
   'Instituto Winston Churchill',
@@ -49,7 +50,8 @@ export const SITE_ADDRESS = {
 
 /** Redes sociales oficiales (sameAs en Schema.org). */
 export const SITE_SOCIAL_LINKS = [
-  'https://www.facebook.com/institutowinstonchurchill/?locale=es_LA',
+  // 2026-08-15: URL canónica de Facebook sin ?locale= (evita redirecciones 3XX reportadas en SEO).
+  'https://www.facebook.com/institutowinstonchurchill/',
   'https://www.instagram.com/institutowinstonchurchill/',
   'https://www.tiktok.com/@imagenwinston',
   'https://www.youtube.com/@institutowinstonchurchill5194',

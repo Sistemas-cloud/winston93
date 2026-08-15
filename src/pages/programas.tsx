@@ -262,7 +262,8 @@ export default function ProgramasPage() {
       />
 
       {/* 2026-07-03: H1 semántico oculto visualmente para SEO/accesibilidad sin alterar el diseño. */}
-      <h1 className="sr-only">Programas - Instituto Winston Churchill</h1>
+      {/* 2026-08-15: H1 distinto del <title> (auditoría SEO: no idénticos). */}
+      <h1 className="sr-only">Programas especializados del Instituto Winston Churchill</h1>
 
       {/* Navigation siempre transparente */}
       <Navigation currentSection={0} />

@@ -97,8 +97,8 @@ export default function ConocenosPage() {
               {/* 2026-07-03: Dimensiones explícitas para reducir CLS en imágenes decorativas y de contenido. */}
               <img
                 src="/images/conocenos/pleca-verde.png"
-                alt=""
-                aria-hidden="true"
+                // 2026-08-15: Alt descriptivo para auditoría SEO (pleca decorativa).
+                alt="Detalle decorativo verde del Instituto Winston Churchill"
                 width={128}
                 height={128}
                 className="absolute -top-8 -right-8 z-10 w-24 md:w-28 lg:w-32 pointer-events-none select-none"
