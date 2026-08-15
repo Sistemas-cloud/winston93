@@ -8,8 +8,7 @@ export const SITE_NAME = 'Instituto Winston Churchill' as const
 export const SITE_TAGLINE = 'Working for a Brighter Future' as const
 
 export const SITE_DESCRIPTION =
-  // 2026-08-15: Alineada a meta description del home (~155 chars).
-  'Colegio bilingüe en Cd. Madero con más de 30 años. Kínder, Primaria y Secundaria. Educación integral respaldada por Oxford y Cambridge.' as const
+  'Instituto educativo con 30 años de experiencia. Educación bilingüe integral: Kínder, Primaria y Secundaria. Respaldados por Oxford University Press y University of Cambridge.' as const
 
 export const SITE_KEYWORDS = [
   'Instituto Winston Churchill',
