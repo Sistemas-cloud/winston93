@@ -60,11 +60,9 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <div className={`${poppins.variable} font-sans`}>
-      {/* 2026-08-19: Google Tag Manager — analytics y tags gestionados desde consola GTM */}
-      <GoogleTagManager />
-
-      {/* 2026-08-19: Google Ads — page views en navegación SPA (snippet en _document <head>) */}
+      {/* 2026-08-19: Google Ads gtag en <head> (beforeInteractive) + GTM */}
       <GoogleAdsTag />
+      <GoogleTagManager />
 
       {/* Componente AmoCRM para métricas y contacto con usuarios */}
       <AmoCRM />

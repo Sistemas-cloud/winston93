@@ -4,16 +4,11 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { GTM_ID } from '@/lib/seo/site-config'
 
-declare global {
-  interface Window {
-    dataLayer?: Record<string, unknown>[]
-  }
-}
-
 function pushPageView(url: string) {
   if (typeof window === 'undefined' || !GTM_ID) return
-  window.dataLayer = window.dataLayer || []
-  window.dataLayer.push({
+  const dataLayer = ((window as Window & { dataLayer?: unknown[] }).dataLayer =
+    (window as Window & { dataLayer?: unknown[] }).dataLayer || [])
+  dataLayer.push({
     event: 'page_view',
     page_path: url,
     page_location: window.location.href,
@@ -42,7 +37,7 @@ export default function GoogleTagManager() {
   return (
     <Script
       id="google-tag-manager"
-      strategy="afterInteractive"
+      strategy="beforeInteractive"
       dangerouslySetInnerHTML={{
         __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],

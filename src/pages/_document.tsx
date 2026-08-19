@@ -11,12 +11,7 @@ import Document, {
   type DocumentInitialProps,
 } from 'next/document'
 import { GoogleTagManagerNoScript } from '@/components/GoogleTagManager'
-import {
-  GOOGLE_ADS_ID,
-  SITE_LANG,
-  SITE_LOGO_PATH,
-  SITE_NAME,
-} from '@/lib/seo/site-config'
+import { SITE_LANG, SITE_LOGO_PATH, SITE_NAME } from '@/lib/seo/site-config'
 
 class MyDocument extends Document {
   static async getInitialProps(
@@ -31,25 +26,6 @@ class MyDocument extends Document {
     return (
       <Html lang={SITE_LANG}>
         <Head>
-          {/* 2026-08-19: Google Ads gtag — justo después de <head>, según instrucciones oficiales */}
-          {GOOGLE_ADS_ID ? (
-            <>
-              <script
-                async
-                src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_ID}`}
-              />
-              <script
-                dangerouslySetInnerHTML={{
-                  __html: `
-                    window.dataLayer = window.dataLayer || [];
-                    function gtag(){dataLayer.push(arguments);}
-                    gtag('js', new Date());
-                    gtag('config', '${GOOGLE_ADS_ID}');
-                  `,
-                }}
-              />
-            </>
-          ) : null}
           <link
             rel="icon"
             href={SITE_LOGO_PATH}
