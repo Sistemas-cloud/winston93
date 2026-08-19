@@ -3,6 +3,16 @@
 
 export const SITE_URL = 'https://www.winston93.edu.mx' as const
 
+// 2026-08-19: Google Tag Manager — override opcional con NEXT_PUBLIC_GTM_ID en .env.local
+export const GTM_ID =
+  (typeof process !== 'undefined' && process.env.NEXT_PUBLIC_GTM_ID) ||
+  'GTM-57SXS2C5'
+
+// 2026-08-19: Google Ads — etiqueta gtag.js para conversiones/remarketing (AW-11289279900)
+export const GOOGLE_ADS_ID =
+  (typeof process !== 'undefined' && process.env.NEXT_PUBLIC_GOOGLE_ADS_ID) ||
+  'AW-11289279900'
+
 export const SITE_NAME = 'Instituto Winston Churchill' as const
 
 export const SITE_TAGLINE = 'Working for a Brighter Future' as const

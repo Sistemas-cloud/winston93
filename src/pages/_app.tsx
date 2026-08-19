@@ -8,6 +8,8 @@ import PageLoadingScreen from '@/components/PageLoadingScreen'
 import Layout from '@/components/Layout'
 import { useRouter } from 'next/router'
 import AmoCRM from '@/components/AmoCRM'
+import GoogleTagManager from '@/components/GoogleTagManager'
+import GoogleAdsTag from '@/components/GoogleAdsTag'
 import WhatsAppFAB from '@/components/WhatsAppFAB'
 import { Poppins } from 'next/font/google'
 
@@ -58,6 +60,12 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <div className={`${poppins.variable} font-sans`}>
+      {/* 2026-08-19: Google Tag Manager — analytics y tags gestionados desde consola GTM */}
+      <GoogleTagManager />
+
+      {/* 2026-08-19: Google Ads — page views en navegación SPA (snippet en _document <head>) */}
+      <GoogleAdsTag />
+
       {/* Componente AmoCRM para métricas y contacto con usuarios */}
       <AmoCRM />
 
