@@ -1,4 +1,6 @@
+// 2026-08-20: Hannia — overlay de marca + CTA suave al final del hero (sin romper full-bleed).
 import { useEffect, useRef, useState } from 'react'
+import Link from 'next/link'
 
 export default function HeroSection() {
   const [isAndroid, setIsAndroid] = useState(false)
@@ -197,6 +199,52 @@ export default function HeroSection() {
         <source src="/videos/winston-video.mp4" type="video/mp4" />
         Tu navegador no soporta videos HTML5.
       </video>
+
+      {/* Gradiente inferior + brand signal (hipótesis: claridad de marca sin saturar el video) */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 bg-gradient-to-t from-black/80 via-black/30 to-transparent pb-0 pt-24 md:pt-32">
+        <div className="pointer-events-auto mx-auto flex max-w-4xl flex-col items-center px-4 pb-4 text-center md:pb-5">
+          <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.28em] text-[#E3FB07] md:text-xs">
+            Instituto Winston Churchill
+          </p>
+          <p className="mb-4 text-lg font-bold text-white drop-shadow md:text-2xl">
+            Working for a Brighter Future
+          </p>
+          <div className="mb-5 flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href="/admisiones"
+              className="rounded-full bg-[#E3FB07] px-6 py-2.5 text-xs font-bold uppercase tracking-wide text-black shadow-lg transition hover:scale-[1.02] md:text-sm"
+            >
+              Admisiones
+            </Link>
+            {/* 2026-08-21: Agenda una cita → apartado examen de admisión. */}
+            <Link
+              href="/admisiones#examen-admision"
+              className="rounded-full border border-white/50 bg-white/10 px-6 py-2.5 text-xs font-bold uppercase tracking-wide text-white backdrop-blur-sm transition hover:border-[#E3FB07] hover:text-[#E3FB07] md:text-sm"
+            >
+              Agenda una cita
+            </Link>
+          </div>
+        </div>
+        {/* 2026-08-20: Trust bar integrada al hero para verse también en FullPageScroll desktop */}
+        <div className="pointer-events-auto border-t border-white/15 bg-[#012A9E]/95 backdrop-blur-sm">
+          <div className="mx-auto grid max-w-6xl grid-cols-2 gap-px md:grid-cols-4">
+            {/* 2026-08-21: Sin Oxford; misma fila de confianza que TrustBar. */}
+            {[
+              { label: '30+ años', sub: 'de experiencia' },
+              { label: 'Bilingüe', sub: 'formación integral' },
+              { label: 'Cambridge', sub: 'University' },
+              { label: 'Cd. Madero', sub: 'Tamaulipas' },
+            ].map((item) => (
+              <div key={item.label} className="px-2 py-3 text-center md:py-3.5">
+                <p className="text-[11px] font-extrabold uppercase tracking-wide text-[#E3FB07] md:text-sm">
+                  {item.label}
+                </p>
+                <p className="text-[10px] text-white/75 md:text-xs">{item.sub}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

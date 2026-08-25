@@ -1,4 +1,5 @@
 // 2026-04-16: Botón flotante de WhatsApp visible en todas las páginas. Abre directamente la conversación con el número institucional.
+// 2026-08-20: Hannia — en móvil se eleva (bottom-20) para no chocar con StickyMobileCTA.
 export default function WhatsAppFAB() {
   return (
     <a
@@ -6,16 +7,12 @@ export default function WhatsAppFAB() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Contactar por WhatsApp"
-      className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-[#25D366] shadow-xl flex items-center justify-center hover:scale-110 transition-transform duration-200"
+      className="fixed bottom-20 right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] shadow-xl transition-transform duration-200 hover:scale-110 md:bottom-6 md:right-6"
     >
-      {/* 2026-07-04: Texto de ancla oculto para crawlers que no leen aria-label (auditoría SEO). */}
       <span className="sr-only">Contactar por WhatsApp</span>
-      {/* Anillo pulse animado */}
-      <span className="absolute w-full h-full rounded-full bg-[#25D366] animate-ping opacity-30" />
-
-      {/* Ícono SVG oficial de WhatsApp */}
+      <span className="absolute h-full w-full animate-ping rounded-full bg-[#25D366] opacity-30" />
       <svg
-        className="relative w-8 h-8 z-10"
+        className="relative z-10 h-8 w-8"
         fill="white"
         viewBox="0 0 24 24"
         xmlns="http://www.w3.org/2000/svg"

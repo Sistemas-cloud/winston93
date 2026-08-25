@@ -10,12 +10,31 @@ export const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID ?? 'GTM-57SXS2C5'
 export const GOOGLE_ADS_ID =
   process.env.NEXT_PUBLIC_GOOGLE_ADS_ID ?? 'AW-11289279900'
 
+// 2026-08-20: Hannia — campaña admisiones (editable). Guía visual: dejar PNG en public.
+export const ADMISSIONS_CAMPAIGN = {
+  title: 'Inscripciones abiertas',
+  cycleLabel: 'Ciclo escolar 2026-2027',
+  highlight: 'Agenda tu visita al campus en Ciudad Madero',
+  openHouseNote: 'Orientación de admisiones de lunes a sábado',
+  /** Ruta pública de la infografía tipo ICT. Colocar archivo aquí cuando el equipo lo entregue. */
+  guideImagePath: '/images/admisiones/guia-registro.png',
+  /**
+   * false = placeholder “próximamente”.
+   * true = mostrar/descargar la imagen (solo tras subir guia-registro.png).
+   */
+  guideImageReady: false,
+} as const
+
+/** Alias legacy por si algún import usó CAMPAIGN */
+export const CAMPAIGN = ADMISSIONS_CAMPAIGN
+
 export const SITE_NAME = 'Instituto Winston Churchill' as const
 
 export const SITE_TAGLINE = 'Working for a Brighter Future' as const
 
+// 2026-08-21: Descripción SEO sin Oxford.
 export const SITE_DESCRIPTION =
-  'Instituto educativo con 30 años de experiencia. Educación bilingüe integral: Kínder, Primaria y Secundaria. Respaldados por Oxford University Press y University of Cambridge.' as const
+  'Instituto educativo con 30 años de experiencia. Educación bilingüe integral: Kínder, Primaria y Secundaria. Respaldados por University of Cambridge.' as const
 
 export const SITE_KEYWORDS = [
   'Instituto Winston Churchill',
@@ -26,7 +45,6 @@ export const SITE_KEYWORDS = [
   'Cd. Madero',
   'Tamaulipas',
   'Cambridge',
-  'Oxford',
   'colegio bilingüe',
 ] as const
 

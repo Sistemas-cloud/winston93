@@ -1,687 +1,373 @@
-import { useState, useEffect, useRef } from 'react'
+// 2026-08-24: Hannia — /programas aesthetic new-era 2026: luz, tipografía editorial,
+// motion suave y asimetría. Fotos landscape completas (sin recorte).
+import Link from 'next/link'
+import Image from 'next/image'
+import { motion, useScroll, useTransform } from 'framer-motion'
+import { useRef } from 'react'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
-import { motion, AnimatePresence } from 'framer-motion'
-import Image from 'next/image'
 import Seo from '@/components/Seo'
 import { SITE_ROUTES } from '@/lib/seo/routes'
 
-// Componente para imagen con efecto de entrada único
-const AnimatedImage = ({ 
-  src, 
-  alt, 
-  effectType = 'slide',
-  delay = 0 
-}: {
-  src: string
-  alt: string
-  effectType?: 'slide' | 'zoom' | 'zoom-organic' | 'fade' | 'rotate'
-  delay?: number
-}) => {
-  const getInitialState = () => {
-    switch (effectType) {
-      case 'slide':
-        return { opacity: 0, x: -100, y: 0, scale: 1, rotate: 0 }
-      case 'zoom':
-        return { opacity: 0, x: 0, y: 0, scale: 0.3, rotate: 0 }
-      case 'zoom-organic':
-        return { opacity: 0, x: 0, y: 0, scale: 0.8, rotate: -5 }
-      case 'fade':
-        return { opacity: 0, x: 0, y: 0, scale: 1, rotate: 0 }
-      case 'rotate':
-        return { opacity: 0, x: 0, y: 0, scale: 0.8, rotate: 180 }
-      default:
-        return { opacity: 0, x: 0, y: 0, scale: 1, rotate: 0 }
-    }
-  }
+interface Program {
+  id: string
+  num: string
+  title: string
+  subtitle: string
+  lead: string
+  body: string
+  image: string
+  w: number
+  h: number
+  imageAlt: string
+  glow: string
+}
 
-  const getFinalState = () => {
-    return { opacity: 1, x: 0, y: 0, scale: 1, rotate: 0 }
-  }
+const PROGRAMS: Program[] = [
+  {
+    id: 'educacion-financiera',
+    num: '01',
+    title: 'Educación financiera',
+    subtitle: 'Entrepreneurs',
+    lead: 'Fomentamos la cultura del emprendimiento desde edades tempranas.',
+    body: 'Nuestros alumnos no sólo imaginan ideas innovadoras: aprenden a construir un negocio desde cero. Desarrollan planes de negocio reales, crean estrategias de marketing, realizan proyecciones financieras básicas y presentan sus proyectos de forma profesional, fortaleciendo liderazgo, pensamiento estratégico y toma de decisiones.',
+    image: '/images/PROGRAMAS/emprende.jpg',
+    w: 1920,
+    h: 1280,
+    imageAlt: 'Programa Entrepreneurs — Instituto Winston Churchill',
+    glow: 'rgba(255, 180, 42, 0.28)',
+  },
+  {
+    id: 'mindfulness',
+    num: '02',
+    title: 'Mindfulness',
+    subtitle: 'Bienestar y concentración',
+    lead: 'Atención plena para el bienestar emocional y la concentración.',
+    body: 'Con ejercicios de respiración, enfoque y relajación, nuestros alumnos aprenden a gestionar sus emociones y mejorar su rendimiento académico.',
+    image: '/images/PROGRAMAS/socioemocional.jpg',
+    w: 6000,
+    h: 4000,
+    imageAlt: 'Programa Mindfulness — Instituto Winston Churchill',
+    glow: 'rgba(1, 59, 223, 0.22)',
+  },
+  {
+    id: 'formacion-social',
+    num: '03',
+    title: 'Formación social y humana',
+    subtitle: 'Comunidad y valores',
+    lead: 'Entendimiento del mundo a través del respeto y la participación.',
+    body: 'Promovemos la conciencia social, la identidad cultural y el compromiso con la comunidad mediante actividades integradoras y experiencias significativas.',
+    image: '/images/secundaria/formacion/formacion1.JPG',
+    w: 4032,
+    h: 2584,
+    imageAlt: 'Formación social y humana — Instituto Winston Churchill',
+    glow: 'rgba(227, 251, 7, 0.35)',
+  },
+]
 
-  const getTransition = () => {
-    switch (effectType) {
-      case 'zoom-organic':
-        return { 
-          duration: 2.2, 
-          delay: delay,
-          ease: [0.25, 0.46, 0.45, 0.94] // Curva de ease-out más orgánica
-        }
-      default:
-        return { 
-          duration: 1.5, 
-          delay: delay,
-          ease: "easeOut"
-        }
-    }
-  }
+const ease = [0.22, 1, 0.36, 1] as const
+
+function ProgramBlock({ program, index }: { program: Program; index: number }) {
+  const reverse = index % 2 === 1
+  const ref = useRef<HTMLElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'end start'],
+  })
+  // 2026-08-24: Parallax suave en la foto (scale 1→1.04), sin recortar el contenido.
+  const imgScale = useTransform(scrollYProgress, [0, 1], [1.04, 1])
 
   return (
-    <motion.div
-      initial={getInitialState()}
-      whileInView={getFinalState()}
-      transition={getTransition()}
-      viewport={{ once: true, margin: "-50px" }}
-      className="absolute inset-0"
+    <section
+      ref={ref}
+      id={program.id}
+      className="scroll-mt-28 relative overflow-hidden"
     >
-      <Image
-        src={src}
-        alt={alt}
-        fill
-        className="object-cover"
-        priority={true}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            index % 2 === 0
+              ? 'linear-gradient(180deg, #FFFFFF 0%, #F8F9FD 100%)'
+              : 'linear-gradient(180deg, #F8F9FD 0%, #FFFFFF 100%)',
+        }}
       />
-    </motion.div>
+      {/* Orbe de color 2026 — atmósfera, no ruido */}
+      <div
+        className="pointer-events-none absolute -z-0 blur-3xl"
+        style={{
+          width: '42vw',
+          height: '42vw',
+          maxWidth: 480,
+          maxHeight: 480,
+          borderRadius: '50%',
+          background: program.glow,
+          opacity: 0.55,
+          top: reverse ? '10%' : 'auto',
+          bottom: reverse ? 'auto' : '8%',
+          left: reverse ? 'auto' : '-8%',
+          right: reverse ? '-8%' : 'auto',
+        }}
+      />
+
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-20 md:px-8 md:py-28 lg:px-10">
+        <div
+          className={`grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-16 ${
+            reverse ? '' : ''
+          }`}
+        >
+          {/* Media */}
+          <motion.div
+            className={`lg:col-span-7 ${reverse ? 'lg:order-2' : 'lg:order-1'}`}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.8, ease }}
+          >
+            <div className="group relative">
+              {/* Marco flotante */}
+              <div
+                className="absolute -inset-3 rounded-[1.75rem] opacity-0 transition duration-500 group-hover:opacity-100 md:-inset-4"
+                style={{
+                  background: `linear-gradient(135deg, ${program.glow}, transparent 60%)`,
+                }}
+              />
+              <div className="relative overflow-hidden rounded-[1.25rem] bg-white shadow-[0_24px_80px_rgba(1,59,223,0.12)] ring-1 ring-black/[0.04] md:rounded-[1.5rem]">
+                <motion.div style={{ scale: imgScale }} className="origin-center">
+                  <Image
+                    src={program.image}
+                    alt={program.imageAlt}
+                    width={program.w}
+                    height={program.h}
+                    sizes="(max-width: 1024px) 100vw, 65vw"
+                    className="h-auto w-full"
+                    priority={index === 0}
+                  />
+                </motion.div>
+              </div>
+              {/* Chip de programa */}
+              <div className="absolute -bottom-4 left-6 flex items-center gap-2 rounded-full bg-white/90 px-4 py-2 shadow-lg backdrop-blur-md ring-1 ring-black/5 md:left-8">
+                <span className="h-2 w-2 rounded-full bg-[#E3FB07]" />
+                <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#013BDF]">
+                  {program.subtitle}
+                </span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Copy editorial */}
+          <motion.div
+            className={`lg:col-span-5 ${reverse ? 'lg:order-1 lg:pr-4' : 'lg:order-2 lg:pl-2'}`}
+            initial={{ opacity: 0, y: 36 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.8, delay: 0.1, ease }}
+          >
+            <div className="relative">
+              <span
+                aria-hidden
+                className="pointer-events-none absolute -left-2 -top-10 select-none text-[7rem] font-extrabold leading-none text-[#013BDF]/[0.06] md:-top-14 md:text-[9rem]"
+              >
+                {program.num}
+              </span>
+
+              <p className="relative mb-4 text-[11px] font-semibold uppercase tracking-[0.32em] text-[#013BDF]">
+                Programa {program.num}
+              </p>
+              <h2 className="relative text-[1.85rem] font-extrabold uppercase leading-[1.05] tracking-[-0.02em] text-gray-900 sm:text-4xl md:text-[2.65rem]">
+                {program.title}
+              </h2>
+              <p className="relative mt-3 text-lg font-semibold text-[#013BDF]/90 md:text-xl">
+                {program.subtitle}
+              </p>
+
+              <motion.div
+                className="relative my-7 h-[3px] w-16 origin-left rounded-full bg-[#E3FB07]"
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: 0.2, ease }}
+              />
+
+              <p className="relative mb-4 text-base font-semibold leading-relaxed text-gray-900 md:text-lg">
+                {program.lead}
+              </p>
+              <p className="relative text-[0.95rem] leading-[1.75] text-gray-500 md:text-base">
+                {program.body}
+              </p>
+
+              <div className="relative mt-10 flex flex-wrap items-center gap-4">
+                <Link
+                  href="/admisiones#examen-admision"
+                  className="group/btn inline-flex items-center gap-2 rounded-full bg-[#013BDF] px-7 py-3.5 text-xs font-bold uppercase tracking-[0.14em] text-white shadow-[0_12px_32px_rgba(1,59,223,0.35)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#012A9E] hover:shadow-[0_16px_40px_rgba(1,59,223,0.4)]"
+                >
+                  Admisiones
+                  <span className="inline-block text-[#E3FB07] transition group-hover/btn:translate-x-0.5">
+                    →
+                  </span>
+                </Link>
+                <Link
+                  href="/contacto"
+                  className="text-xs font-bold uppercase tracking-[0.14em] text-gray-400 transition hover:text-[#013BDF]"
+                >
+                  Hablar con nosotros
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
   )
 }
 
-// Tipo para las secciones que pueden tener imagen normal o fragmentada
-interface Section {
-  id: string
-  title: string
-  subtitle: string
-  description: string
-  longDescription: string
-  bgColor: string
-  textColor: string
-  accentColor: string
-  image?: string
-  imageEffect?: 'slide' | 'zoom' | 'zoom-organic' | 'fade' | 'rotate'
-  fadeImage?: string
-}
-
 export default function ProgramasPage() {
-  const [currentSection, setCurrentSection] = useState(0)
-  const [showTitle, setShowTitle] = useState(true)
-  const [isScrolling, setIsScrolling] = useState(false)
-  const sectionsRef = useRef<HTMLDivElement>(null)
-  const sections = useRef<(HTMLDivElement | null)[]>([])
-
-  // Configuración de las tres secciones
-  const sectionsData: Section[] = [
-    {
-      id: 'educacion-financiera',
-      title: 'Educación Financiera',
-      subtitle: 'Entrepreneurs',
-      description: 'Fomentamos la cultura del emprendimiento desde edades tempranas.',
-      // 2026-04-16: El texto "Fomentamos..." se mostrará en un bloque separado en negritas.
-      longDescription: 'Nuestros alumnos no sólo imaginan ideas innovadoras: Aprenden a construir un negocio desde cero. Desarrollan planes de negocio reales, crean estrategias de marketing, realizan proyecciones financieras básicas y presentan sus proyectos de forma profesional, todo esto con la finalidad de fortalecer su liderazgo, pensamiento estratégico y toma de decisiones.',
-      bgColor: 'from-yellow-400 to-yellow-500',
-      textColor: 'text-black',
-      accentColor: 'bg-blue-600',
-      image: '/images/PROGRAMAS/emprende.jpg',
-      imageEffect: 'fade',
-      fadeImage: '/images/PROGRAMAS/fundidos/fondo_naranja.png'
-    },
-    {
-      id: 'mindfulness',
-      title: 'MIND FUL NESS',
-      subtitle: '',
-      description: 'Atención plena para el bienestar emocional y la concentración.',
-      longDescription: 'Con ejercicios de respiración, enfoque y relajación, nuestros alumnos aprenden a gestionar sus emociones y mejorar su rendimiento académico.',
-      bgColor: 'from-blue-500 to-blue-600',
-      textColor: 'text-white',
-      accentColor: 'bg-yellow-400',
-      image: '/images/PROGRAMAS/socioemocional.jpg',
-      imageEffect: 'slide',
-      fadeImage: '/images/PROGRAMAS/fundidos/fondo_azul.png'
-    },
-    {
-      id: 'formacion-social',
-      title: 'FORMACIÓN',
-      subtitle: 'Social y Humana',
-      // 2026-04-16: Se actualiza el contenido de Formación Social y Humana con el texto oficial proporcionado.
-      description: 'Entendimiento del mundo a través del respeto y la participación.',
-      longDescription: 'Promovemos la conciencia social, la identidad cultural y el compromiso con la comunidad mediante actividades integradoras y experiencias significativas.',
-      bgColor: 'from-blue-600 to-blue-800',
-      textColor: 'text-white',
-      accentColor: 'bg-yellow-400',
-      image: '/images/PROGRAMAS/donativo.jpg',
-      imageEffect: 'zoom-organic',
-      fadeImage: '/images/PROGRAMAS/fundidos/fondo_verde.png'
-    }
-  ]
-
-  // Ocultar el título después de 3 segundos
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowTitle(false)
-    }, 3000)
-    
-    return () => clearTimeout(timer)
-  }, [])
-
-  // Función para obtener el color de difuminado más suave según el fondo de la sección
-  const getFadeColor = (bgColor: string) => {
-    if (bgColor.includes('blue-500') || bgColor.includes('blue-600')) {
-      return {
-        light: 'rgba(1, 59, 223, 0.01)',
-        medium: 'rgba(1, 59, 223, 0.03)',
-        strong: 'rgba(1, 59, 223, 0.08)',
-        veryStrong: 'rgba(1, 59, 223, 0.2)',
-        solid: 'rgba(1, 59, 223, 0.6)'
-      }
-    } else if (bgColor.includes('blue-800')) {
-      return {
-        light: 'rgba(1, 59, 223, 0.01)',
-        medium: 'rgba(1, 59, 223, 0.03)',
-        strong: 'rgba(1, 59, 223, 0.08)',
-        veryStrong: 'rgba(1, 59, 223, 0.2)',
-        solid: 'rgba(1, 59, 223, 0.6)'
-      }
-    } else if (bgColor.includes('yellow-400') || bgColor.includes('yellow-500')) {
-      return {
-        light: 'rgba(227, 251, 7, 0.01)',
-        medium: 'rgba(227, 251, 7, 0.03)',
-        strong: 'rgba(227, 251, 7, 0.08)',
-        veryStrong: 'rgba(227, 251, 7, 0.2)',
-        solid: 'rgba(227, 251, 7, 0.6)'
-      }
-    }
-    // Color por defecto (negro) para otros casos
-    return {
-      light: 'rgba(0, 0, 0, 0.01)',
-      medium: 'rgba(0, 0, 0, 0.03)',
-      strong: 'rgba(0, 0, 0, 0.08)',
-      veryStrong: 'rgba(0, 0, 0, 0.2)',
-      solid: 'rgba(0, 0, 0, 0.6)'
-    }
-  }
-
-  // Función para navegar a una sección específica
-  const goToSection = (index: number) => {
-    if (isScrolling || index < 0 || index >= sectionsData.length) return
-    
-    setIsScrolling(true)
-    setCurrentSection(index)
-    
-    // Usar scrollTo en el contenedor principal en lugar de window
-    if (sectionsRef.current) {
-      const targetY = index * window.innerHeight
-      sectionsRef.current.scrollTo({
-        top: targetY,
-        behavior: 'smooth'
-      })
-    }
-    
-    // Permitir scroll después de la animación
-    setTimeout(() => setIsScrolling(false), 1000)
-  }
-
-  // Manejar scroll del mouse y teclado
-  useEffect(() => {
-    const handleWheel = (e: WheelEvent) => {
-      if (isScrolling) return
-      
-      if (e.deltaY > 0) {
-        // Scroll hacia abajo
-        goToSection(Math.min(currentSection + 1, sectionsData.length - 1))
-      } else {
-        // Scroll hacia arriba
-        goToSection(Math.max(currentSection - 1, 0))
-      }
-    }
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (isScrolling) return
-      
-      if (e.key === 'ArrowDown' || e.key === 'PageDown') {
-        e.preventDefault()
-        goToSection(Math.min(currentSection + 1, sectionsData.length - 1))
-      } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
-        e.preventDefault()
-        goToSection(Math.max(currentSection - 1, 0))
-      }
-    }
-
-    // Bloquear scroll nativo completamente
-    document.body.style.overflow = 'hidden'
-    document.documentElement.style.overflow = 'hidden'
-    
-    document.addEventListener('wheel', handleWheel, { passive: false })
-    document.addEventListener('keydown', handleKeyDown)
-    
-    return () => {
-      document.body.style.overflow = ''
-      document.documentElement.style.overflow = ''
-      document.removeEventListener('wheel', handleWheel)
-      document.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [currentSection, isScrolling, sectionsData.length])
-
-  // 2026-07-03: Metadata SEO centralizada para /programas.
   const pageSeo = SITE_ROUTES.find((route) => route.path === '/programas')!
 
   return (
-    <div className="programas-page">
+    <div className="overflow-x-hidden bg-[#FAFBFF]">
       <Seo
         title={pageSeo.title}
         description={pageSeo.description}
         path={pageSeo.path}
         keywords={pageSeo.keywords}
       />
+      <Navigation currentSection={1} />
 
-      {/* 2026-07-03: H1 semántico oculto visualmente para SEO/accesibilidad sin alterar el diseño. */}
-      {/* 2026-08-15: H1 distinto del <title> (auditoría SEO: no idénticos). */}
-      <h1 className="sr-only">Programas especializados del Instituto Winston Churchill</h1>
+      {/* Hero 2026 — mesh suave + tipografía grande */}
+      <header className="relative overflow-hidden px-4 pb-20 pt-28 md:pb-28 md:pt-36">
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(ellipse 80% 70% at 15% 20%, rgba(227,251,7,0.22) 0%, transparent 50%), radial-gradient(ellipse 70% 60% at 90% 80%, rgba(255,255,255,0.12) 0%, transparent 45%), linear-gradient(160deg, #013BDF 0%, #012A9E 52%, #011F75 100%)',
+          }}
+        />
+        <motion.div
+          className="pointer-events-none absolute left-1/2 top-1/3 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-white/5 blur-3xl"
+          animate={{ scale: [1, 1.12, 1], opacity: [0.4, 0.65, 0.4] }}
+          transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
+        />
 
-      {/* Navigation siempre transparente */}
-      <Navigation currentSection={0} />
-
-      
-      {/* Contenedor principal con secciones */}
-      <div ref={sectionsRef} className="programas-container">
-        {sectionsData.map((section, index) => (
-          <motion.section
-            key={section.id}
-            ref={(el: HTMLDivElement | null) => {
-              if (el) sections.current[index] = el
-            }}
-            className="programas-section h-screen w-full relative overflow-hidden"
-            initial={{ opacity: 0, y: 100 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
-            viewport={{ once: true, margin: "-200px" }}
-            style={{ border: 'none', outline: 'none', boxShadow: 'none' }}
+        <div className="relative z-10 mx-auto max-w-4xl text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease }}
+            className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 backdrop-blur-md"
           >
-            {/* Contenedor unificado para imagen y texto */}
-            <div className="h-full w-full relative flex flex-row" style={{ border: 'none', outline: 'none', boxShadow: 'none' }}>
-              {/* Imagen de fondo que ocupa toda la pantalla */}
-              <div className="w-full h-full relative" style={{ border: 'none', outline: 'none', boxShadow: 'none' }}>
-                <motion.div
-                  initial={{ opacity: 0, scale: 1.1 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 1.5, ease: "easeOut" }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  className="absolute inset-0"
-                  style={{ border: 'none', outline: 'none' }}
-                >
-                  {/* Contenedor para la imagen */}
-                  <div className="relative w-full h-full">
-                    {/* Renderizar imagen con efecto único */}
-                    {section.image && (
-                      <AnimatedImage 
-                        src={section.image} 
-                        alt={section.title} 
-                        effectType={section.imageEffect}
-                        delay={0.3}
-                      />
-                    )}
-                    
-                    {/* Imagen de fundido superpuesta */}
-                    {section.fadeImage && (
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 0.5 }}
-                        transition={{ duration: 1.5, delay: 0.8, ease: "easeOut" }}
-                        viewport={{ once: true, margin: "-50px" }}
-                        className="absolute inset-0 z-10"
-                      >
-                        <Image
-                          src={section.fadeImage}
-                          alt={`Fundido ${section.title}`}
-                          fill
-                          className="object-cover"
-                          priority={true}
-                        />
-                      </motion.div>
-                    )}
-                  </div>
-                  
-                  {/* Overlay con gradiente que coincide con el color del fondo */}
-                  <div 
-                    className="absolute inset-0"
-                    style={{
-                      background: section.fadeImage?.includes('naranja') ? 
-                        `linear-gradient(
-                          to right,
-                          transparent 0%,
-                          transparent 30%,
-                          rgba(255, 180, 42, 0.1) 50%,
-                          rgba(255, 180, 42, 0.3) 70%,
-                          rgba(255, 180, 42, 0.5) 85%,
-                          rgba(255, 180, 42, 0.7) 100%
-                        )` :
-                        section.fadeImage?.includes('azul') ?
-                        `linear-gradient(
-                          to right,
-                          transparent 0%,
-                          transparent 30%,
-                          rgba(122, 220, 243, 0.1) 50%,
-                          rgba(122, 220, 243, 0.3) 70%,
-                          rgba(122, 220, 243, 0.5) 85%,
-                          rgba(122, 220, 243, 0.7) 100%
-                        )` :
-                        section.fadeImage?.includes('verde') ?
-                        `linear-gradient(
-                          to right,
-                          transparent 0%,
-                          transparent 30%,
-                          rgba(234, 249, 128, 0.1) 50%,
-                          rgba(234, 249, 128, 0.3) 70%,
-                          rgba(234, 249, 128, 0.5) 85%,
-                          rgba(234, 249, 128, 0.7) 100%
-                        )` :
-                        `linear-gradient(
-                          to right,
-                          transparent 0%,
-                          transparent 30%,
-                          rgba(0, 0, 0, 0.1) 50%,
-                          rgba(0, 0, 0, 0.3) 70%,
-                          rgba(0, 0, 0, 0.5) 85%,
-                          rgba(0, 0, 0, 0.7) 100%
-                        )`,
-                      border: 'none',
-                      outline: 'none',
-                      boxShadow: 'none'
-                    }}
-                  ></div>
-                </motion.div>
-              </div>
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#E3FB07]" />
+            <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/90">
+              Instituto Winston Churchill · #soywinston
+            </span>
+          </motion.div>
 
-              {/* Panel de texto derecho con fondo sólido que se extiende sobre la imagen */}
-              <div 
-                className={`w-full md:w-4/5 h-full absolute right-0 top-0 flex items-end md:items-center justify-center md:justify-end px-4 pb-24 md:pb-0 md:pr-16 lg:pr-24 z-20`}
-                style={{
-                  border: 'none',
-                  outline: 'none',
-                  boxShadow: 'none',
-                  background: section.fadeImage?.includes('naranja') ? 
-                    `linear-gradient(
-                      to left,
-                      rgba(255, 180, 42, 1) 0%,
-                      rgba(255, 180, 42, 0.95) 15%,
-                      rgba(255, 180, 42, 0.8) 35%,
-                      rgba(255, 180, 42, 0.4) 60%,
-                      transparent 100%
-                    )` :
-                    section.fadeImage?.includes('azul') ?
-                    `linear-gradient(
-                      to left,
-                      rgba(122, 220, 243, 1) 0%,
-                      rgba(122, 220, 243, 0.95) 15%,
-                      rgba(122, 220, 243, 0.8) 35%,
-                      rgba(122, 220, 243, 0.4) 60%,
-                      transparent 100%
-                    )` :
-                    section.fadeImage?.includes('verde') ?
-                    `linear-gradient(
-                      to left,
-                      rgba(234, 249, 128, 1) 0%,
-                      rgba(234, 249, 128, 0.95) 15%,
-                      rgba(234, 249, 128, 0.8) 35%,
-                      rgba(234, 249, 128, 0.4) 60%,
-                      transparent 100%
-                    )` :
-                    `linear-gradient(
-                      to left,
-                      ${section.bgColor.includes('from-') ? 
-                        section.bgColor.includes('blue-500') ? 'rgba(1, 59, 223, 1)' :
-                        section.bgColor.includes('blue-800') ? 'rgba(1, 59, 223, 1)' :
-                        section.bgColor.includes('yellow-400') ? 'rgba(227, 251, 7, 1)' :
-                        'rgba(0, 0, 0, 1)' : 'rgba(0, 0, 0, 1)'
-                      } 0%,
-                      ${section.bgColor.includes('from-') ? 
-                        section.bgColor.includes('blue-500') ? 'rgba(1, 59, 223, 0.95)' :
-                        section.bgColor.includes('blue-800') ? 'rgba(1, 59, 223, 0.95)' :
-                        section.bgColor.includes('yellow-400') ? 'rgba(227, 251, 7, 0.95)' :
-                        'rgba(0, 0, 0, 0.95)' : 'rgba(0, 0, 0, 0.95)'
-                      } 15%,
-                      ${section.bgColor.includes('from-') ? 
-                        section.bgColor.includes('blue-500') ? 'rgba(1, 59, 223, 0.8)' :
-                        section.bgColor.includes('blue-800') ? 'rgba(1, 59, 223, 0.8)' :
-                        section.bgColor.includes('yellow-400') ? 'rgba(227, 251, 7, 0.8)' :
-                        'rgba(0, 0, 0, 0.8)' : 'rgba(0, 0, 0, 0.8)'
-                      } 35%,
-                      ${section.bgColor.includes('from-') ? 
-                        section.bgColor.includes('blue-500') ? 'rgba(1, 59, 223, 0.4)' :
-                        section.bgColor.includes('blue-800') ? 'rgba(1, 59, 223, 0.4)' :
-                        section.bgColor.includes('yellow-400') ? 'rgba(227, 251, 7, 0.4)' :
-                        'rgba(0, 0, 0, 0.4)' : 'rgba(0, 0, 0, 0.4)'
-                      } 60%,
-                      transparent 100%
-                    )`
-                } as React.CSSProperties}
+          <motion.h1
+            className="mb-6 text-[3.25rem] font-extrabold uppercase leading-[0.9] tracking-[-0.03em] text-white sm:text-6xl md:text-7xl lg:text-8xl"
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.75, delay: 0.05, ease }}
+          >
+            Programas
+          </motion.h1>
+
+          <motion.p
+            className="mx-auto max-w-xl text-sm leading-relaxed text-white/85 md:text-lg"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.14, ease }}
+          >
+            Emprendimiento, mindfulness y formación humana — experiencias que forman carácter
+            más allá del aula, en Ciudad Madero.
+          </motion.p>
+
+          <motion.nav
+            className="mt-12 flex flex-wrap items-center justify-center gap-2.5"
+            aria-label="Saltar a programa"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65, delay: 0.24, ease }}
+          >
+            {PROGRAMS.map((p, i) => (
+              <a
+                key={p.id}
+                href={`#${p.id}`}
+                className={`rounded-full px-5 py-2.5 text-[11px] font-bold uppercase tracking-[0.12em] transition duration-300 hover:-translate-y-0.5 ${
+                  i === 0
+                    ? 'bg-[#E3FB07] text-[#012A9E] shadow-lg shadow-black/15'
+                    : 'border border-white/25 bg-white/5 text-white backdrop-blur-sm hover:border-[#E3FB07]/60 hover:bg-white/10'
+                }`}
               >
-                {/* 2026-04-10: Se ajustan anchos/offsets para evitar solapes y mejorar legibilidad en móvil/tablet. */}
-                <div className={`w-full max-w-[95vw] sm:max-w-[34rem] md:max-w-sm ${section.fadeImage?.includes('naranja') ? 'text-left ml-0 md:-ml-12 lg:-ml-16' : 'text-center'}`}>
-                  {/* Título principal - Solo para sección naranja */}
-                  {section.fadeImage?.includes('naranja') ? (
-                    <div className="mb-4">
-                      <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
-                        viewport={{ once: true }}
-                        className="text-white font-bold text-3xl sm:text-5xl md:text-6xl lg:text-7xl leading-tight ml-0 md:-ml-16 lg:-ml-20"
-                      >
-                        <div className="ml-0 md:-ml-16 lg:-ml-24">Educación</div>
-                        <div className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl ml-0 md:-ml-16 lg:-ml-10">Financiera</div>
-                      </motion.div>
-                      
-                      {/* Subtítulo */}
-                      <motion.h3 
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.4 }}
-                        viewport={{ once: true }}
-                        className="text-white font-bold text-base sm:text-xl md:text-2xl lg:text-3xl mt-2 ml-0 md:-ml-16 lg:-ml-20"
-                      >
-                        Entrepreneurs
-                      </motion.h3>
-                    </div>
-                  ) : section.fadeImage?.includes('azul') ? (
-                    /* Título para sección azul (Mindfulness) */
-                    <div className="mb-4">
-                      <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
-                        viewport={{ once: true }}
-                        className="text-white font-bold text-3xl sm:text-5xl md:text-6xl lg:text-7xl leading-tight"
-                      >
-                        <div className="ml-0 md:-ml-16 lg:-ml-40">MIND</div>
-                        <div className="ml-0 md:-ml-16 lg:-ml-10">FUL</div>
-                        <div className="mr-0 md:-mr-16 lg:-mr-20">NESS</div>
-                      </motion.div>
-                    </div>
-                  ) : section.fadeImage?.includes('verde') ? (
-                    /* Título para sección verde (Formación Social) */
-                    <div className="mb-4">
-                      <motion.h2 
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
-                        viewport={{ once: true }}
-                        className="font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-2"
-                        style={{ color: '#0A1F44' }}
-                      >
-                        {section.title}
-                      </motion.h2>
-                      
-                      <motion.h3 
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.4 }}
-                        viewport={{ once: true }}
-                        className="font-bold text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-4 md:mb-6"
-                        style={{ color: '#0A1F44' }}
-                      >
-                        {section.subtitle}
-                      </motion.h3>
-                    </div>
-                  ) : (
-                    <>
-                      {/* Título principal para otras secciones */}
-                      <motion.h2 
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
-                        viewport={{ once: true }}
-                        className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 ${section.textColor}`}
-                      >
-                        {section.title}
-                      </motion.h2>
-                      
-                      {/* Subtítulo para otras secciones */}
-                      <motion.h3 
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.4 }}
-                        viewport={{ once: true }}
-                        className={`text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-4 md:mb-6 ${section.textColor}`}
-                      >
-                        {section.subtitle}
-                      </motion.h3>
-                    </>
-                  )}
+                <span className="mr-1.5 opacity-50">{p.num}</span>
+                {p.subtitle}
+              </a>
+            ))}
+          </motion.nav>
+        </div>
 
-                  {/* Descripción en caja */}
-                  {section.fadeImage?.includes('azul') ? (
-                    /* Recuadro transparente con borde blanco para Mindfulness */
-                    <motion.div 
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.8, delay: 0.6 }}
-                      viewport={{ once: true }}
-                      className="bg-transparent border border-white p-3 md:p-4 mb-3 md:mb-6"
-                    >
-                      <p className="text-sm md:text-lg text-white font-medium leading-relaxed">
-                        {section.description}
-                      </p>
-                    </motion.div>
-                  ) : section.fadeImage?.includes('verde') ? (
-                    /* Recuadro transparente con borde verde oscuro para Formación Social */
-                    <motion.div 
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.8, delay: 0.6 }}
-                      viewport={{ once: true }}
-                      className="bg-transparent p-3 md:p-4 mb-3 md:mb-6"
-                      // 2026-04-10: En fondo verde/amarillo usamos azul marino para maximizar contraste.
-                      style={{ borderColor: '#0A1F44', border: '1px solid' }}
-                    >
-                      <p className="text-sm md:text-lg font-medium leading-relaxed"
-                         style={{ color: '#0A1F44' }}>
-                        {section.description}
-                      </p>
-                    </motion.div>
-                  ) : !section.fadeImage?.includes('naranja') && (
-                    /* Recuadro normal para otras secciones */
-                    <motion.div 
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.8, delay: 0.6 }}
-                      viewport={{ once: true }}
-                      className={`${section.accentColor} bg-opacity-20 border border-current border-opacity-30 p-3 md:p-4 mb-3 md:mb-6`}
-                    >
-                      <p className={`text-sm md:text-lg ${section.textColor} font-medium leading-relaxed`}>
-                        {section.description}
-                      </p>
-                    </motion.div>
-                  )}
+        {/* Indicador scroll */}
+        <motion.div
+          className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 md:flex"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.9 }}
+        >
+          <span className="text-[9px] font-semibold uppercase tracking-[0.3em] text-white/40">
+            Scroll
+          </span>
+          <motion.span
+            className="h-8 w-px bg-gradient-to-b from-white/50 to-transparent"
+            animate={{ scaleY: [1, 0.5, 1], opacity: [0.6, 1, 0.6] }}
+            transition={{ duration: 1.8, repeat: Infinity }}
+          />
+        </motion.div>
+      </header>
 
-                  {/* 2026-04-16: En Educación Financiera se muestra la frase de introducción en un bloque separado y en negritas. */}
-                  {section.fadeImage?.includes('naranja') && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.8, delay: 0.6 }}
-                      viewport={{ once: true }}
-                      className="text-sm sm:text-base md:text-lg font-bold leading-relaxed text-left text-white mb-3 md:mb-4 ml-0 md:-ml-16 lg:-ml-20"
-                    >
-                      {section.description}
-                    </motion.div>
-                  )}
-
-                  {/* Descripción larga */}
-                  <motion.p 
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.8 }}
-                    viewport={{ once: true }}
-                    className={`text-xs sm:text-sm md:text-base leading-relaxed text-left ${section.fadeImage?.includes('naranja') ? 'text-white ml-0 md:-ml-16 lg:-ml-20' : section.fadeImage?.includes('azul') ? 'text-white' : section.fadeImage?.includes('verde') ? '' : section.textColor} opacity-95`}
-                    style={section.fadeImage?.includes('verde') ? { color: '#0A1F44' } : {}}
-                  >
-                    {section.longDescription}
-                  </motion.p>
-
-                  {/* 2026-04-16: Se elimina el icono decorativo de avión de papel por solicitud del usuario. */}
-
-                  {/* Flechas de navegación */}
-                  <div className="absolute right-4 md:right-6 bottom-6 md:top-1/2 md:bottom-auto transform md:-translate-y-1/2 flex md:block gap-3 md:gap-0 md:space-y-6 z-30">
-                    {/* 2026-07-03: aria-label en flechas de navegación de programas. */}
-                    <motion.button
-                      onClick={() => goToSection(Math.max(0, index - 1))}
-                      aria-label="Sección anterior"
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
-                      className={`w-11 h-11 md:w-14 md:h-14 rounded-full backdrop-blur-sm transition-all duration-300 flex items-center justify-center shadow-xl ${
-                        section.fadeImage?.includes('naranja') ? 'bg-white bg-opacity-20 text-white hover:bg-opacity-30' :
-                        section.fadeImage?.includes('azul') ? 'bg-white bg-opacity-20 text-white hover:bg-opacity-30' :
-                        section.fadeImage?.includes('verde') ? 'bg-white bg-opacity-20 hover:bg-opacity-30' :
-                        'bg-white bg-opacity-10 text-white hover:bg-opacity-20'
-                      } ${
-                        index === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-2xl'
-                      }`}
-                      style={section.fadeImage?.includes('verde') ? { color: '#97b664' } : {}}
-                      disabled={index === 0}
-                    >
-                      <svg className="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 15l7-7 7 7" />
-                      </svg>
-                    </motion.button>
-                    <motion.button
-                      onClick={() => goToSection(Math.min(sectionsData.length - 1, index + 1))}
-                      aria-label="Sección siguiente"
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
-                      className={`w-11 h-11 md:w-14 md:h-14 rounded-full backdrop-blur-sm transition-all duration-300 flex items-center justify-center shadow-xl ${
-                        section.fadeImage?.includes('naranja') ? 'bg-white bg-opacity-20 text-white hover:bg-opacity-30' :
-                        section.fadeImage?.includes('azul') ? 'bg-white bg-opacity-20 text-white hover:bg-opacity-30' :
-                        section.fadeImage?.includes('verde') ? 'bg-white bg-opacity-20 hover:bg-opacity-30' :
-                        'bg-white bg-opacity-10 text-white hover:bg-opacity-20'
-                      } ${
-                        index === sectionsData.length - 1 ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-2xl'
-                      }`}
-                      style={section.fadeImage?.includes('verde') ? { color: '#97b664' } : {}}
-                      disabled={index === sectionsData.length - 1}
-                    >
-                      <svg className="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </motion.button>
-                  </div>
-
-                  {/* 2026-04-14: El aviso de privacidad solo se muestra en la última sección. */}
-                  {index === sectionsData.length - 1 && (
-                    <motion.div 
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.8, delay: 1.2 }}
-                      viewport={{ once: true }}
-                      className="hidden md:block absolute bottom-8 right-8"
-                    >
-                      {/* 2026-04-14: En la sección verde, el aviso usa el mismo tono azul oscuro del texto para mantener contraste. */}
-                      <p
-                        className={`text-sm opacity-70 font-medium ${
-                          section.fadeImage?.includes('verde') ? '' : section.textColor
-                        }`}
-                        style={section.fadeImage?.includes('verde') ? { color: '#0A1F44' } : {}}
-                      >
-                        AVISO DE PRIVACIDAD
-                      </p>
-                    </motion.div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </motion.section>
-        ))}
+      {/* Intro strip */}
+      <div className="border-b border-[#013BDF]/5 bg-white/80 px-4 py-8 backdrop-blur-sm md:py-10">
+        <p className="mx-auto max-w-2xl text-center text-sm leading-relaxed text-gray-500 md:text-base">
+          Tres caminos. Una misma familia{' '}
+          <span className="font-semibold text-[#013BDF]">Winston</span>. Diseñados para acompañar
+          el crecimiento académico con propósito.
+        </p>
       </div>
 
-      {/* Footer al final de todas las secciones */}
+      {PROGRAMS.map((program, index) => (
+        <ProgramBlock key={program.id} program={program} index={index} />
+      ))}
+
+      {/* 2026-08-24: Un solo CTA de cierre (sin EnrollmentCTA duplicado). */}
+      <section className="relative overflow-hidden px-4 py-20 md:py-24">
+        <div
+          className="absolute inset-0"
+          style={{
+            background: 'linear-gradient(135deg, #013BDF 0%, #012A9E 100%)',
+          }}
+        />
+        <div
+          className="pointer-events-none absolute -right-20 top-0 h-64 w-64 rounded-full opacity-40 blur-3xl"
+          style={{ background: '#E3FB07' }}
+        />
+        <div className="relative z-10 mx-auto max-w-2xl text-center">
+          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.3em] text-[#E3FB07]">
+            Working for a Brighter Future
+          </p>
+          <h2 className="mb-4 text-2xl font-extrabold uppercase tracking-wide text-white md:text-4xl">
+            El siguiente paso es tuyo
+          </h2>
+          <p className="mx-auto mb-8 max-w-md text-sm text-white/80">
+            Agenda tu visita y conoce cómo estos programas viven en el campus Winston.
+          </p>
+          <Link
+            href="/admisiones#examen-admision"
+            className="inline-flex rounded-full bg-[#E3FB07] px-8 py-3.5 text-xs font-bold uppercase tracking-[0.14em] text-[#012A9E] shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl"
+          >
+            Ir a admisiones
+          </Link>
+        </div>
+      </section>
+
       <Footer />
     </div>
   )
-} 
+}

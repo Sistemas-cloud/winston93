@@ -52,19 +52,16 @@ export default function Navigation({ currentSection = 0 }: NavigationProps) {
   }, [])
   
   const isHomePage = router.pathname === '/'
-  const isProgramasPage = router.pathname === '/programas'
   const isMobileMenu = isMobile || (isTablet && isPortrait)
 
   // 2026-04-14: Lógica unificada de transparencia.
-  // - /programas: siempre transparente.
   // - Home en desktop: usa currentSection (FullPageScroll no mueve window.scrollY).
-  // - Resto de páginas (incluyendo móvil/tablet en home): usa isAtTop (scroll nativo).
+  // - 2026-08-24: /programas usa scroll nativo (como el resto); ya no fuerza transparente.
+  // - Resto de páginas (incluyendo móvil/tablet en home): usa isAtTop.
   const isDesktopFullPage = isHomePage && !isMobile && !isTablet
-  const shouldBeTransparent = isProgramasPage
-    ? true
-    : isDesktopFullPage
-      ? currentSection === 0
-      : isAtTop
+  const shouldBeTransparent = isDesktopFullPage
+    ? currentSection === 0
+    : isAtTop
 
   // Siempre fixed para que quede anclado al tope al hacer scroll.
   const navPosition = 'fixed'
@@ -165,6 +162,21 @@ export default function Navigation({ currentSection = 0 }: NavigationProps) {
               <Link href="/contacto" className="text-white hover:text-black font-medium transition-all duration-300 text-sm uppercase tracking-wide px-4 py-2 rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
                 CONTACTO
               </Link>
+              {/* 2026-08-20: Hannia — CTAs tipo Columbia (admisiones + portales) */}
+              <Link
+                href="/admisiones"
+                className="ml-1 rounded-full bg-[#E3FB07] px-4 py-2 text-sm font-bold uppercase tracking-wide text-black shadow-md transition hover:scale-[1.03] hover:shadow-lg"
+              >
+                Admisiones
+              </Link>
+              <a
+                href="https://servicios-admin.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full bg-white px-4 py-2 text-sm font-bold uppercase tracking-wide text-[#013BDF] shadow-md transition hover:scale-[1.03] hover:shadow-lg"
+              >
+                Pagos
+              </a>
             </div>
           </div>
 
@@ -242,6 +254,13 @@ export default function Navigation({ currentSection = 0 }: NavigationProps) {
               <Link href="/contacto" className="block px-3 py-3 text-white hover:text-black font-medium transition-all duration-300 text-base uppercase tracking-wide rounded-md hover:shadow-lg" onMouseEnter={(e) => {e.currentTarget.style.backgroundColor = '#E3FB07'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(227, 251, 7, 0.5), 0 4px 6px -2px rgba(227, 251, 7, 0.3)'}} onMouseLeave={(e) => {e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.boxShadow = 'none'}}>
                 CONTACTO
               </Link>
+              {/* 2026-08-20: Hannia — accesos clave en menú móvil */}
+              <Link href="/admisiones" className="block px-3 py-3 text-black font-bold transition-all duration-300 text-base uppercase tracking-wide rounded-md bg-[#E3FB07]">
+                ADMISIONES
+              </Link>
+              <a href="https://servicios-admin.vercel.app/" target="_blank" rel="noopener noreferrer" className="block px-3 py-3 text-white font-medium transition-all duration-300 text-base uppercase tracking-wide rounded-md hover:bg-white/20">
+                PAGOS EN LÍNEA
+              </a>
             </div>
           </div>
         )}

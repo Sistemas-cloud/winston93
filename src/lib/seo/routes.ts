@@ -23,8 +23,9 @@ export const SITE_ROUTES: readonly SiteRoute[] = [
   {
     path: '/',
     title: 'Instituto Winston Churchill - Working for a Brighter Future',
+    // 2026-08-21: Meta home sin Oxford.
     description:
-      'Instituto educativo con 30 años de experiencia. Educación bilingüe integral: Kínder, Primaria y Secundaria. Respaldados por Oxford University Press y University of Cambridge.',
+      'Instituto educativo con 30 años de experiencia. Educación bilingüe integral: Kínder, Primaria y Secundaria. Respaldados por University of Cambridge.',
     keywords: [
       'instituto',
       'educación',
@@ -33,7 +34,6 @@ export const SITE_ROUTES: readonly SiteRoute[] = [
       'primaria',
       'secundaria',
       'Winston Churchill',
-      'Oxford',
       'Cambridge',
     ],
     changeFrequency: 'weekly',
@@ -162,5 +162,37 @@ export const SITE_ROUTES: readonly SiteRoute[] = [
     ],
     changeFrequency: 'monthly',
     priority: 0.8,
+  },
+  // 2026-08-20: Hannia — página de admisiones (proceso, requisitos, FAQ).
+  {
+    path: '/admisiones',
+    title: 'Admisiones - Instituto Winston Churchill',
+    description:
+      'Proceso de admisión al Instituto Winston Churchill: agenda tu cita, requisitos por nivel y preguntas frecuentes. Educación bilingüe en Cd. Madero.',
+    keywords: [
+      'admisiones',
+      'inscripciones',
+      'requisitos',
+      'examen de admisión',
+      'Winston Churchill',
+      'Cd. Madero',
+    ],
+    changeFrequency: 'weekly',
+    priority: 0.95,
+  },
+  // 2026-08-20: Slot SEO para guía visual / requisitos (infografía pendiente).
+  {
+    path: '/admisiones/requisitos',
+    title: 'Guía de registro y requisitos - Admisiones Winston',
+    description:
+      'Guía visual del registro para examen de admisión y requisitos por nivel en el Instituto Winston Churchill.',
+    keywords: [
+      'requisitos admisión',
+      'registro examen',
+      'guía admisión',
+      'Winston Churchill',
+    ],
+    changeFrequency: 'monthly',
+    priority: 0.7,
   },
 ] as const

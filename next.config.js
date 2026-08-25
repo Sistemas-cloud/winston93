@@ -12,6 +12,21 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
+  // 2026-08-20: Hannia — URL legacy indexada por GTM/Google → página nueva de admisiones.
+  async redirects() {
+    return [
+      {
+        source: '/admisiones/solicitud',
+        destination: '/admisiones',
+        permanent: true,
+      },
+      {
+        source: '/admisiones/solicitud/',
+        destination: '/admisiones',
+        permanent: true,
+      },
+    ]
+  },
 }
 
 module.exports = nextConfig 

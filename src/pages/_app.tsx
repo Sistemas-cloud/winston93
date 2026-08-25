@@ -11,6 +11,8 @@ import AmoCRM from '@/components/AmoCRM'
 import GoogleTagManager from '@/components/GoogleTagManager'
 import GoogleAdsTag from '@/components/GoogleAdsTag'
 import WhatsAppFAB from '@/components/WhatsAppFAB'
+import CampaignModal from '@/components/CampaignModal'
+import StickyMobileCTA from '@/components/StickyMobileCTA'
 import { Poppins } from 'next/font/google'
 
 const poppins = Poppins({
@@ -94,8 +96,12 @@ export default function App({ Component, pageProps }: AppProps) {
         )}
       </AnimatePresence>
 
-      {/* 2026-04-16: Botón flotante WhatsApp visible en todas las páginas, fuera del AnimatePresence para que no desaparezca en transiciones. */}
+      {/* 2026-08-20: Hannia — sticky CTA móvil + FAB WhatsApp elevado en móvil */}
+      <StickyMobileCTA />
       <WhatsAppFAB />
+
+      {/* 2026-08-20: Hannia — modal campaña inscripciones (1 vez por sesión) */}
+      <CampaignModal />
     </div>
   )
 } // Updated: 2026-07-03 (fix de SEO: render de Component siempre activo para SSR/SSG)

@@ -658,15 +658,15 @@ export default function WinstonLife() {
           </div>
         </section>
 
-        {/* Video Final - Pantalla completa */}
-        <section className="relative h-screen overflow-hidden">
+        {/* 2026-08-24: Video final sin recorte agresivo — object-contain + fondo marca. */}
+        <section className="relative flex min-h-[70vh] items-center justify-center overflow-hidden bg-[#0A1F44] md:min-h-screen">
           <video
             ref={video2Ref}
             autoPlay
             loop
             muted={video2Muted}
             playsInline
-            className="absolute inset-0 w-full h-full object-cover cursor-pointer"
+            className="relative z-10 mx-auto max-h-[100vh] w-full cursor-pointer object-contain"
             preload="auto"
             onClick={toggleVideo2PlayPause}
           >
@@ -679,7 +679,7 @@ export default function WinstonLife() {
               e.stopPropagation()
               toggleVideo2Audio()
             }}
-            className="absolute bottom-4 right-4 md:bottom-8 md:right-8 z-20 bg-black bg-opacity-50 hover:bg-opacity-75 text-white p-3 md:p-4 rounded-full transition-all duration-300 hover:scale-110"
+            className="absolute bottom-4 right-4 z-20 rounded-full bg-black bg-opacity-50 p-3 text-white transition-all duration-300 hover:scale-110 hover:bg-opacity-75 md:bottom-8 md:right-8 md:p-4"
             aria-label={video2Muted ? "Activar audio" : "Desactivar audio"}
           >
             {video2Muted ? (

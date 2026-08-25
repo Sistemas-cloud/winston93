@@ -6,16 +6,14 @@ import SliderSection from '@/components/sections/ProjectsSection'
 import EducationalOfferSection from '@/components/sections/ServicesSection'
 import ConveniosSection from '@/components/sections/ConveniosSection'
 import OfertaEducativaSection from '@/components/sections/OfertaEducativaSection'
+import CommunityVoices from '@/components/CommunityVoices'
+import VisitCampusSection from '@/components/VisitCampusSection'
 import Seo from '@/components/Seo'
 import { SITE_ROUTES } from '@/lib/seo/routes'
 
-
 export default function Home() {
   const [currentSection, setCurrentSection] = useState(0)
-  const [scrolled, setScrolled] = useState(false)
-  // Por defecto asumimos scroll nativo para SSR
   const [useNativeScroll, setUseNativeScroll] = useState(true)
-  const [isMobile, setIsMobile] = useState(false)
   const [isHydrated, setIsHydrated] = useState(false)
 
   const handleSectionChange = (sectionIndex: number) => {
@@ -28,16 +26,8 @@ export default function Home() {
         const width = window.innerWidth
         const height = window.innerHeight
         const isLandscape = width > height
-        
-        // Determinar si es móvil
-        setIsMobile(width < 768)
-        
-        // Detectar tablets: 768-1024px O dispositivos landscape con altura <= 900px (Nest Hub Max)
         const isTabletDevice = (width >= 768 && width <= 1024) || (isLandscape && height <= 900)
-        
-        // Usar scroll nativo en: móviles O tablets
-        const shouldUseNativeScroll = width < 768 || isTabletDevice
-        setUseNativeScroll(shouldUseNativeScroll)
+        setUseNativeScroll(width < 768 || isTabletDevice)
       }
     }
     updateDeviceType()
@@ -50,24 +40,14 @@ export default function Home() {
     }
   }, [])
 
-  // Detectar scroll para cambiar la navegación
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY
-      setScrolled(scrollY > 100)
-      
-      // Actualizar sección actual basado en scroll
-      if (scrollY < window.innerHeight * 0.5) {
-        setCurrentSection(0)
-      } else if (scrollY < window.innerHeight * 1.5) {
-        setCurrentSection(1)
-      } else if (scrollY < window.innerHeight * 2.5) {
-        setCurrentSection(2)
-      } else if (scrollY < window.innerHeight * 3.5) {
-        setCurrentSection(3)
-      } else {
-        setCurrentSection(4)
-      }
+      if (scrollY < window.innerHeight * 0.5) setCurrentSection(0)
+      else if (scrollY < window.innerHeight * 1.5) setCurrentSection(1)
+      else if (scrollY < window.innerHeight * 2.5) setCurrentSection(2)
+      else if (scrollY < window.innerHeight * 3.5) setCurrentSection(3)
+      else setCurrentSection(4)
     }
 
     if (useNativeScroll) {
@@ -76,7 +56,6 @@ export default function Home() {
     }
   }, [useNativeScroll])
 
-  // 2026-07-03: Metadata SEO centralizada (title, description, OG, Twitter, canonical, JSON-LD).
   const homeSeo = SITE_ROUTES.find((route) => route.path === '/')!
 
   return (
@@ -88,21 +67,19 @@ export default function Home() {
         keywords={homeSeo.keywords}
       />
 
-      {/* 2026-07-03: H1 semántico oculto visualmente para SEO/accesibilidad sin alterar el diseño. */}
       <h1 className="sr-only">Instituto Winston Churchill - Educación Bilingüe</h1>
 
-      {/* Navigation que recibe la sección actual */}
       <Navigation currentSection={currentSection} />
 
-      {/* Móvil y Tablets: scroll nativo. Solo Desktop: FullPageScroll */}
       {isHydrated && useNativeScroll ? (
-        // 2026-03-27: Espaciado y alturas fluidas para mejorar legibilidad en móvil/tablet sin alterar orden de secciones.
-        // 2026-04-10: Eliminado pt-16 del contenedor; la sección hero arranca en y=0 para que el nav transparente la superponga.
-        // 2026-04-10: Se diferencian alturas tablet (md:) vs desktop (lg:) para reducir espacios muertos en tablet.
-        <div className="w-full">
+        // 2026-08-20: pb-28 evita que el sticky CTA móvil recorte títulos/secciones al final del viewport
+        <div className="w-full pb-28 md:pb-0">
           <section className="min-h-[85vh] md:min-h-[90vh] lg:h-screen w-full">
             <HeroSection />
           </section>
+          {/* 2026-08-25: Sin LevelsShowcase — duplicaba Oferta Educativa; queda solo OfertaEducativaSection. */}
+          <CommunityVoices />
+          <VisitCampusSection />
           <section className="w-full min-h-[70vh] md:min-h-[75vh] lg:h-screen">
             <div className="h-full">
               <SliderSection />
@@ -124,11 +101,10 @@ export default function Home() {
           <SliderSection />
           <EducationalOfferSection />
           <ConveniosSection />
+          {/* 2026-08-20: Sin DiscoverySection en full-page — metía 3 bloques en 1 viewport y recortaba “Confianza”. */}
           <OfertaEducativaSection />
         </FullPageScroll>
       )}
-      
-
     </div>
   )
-} 
+}

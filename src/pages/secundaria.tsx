@@ -527,7 +527,8 @@ export default function SecundariaPage() {
               MINDFULNESS
             </ExtracurricularCard>
 
-            <ExtracurricularCard src="/images/secundaria/emprende.png" alt="Formación Social y Humana" overlayColor="bg-[#ff7c00] bg-opacity-60" textColor="text-black" onClick={() => openGallery('formacionSocial')}>
+            {/* 2026-08-20: Miniatura correcta de formación; antes reutilizaba emprende.png por error. */}
+            <ExtracurricularCard src="/images/secundaria/formacion/formacion1.JPG" alt="Formación Social y Humana" overlayColor="bg-[#ff7c00] bg-opacity-60" textColor="text-black" onClick={() => openGallery('formacionSocial')}>
               FORMACIÓN SOCIAL Y HUMANA
             </ExtracurricularCard>
           </div>
