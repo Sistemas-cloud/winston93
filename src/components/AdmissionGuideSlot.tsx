@@ -99,11 +99,7 @@ export default function AdmissionGuideSlot({ variant = 'compact' }: AdmissionGui
                 </Link>
               )}
             </div>
-            <p className="mt-6 text-[11px] text-gray-400">
-              Dev: subir <code className="rounded bg-white px-1">public/images/admisiones/guia-registro.png</code>{' '}
-              y poner <code className="rounded bg-white px-1">guideImageReady: true</code> en{' '}
-              <code className="rounded bg-white px-1">site-config.ts</code>
-            </p>
+            {/* 2026-08-25: Quitada leyenda Dev visible al público */}
           </div>
         )}
       </div>
