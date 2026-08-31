@@ -45,9 +45,11 @@ export default function ServiciosEnLinea() {
     {
       id: 'servicios-internos',
       nombre: 'Servicios internos',
-      descripcion: 'Acceso interno próximamente disponible.',
+      // 2026-08-29: Portal Servicios Escolares — login familiar, noticias y menús de comida.
+      descripcion:
+        'Entra con el número de control de tu hijo para consultar noticias del plantel y menús de comida.',
       icono: '/images/servicios/servicios_internos.png',
-      enConstruccion: true,
+      link: 'https://servicios-admin.vercel.app/',
     },
     {
       id: 'registro-para-examen',
