@@ -8,3 +8,34 @@
   padding: 10px !important;
   box-sizing: border-box !important;
 }
+
+/* 2026-08-31: Botón para cerrar la burbuja de bienvenida del chat Kommo/AmoCRM */
+.amo-greeting-close {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 3002;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 9999px;
+  background: rgba(15, 23, 42, 0.08);
+  color: #334155;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.amo-greeting-close:hover {
+  background: rgba(15, 23, 42, 0.14);
+  color: #0f172a;
+}
+
+.amo-greeting-close:focus-visible {
+  outline: 2px solid #013bdf;
+  outline-offset: 2px;
+}
