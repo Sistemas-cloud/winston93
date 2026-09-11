@@ -1,5 +1,45 @@
+// 2026-09-11: Anti-spam — honeypot, tiempo mínimo, URLs y patrones comerciales.
 import type { NextApiRequest, NextApiResponse } from 'next'
 import nodemailer from 'nodemailer'
+
+const SPAM_PATTERNS = [
+  /https?:\/\//i,
+  /www\./i,
+  /freeb2bdata/i,
+  /download your data/i,
+  /million compan/i,
+  /b2b data/i,
+  /shutting down/i,
+  /seo\s*(services|package|ranking)/i,
+  /cryptocurrenc/i,
+  /viagra|cialis/i,
+  /casino|betting/i,
+]
+
+function isSpam(body: Record<string, unknown>): boolean {
+  const honeypot = String(body.companyWebsite ?? body.company_website ?? '').trim()
+  if (honeypot.length > 0) return true
+
+  const startedAt = Number(body.formStartedAt ?? body.form_started_at ?? 0)
+  if (!Number.isFinite(startedAt) || Date.now() - startedAt < 3000) return true
+
+  const phone = String(body.phone ?? '').replace(/\D/g, '')
+  if (phone.length < 8) return true
+
+  const blob = [
+    body.parentName,
+    body.studentName,
+    body.email,
+    body.message,
+  ]
+    .map((v) => String(v ?? ''))
+    .join('\n')
+
+  if (SPAM_PATTERNS.some((re) => re.test(blob))) return true
+  if (String(body.message ?? '').length > 1200) return true
+
+  return false
+}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -10,6 +50,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (!parentName || !studentName || !email || !phone) {
     return res.status(400).json({ ok: false, message: 'Campos requeridos faltantes' })
+  }
+
+  // Respuesta silenciosa a bots (no incentivar reintentos)
+  if (isSpam(req.body || {})) {
+    console.warn('[contacto] spam bloqueado', { email, parentName })
+    return res.status(200).json({ ok: true })
   }
 
   try {
@@ -42,8 +88,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
 
     return res.status(200).json({ ok: true })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Email error:', error)
     return res.status(500).json({ ok: false, message: 'No se pudo enviar el correo' })
   }
-} 
+}

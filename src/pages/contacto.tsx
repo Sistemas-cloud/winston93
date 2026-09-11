@@ -1,6 +1,7 @@
 // 2026-08-20: Hannia — rediseño de /contacto (claridad ICT + datos Columbia), marca Winston.
+// 2026-09-11: Anti-spam — honeypot + timestamp al enviar.
 import Navigation from '@/components/Navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Seo from '@/components/Seo'
 import { SITE_ROUTES } from '@/lib/seo/routes'
@@ -11,11 +12,17 @@ export default function ContactoPage() {
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
   const [phone, setPhone] = useState('')
+  const [companyWebsite, setCompanyWebsite] = useState('')
+  const [formStartedAt, setFormStartedAt] = useState(0)
   const [submitting, setSubmitting] = useState(false)
   const [feedback, setFeedback] = useState<{ type: 'ok' | 'error' | null; text: string }>({
     type: null,
     text: '',
   })
+
+  useEffect(() => {
+    setFormStartedAt(Date.now())
+  }, [])
 
   const address = 'C. 3 309, Jardín 20 de Noviembre, 89440 Cd Madero, Tamps.'
   const officePhone = '833 437 8743'
@@ -32,7 +39,15 @@ export default function ContactoPage() {
       const res = await fetch('/api/send-contact-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ parentName, studentName, email, message, phone }),
+        body: JSON.stringify({
+          parentName,
+          studentName,
+          email,
+          message,
+          phone,
+          companyWebsite,
+          formStartedAt,
+        }),
       })
 
       const data = await res.json()
@@ -173,6 +188,22 @@ export default function ContactoPage() {
       <section className="px-4 py-12 md:px-8 md:py-16">
         <div className="container mx-auto grid grid-cols-1 items-start gap-12 lg:grid-cols-2 lg:gap-14">
           <form id="formulario-contacto" onSubmit={handleSubmit} className="space-y-5">
+            {/* 2026-09-11: Honeypot oculto anti-bot */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -left-[9999px] h-0 w-0 overflow-hidden opacity-0"
+            >
+              <label htmlFor="companyWebsite">Sitio web</label>
+              <input
+                id="companyWebsite"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                value={companyWebsite}
+                onChange={(e) => setCompanyWebsite(e.target.value)}
+              />
+            </div>
+
             <div>
               <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-[#013BDF]">
                 Formulario
