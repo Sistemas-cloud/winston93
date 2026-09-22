@@ -574,21 +574,21 @@ export default function SecundariaPage() {
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Certificación Internacional */}
-            <div className="bg-blue-600 text-white p-8 rounded-2xl relative">
-              <h3 className="text-2xl font-bold mb-4">CERTIFICACIÓN INTERNACIONAL</h3>
-              {/* 2026-04-14: Se justifica el texto informativo de ambas tarjetas. */}
-              <p className="mb-6 leading-relaxed text-justify">
+            {/* 2026-09-22: Logo en flujo normal (no absolute) — evita solaparse con el texto en móvil. */}
+            <div className="flex flex-col rounded-2xl bg-blue-600 p-8 text-white">
+              <h3 className="mb-4 text-2xl font-bold">CERTIFICACIÓN INTERNACIONAL</h3>
+              <p className="mb-6 text-justify leading-relaxed">
                 Contamos con el respaldo del prestigioso programa de Cambridge, diseñado para elevar los estándares educativos en el idioma inglés y proporcionar a nuestros estudiantes las mejores herramientas para su aprendizaje.
               </p>
-              {/* 2026-04-14: Logo Cambridge centrado horizontalmente dentro del bloque de certificación. */}
-              {/* 2026-07-03: Dimensiones explícitas del logo Cambridge para reducir CLS. */}
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2">
+              <div className="mt-auto flex justify-center pt-2">
                 <img
                   src="/images/logos/cambridge.png"
                   alt="University of Cambridge"
                   width={160}
                   height={64}
                   className="h-16 w-auto"
+                  loading="lazy"
+                  decoding="async"
                 />
               </div>
             </div>
