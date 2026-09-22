@@ -35,9 +35,10 @@ export default function GoogleTagManager() {
   if (!GTM_ID) return null
 
   return (
+    // 2026-09-22: lazyOnload — GTM ya no compite con LCP móvil.
     <Script
       id="google-tag-manager"
-      strategy="beforeInteractive"
+      strategy="lazyOnload"
       dangerouslySetInnerHTML={{
         __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],

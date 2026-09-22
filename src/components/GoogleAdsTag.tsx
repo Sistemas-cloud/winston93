@@ -31,14 +31,15 @@ export default function GoogleAdsTag() {
 
   return (
     <>
+      {/* 2026-09-22: afterInteractive — Ads deja de bloquear el primer paint */}
       <Script
         id="google-ads-gtag-loader"
-        strategy="beforeInteractive"
+        strategy="afterInteractive"
         src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_ID}`}
       />
       <Script
         id="google-ads-gtag-config"
-        strategy="beforeInteractive"
+        strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `
             window.dataLayer = window.dataLayer || [];

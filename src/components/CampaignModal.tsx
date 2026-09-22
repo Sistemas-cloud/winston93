@@ -124,11 +124,11 @@ export default function CampaignModal() {
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    // 2026-08-21: Sin sessionStorage — el aviso sale en cada recarga de página.
+    // 2026-09-22: Retrasar modal hasta después de LCP (~5s) para no competir con paint ni provocar CLS temprano.
     let cancelled = false
     const t = window.setTimeout(() => {
       if (!cancelled) setOpen(true)
-    }, 2600)
+    }, 5000)
 
     return () => {
       cancelled = true

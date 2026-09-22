@@ -3,7 +3,6 @@ import '@/styles/amocrm.css'
 import type { AppProps } from 'next/app'
 import { useState, useEffect } from 'react'
 import { AnimatePresence } from 'framer-motion'
-import LoadingScreen from '@/components/LoadingScreen'
 import PageLoadingScreen from '@/components/PageLoadingScreen'
 import Layout from '@/components/Layout'
 import { useRouter } from 'next/router'
@@ -15,38 +14,25 @@ import CampaignModal from '@/components/CampaignModal'
 import StickyMobileCTA from '@/components/StickyMobileCTA'
 import { Poppins } from 'next/font/google'
 
+// 2026-09-22: Menos pesos de fuente = menos CSS/FOUT; display swap ya activo.
 const poppins = Poppins({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700', '800', '900'],
+  weight: ['400', '600', '700', '800'],
   variable: '--font-poppins',
   display: 'swap',
+  preload: true,
 })
 
 export default function App({ Component, pageProps }: AppProps) {
-  const [isLoading, setIsLoading] = useState(true)
   const [isPageLoading, setIsPageLoading] = useState(false)
   const router = useRouter()
 
+  // 2026-09-22: Eliminado LoadingScreen inicial (1.5s + partículas) — era el mayor bloqueo de LCP móvil.
+
   useEffect(() => {
-    // 2026-07-03: Se reduce el loading inicial (2000ms → 1500ms) para mejorar LCP/TBT sin cambiar el diseño.
-    const timer = setTimeout(() => {
-      setIsLoading(false)
-    }, 1500)
-
-    return () => clearTimeout(timer)
-  }, [])
-
-  // Detectar cambios de página
-  useEffect(() => {
-    const handleStart = () => {
-      setIsPageLoading(true)
-    }
-
+    const handleStart = () => setIsPageLoading(true)
     const handleComplete = () => {
-      // 2026-07-03: Se reduce el delay de transición (1200ms → 700ms) para mejorar Core Web Vitals.
-      setTimeout(() => {
-        setIsPageLoading(false)
-      }, 700)
+      setTimeout(() => setIsPageLoading(false), 400)
     }
 
     router.events.on('routeChangeStart', handleStart)
@@ -62,23 +48,11 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <div className={`${poppins.variable} font-sans`}>
-      {/* 2026-08-19: Google Ads gtag en <head> (beforeInteractive) + GTM */}
+      {/* 2026-09-22: GTM/Ads diferidos — no bloquean LCP */}
       <GoogleAdsTag />
       <GoogleTagManager />
-
-      {/* Componente AmoCRM para métricas y contacto con usuarios */}
       <AmoCRM />
 
-      {/* 2026-07-03: Auditoría SEO — antes la página solo se montaba cuando
-          isLoading/isPageLoading eran false. Como isLoading arranca en true
-          y solo cambia dentro de un useEffect (que nunca corre en SSR/SSG),
-          el <Component> (y el <Head> de Seo.tsx con title/description/OG/
-          Twitter) nunca llegaba a renderizarse en el HTML servido a los
-          crawlers (SE Ranking reportaba "Missing Title/Description").
-          Ahora <Component> se monta siempre para que el HTML inicial
-          incluya la metadata, y la pantalla de carga (LoadingScreen ya usa
-          "fixed inset-0 z-50") se superpone visualmente encima, sin cambiar
-          el diseño ni la experiencia de carga. */}
       {router.pathname === '/' ||
       router.pathname === '/programas' ||
       router.pathname === '/oferta-educativa' ? (
@@ -90,18 +64,12 @@ export default function App({ Component, pageProps }: AppProps) {
       )}
 
       <AnimatePresence>
-        {isLoading && <LoadingScreen key="initial-loading" />}
-        {!isLoading && isPageLoading && (
-          <PageLoadingScreen key="page-loading" />
-        )}
+        {isPageLoading && <PageLoadingScreen key="page-loading" />}
       </AnimatePresence>
 
-      {/* 2026-08-20: Hannia — sticky CTA móvil + FAB WhatsApp elevado en móvil */}
       <StickyMobileCTA />
       <WhatsAppFAB />
-
-      {/* 2026-08-20: Hannia — modal campaña inscripciones (1 vez por sesión) */}
       <CampaignModal />
     </div>
   )
-} // Updated: 2026-07-03 (fix de SEO: render de Component siempre activo para SSR/SSG)
+}

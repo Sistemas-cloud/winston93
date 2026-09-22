@@ -110,92 +110,82 @@ export default function AmoCRM({
   locale = "es"
 }: AmoCRMProps) {
   
+  // 2026-09-22: Diferir AmoCRM hasta idle/interacción — evita CLS y main-thread block en móvil.
   useEffect(() => {
-    // Solo ejecutar en el cliente
     if (typeof window === 'undefined') return
 
-    // Verificar si ya está cargado
-    if (document.getElementById('amo_social_button_script')) {
-      console.log('✅ AmoCRM ya está cargado')
-      const teardownGreetingClose = setupAmoGreetingCloseObserver()
-      return () => teardownGreetingClose()
-    }
+    let teardownGreetingClose: (() => void) | undefined
+    let cancelled = false
+    let idleId: number | undefined
+    let timeoutId: number | undefined
 
-    console.log('🔄 Iniciando carga de AmoCRM...')
-    console.log('📋 Configuración:', { id, hash: hash.substring(0, 10) + '...', locale })
-
-    // PASO 1: Configurar el objeto AmoCRM PRIMERO (antes del script)
-    window.amo_social_button = {
-      id: id,
-      hash: hash,
-      locale: locale,
-      inline: false, // Importante: false para que sea flotante
-      setMeta: function(p) {
-        this.params = (this.params || []).concat([p])
-      },
-      params: []
-    }
-
-    // PASO 2: Función para inicializar amoSocialButton
-    // 2026-07-03: Asignación tipada segura para evitar error de strictNullChecks en build.
-    const amoSocialButtonFn = function (...args: any[]) {
-      ;(amoSocialButtonFn.q = amoSocialButtonFn.q || []).push(args)
-    } as ((...args: any[]) => void) & { q?: any[] }
-    amoSocialButtonFn.q = []
-    window.amoSocialButton = amoSocialButtonFn
-
-    console.log('✅ Objeto amo_social_button configurado:', window.amo_social_button)
-    console.log('✅ Función amoSocialButton inicializada')
-
-    const teardownGreetingClose = setupAmoGreetingCloseObserver()
-
-    // PASO 3: AHORA crear y cargar el script (después de configurar todo)
-    const script = document.createElement('script')
-    script.async = true
-    script.id = 'amo_social_button_script'
-    script.src = 'https://gso.amocrm.com/js/button.js?1658160430'
-    
-    // Evento cuando se carga exitosamente
-    script.onload = () => {
-      console.log('✅ Script de AmoCRM cargado exitosamente')
-      console.log('📦 Objeto amo_social_button:', window.amo_social_button)
-      
-      // Verificar después de 2 segundos si el widget apareció
-      setTimeout(() => {
-        const widget = document.querySelector('[id*="amo"], [class*="amo"]')
-        if (widget) {
-          console.log('✅ Widget de AmoCRM encontrado:', widget)
-        } else {
-          console.warn('⚠️ Widget de AmoCRM no encontrado en el DOM')
-          console.warn('💡 Verifica que el widget esté habilitado en tu panel de AmoCRM')
-        }
-      }, 2000)
-    }
-
-    // Evento de error
-    script.onerror = (error) => {
-      console.error('❌ Error al cargar el script de AmoCRM:', error)
-      console.error('🔍 Verifica tu conexión a internet y las credenciales')
-    }
-    
-    // Agregar el script al head
-    if (document.head) {
-      document.head.appendChild(script)
-      console.log('📝 Script agregado al <head>')
-    }
-
-    // Cleanup: remover el script cuando el componente se desmonte
-    return () => {
-      teardownGreetingClose()
-      const existingScript = document.getElementById('amo_social_button_script')
-      if (existingScript && existingScript.parentNode) {
-        existingScript.parentNode.removeChild(existingScript)
-        console.log('🗑️ Script de AmoCRM removido')
+    const loadAmo = () => {
+      if (cancelled) return
+      if (document.getElementById('amo_social_button_script')) {
+        teardownGreetingClose = setupAmoGreetingCloseObserver()
+        return
       }
+
+      window.amo_social_button = {
+        id: id,
+        hash: hash,
+        locale: locale,
+        inline: false,
+        setMeta: function (p) {
+          this.params = (this.params || []).concat([p])
+        },
+        params: [],
+      }
+
+      const amoSocialButtonFn = function (...args: any[]) {
+        ;(amoSocialButtonFn.q = amoSocialButtonFn.q || []).push(args)
+      } as ((...args: any[]) => void) & { q?: any[] }
+      amoSocialButtonFn.q = []
+      window.amoSocialButton = amoSocialButtonFn
+
+      teardownGreetingClose = setupAmoGreetingCloseObserver()
+
+      const script = document.createElement('script')
+      script.async = true
+      script.defer = true
+      script.id = 'amo_social_button_script'
+      script.src = 'https://gso.amocrm.com/js/button.js?1658160430'
+      document.head?.appendChild(script)
+    }
+
+    const onInteract = () => {
+      loadAmo()
+      window.removeEventListener('scroll', onInteract)
+      window.removeEventListener('touchstart', onInteract)
+      window.removeEventListener('click', onInteract)
+    }
+
+    window.addEventListener('scroll', onInteract, { once: true, passive: true })
+    window.addEventListener('touchstart', onInteract, { once: true, passive: true })
+    window.addEventListener('click', onInteract, { once: true })
+
+    const ric =
+      window.requestIdleCallback ??
+      ((cb: IdleRequestCallback) =>
+        window.setTimeout(() => cb({ didTimeout: true, timeRemaining: () => 0 } as IdleDeadline), 5000))
+    idleId = ric(() => loadAmo(), { timeout: 6000 }) as number
+    timeoutId = window.setTimeout(loadAmo, 7000)
+
+    return () => {
+      cancelled = true
+      window.removeEventListener('scroll', onInteract)
+      window.removeEventListener('touchstart', onInteract)
+      window.removeEventListener('click', onInteract)
+      if (typeof window.cancelIdleCallback === 'function' && idleId !== undefined) {
+        window.cancelIdleCallback(idleId)
+      } else if (idleId !== undefined) {
+        window.clearTimeout(idleId)
+      }
+      if (timeoutId) window.clearTimeout(timeoutId)
+      teardownGreetingClose?.()
     }
   }, [id, hash, locale])
 
   // Este componente no renderiza nada visible
   return null
 }
-
