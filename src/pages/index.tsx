@@ -1,3 +1,4 @@
+// 2026-09-22: Mobile-first SSR — hero en HTML inicial (mejor LCP); FullPageScroll solo desktop.
 import { useEffect, useState } from 'react'
 import Navigation from '@/components/Navigation'
 import FullPageScroll from '@/components/FullPageScroll'
@@ -13,8 +14,8 @@ import { SITE_ROUTES } from '@/lib/seo/routes'
 
 export default function Home() {
   const [currentSection, setCurrentSection] = useState(0)
-  const [useNativeScroll, setUseNativeScroll] = useState(true)
-  const [isHydrated, setIsHydrated] = useState(false)
+  // SSR y primer paint: scroll nativo. FullPageScroll solo en desktop tras hidratar.
+  const [useFullPage, setUseFullPage] = useState(false)
 
   const handleSectionChange = (sectionIndex: number) => {
     setCurrentSection(sectionIndex)
@@ -22,16 +23,15 @@ export default function Home() {
 
   useEffect(() => {
     const updateDeviceType = () => {
-      if (typeof window !== 'undefined') {
-        const width = window.innerWidth
-        const height = window.innerHeight
-        const isLandscape = width > height
-        const isTabletDevice = (width >= 768 && width <= 1024) || (isLandscape && height <= 900)
-        setUseNativeScroll(width < 768 || isTabletDevice)
-      }
+      if (typeof window === 'undefined') return
+      const width = window.innerWidth
+      const height = window.innerHeight
+      const isLandscape = width > height
+      const isTabletDevice =
+        (width >= 768 && width <= 1024) || (isLandscape && height <= 900)
+      setUseFullPage(width >= 768 && !isTabletDevice)
     }
     updateDeviceType()
-    setIsHydrated(true)
     window.addEventListener('resize', updateDeviceType)
     window.addEventListener('orientationchange', updateDeviceType)
     return () => {
@@ -41,6 +41,7 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
+    if (useFullPage) return
     const handleScroll = () => {
       const scrollY = window.scrollY
       if (scrollY < window.innerHeight * 0.5) setCurrentSection(0)
@@ -49,14 +50,35 @@ export default function Home() {
       else if (scrollY < window.innerHeight * 3.5) setCurrentSection(3)
       else setCurrentSection(4)
     }
-
-    if (useNativeScroll) {
-      window.addEventListener('scroll', handleScroll)
-      return () => window.removeEventListener('scroll', handleScroll)
-    }
-  }, [useNativeScroll])
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [useFullPage])
 
   const homeSeo = SITE_ROUTES.find((route) => route.path === '/')!
+
+  const nativeSections = (
+    <div className="w-full pb-28 md:pb-0">
+      <section className="min-h-[85vh] w-full md:min-h-[90vh] lg:h-screen">
+        <HeroSection />
+      </section>
+      <CommunityVoices />
+      <VisitCampusSection />
+      <section className="min-h-[70vh] w-full md:min-h-[75vh] lg:h-screen">
+        <div className="h-full">
+          <SliderSection />
+        </div>
+      </section>
+      <section className="min-h-[85vh] w-full md:min-h-[90vh] lg:h-screen">
+        <EducationalOfferSection />
+      </section>
+      <section className="min-h-[360px] w-full md:min-h-[450px] lg:h-screen">
+        <ConveniosSection />
+      </section>
+      <section className="min-h-screen w-full">
+        <OfertaEducativaSection />
+      </section>
+    </div>
+  )
 
   return (
     <div className="home-page">
@@ -71,39 +93,16 @@ export default function Home() {
 
       <Navigation currentSection={currentSection} />
 
-      {isHydrated && useNativeScroll ? (
-        // 2026-08-20: pb-28 evita que el sticky CTA móvil recorte títulos/secciones al final del viewport
-        <div className="w-full pb-28 md:pb-0">
-          <section className="min-h-[85vh] md:min-h-[90vh] lg:h-screen w-full">
-            <HeroSection />
-          </section>
-          {/* 2026-08-25: Sin LevelsShowcase — duplicaba Oferta Educativa; queda solo OfertaEducativaSection. */}
-          <CommunityVoices />
-          <VisitCampusSection />
-          <section className="w-full min-h-[70vh] md:min-h-[75vh] lg:h-screen">
-            <div className="h-full">
-              <SliderSection />
-            </div>
-          </section>
-          <section className="min-h-[85vh] md:min-h-[90vh] lg:h-screen w-full">
-            <EducationalOfferSection />
-          </section>
-          <section className="w-full min-h-[360px] md:min-h-[450px] lg:h-screen">
-            <ConveniosSection />
-          </section>
-          <section className="min-h-screen w-full">
-            <OfertaEducativaSection />
-          </section>
-        </div>
-      ) : (
+      {useFullPage ? (
         <FullPageScroll onSectionChange={handleSectionChange}>
           <HeroSection />
           <SliderSection />
           <EducationalOfferSection />
           <ConveniosSection />
-          {/* 2026-08-20: Sin DiscoverySection en full-page — metía 3 bloques en 1 viewport y recortaba “Confianza”. */}
           <OfertaEducativaSection />
         </FullPageScroll>
+      ) : (
+        nativeSections
       )}
     </div>
   )
