@@ -42,9 +42,14 @@ export default function EducationalOfferSection() {
               }`} style={{ transitionDelay: '200ms' }}>
                 {/* Formas geométricas de fondo - Responsive */}
                  {/* 2026-03-27: Escala responsive de imagen para evitar recortes en móvil/tablet manteniendo el diseño base. */}
+                {/* 2026-09-22: Dimensiones + lazy para no competir con LCP */}
                 <img
                   src="/images/students/niños_left.jpg"
                   alt="Estudiantes del Instituto Winston Churchill"
+                  width={800}
+                  height={1000}
+                  loading="lazy"
+                  decoding="async"
                   className="relative z-10 h-[260px] sm:h-[320px] md:h-[500px] lg:h-[620px] xl:h-[700px] w-auto max-w-none object-contain"
                 />
               </div>

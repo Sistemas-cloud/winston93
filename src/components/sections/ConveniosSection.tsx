@@ -3,7 +3,8 @@ import { useEffect, useRef, useState } from 'react'
 export default function ConveniosSection() {
   const [isVisible, setIsVisible] = useState(false)
   const [isTablet, setIsTablet] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
+  // 2026-09-22: Mobile-first SSR — evita descargar layout desktop + PNG grande en móvil.
+  const [isMobile, setIsMobile] = useState(true)
   const sectionRef = useRef<HTMLDivElement>(null)
 
   // Detectar dispositivo
@@ -70,6 +71,8 @@ export default function ConveniosSection() {
               alt="Convenios y Alianzas Académicas - Instituto Winston Churchill"
               width={1200}
               height={600}
+              loading="lazy"
+              decoding="async"
               className="w-[108%] max-w-none h-auto object-contain translate-x-3"
             />
           </div>
@@ -96,6 +99,8 @@ export default function ConveniosSection() {
                     alt="Convenios y Alianzas Académicas - Instituto Winston Churchill"
                     width={1200}
                     height={600}
+                    loading="lazy"
+                    decoding="async"
                     className="w-auto h-auto object-contain scale-90 sm:scale-95 md:scale-100 lg:scale-110 xl:scale-125 2xl:scale-140"
                   />
                   

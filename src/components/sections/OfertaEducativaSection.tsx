@@ -109,7 +109,7 @@ export default function OfertaEducativaSection({
                       height={520}
                       className="relative z-10 h-auto max-h-[92%] w-auto max-w-full object-contain transition duration-700 ease-out group-hover:scale-[1.04]"
                       sizes="(max-width: 768px) 90vw, 33vw"
-                      priority={index === 0}
+                      priority={false}
                     />
                     {/* Franja inferior de color marca */}
                     <div

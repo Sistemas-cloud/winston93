@@ -50,26 +50,23 @@ export default function SliderSection() {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      {/* Imágenes de fondo con transición */}
+      {/* Imágenes de fondo — solo la activa en DOM para no descargar 3 JPG grandes */}
       <div className="absolute inset-0">
-        {slides.map((slide, index) => (
-          <div
-            key={index}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-              index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'
-            }`}
-          >
-            {/* 2026-07-03: Dimensiones explícitas en slides del home para reducir CLS. */}
-            <img
-              src={slide.image}
-              alt={`${slide.title} ${slide.subtitle}`}
-              width={1920}
-              height={1080}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        ))}
-        {/* 2026-04-14: Gradiente móvil desde abajo para texto legible; overlay sutil en desktop. */}
+        {slides.map((slide, index) =>
+          index === currentSlide ? (
+            <div key={index} className="absolute inset-0 z-10 opacity-100">
+              <img
+                src={slide.image}
+                alt={`${slide.title} ${slide.subtitle}`}
+                width={1920}
+                height={1080}
+                loading="lazy"
+                decoding="async"
+                className="h-full w-full object-cover"
+              />
+            </div>
+          ) : null
+        )}
         <div className="absolute inset-0 z-20 bg-gradient-to-t from-black/75 via-black/30 to-black/10 md:bg-black/25 lg:bg-black/20"></div>
       </div>
 

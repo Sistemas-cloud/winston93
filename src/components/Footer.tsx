@@ -35,7 +35,7 @@ export default function Footer() {
           <div className="flex-1">
             <AnimatedElement animation="fadeInUp" delay={150}>
               <div className="flex items-center mb-2">
-                <Image src="/images/logos/logo_winston.png" alt="Winston" width={100} height={28} className="h-6 w-auto" priority quality={100} />
+                <Image src="/images/logos/logo_winston.png" alt="Winston" width={100} height={28} className="h-6 w-auto" quality={100} />
               </div>
               <h2 className="text-base font-extrabold tracking-wide uppercase mb-1 leading-tight">
                 WORKING FOR BRIGHTER FUTURES
@@ -127,7 +127,7 @@ export default function Footer() {
             <AnimatedElement animation="fadeInUp" delay={150}>
               <div>
                 <div className="mb-3 flex items-center md:mb-4">
-                  <Image src="/images/logos/logo_winston.png" alt="Winston" width={110} height={30} className="h-7 w-auto md:h-8" priority quality={100} />
+                  <Image src="/images/logos/logo_winston.png" alt="Winston" width={110} height={30} className="h-7 w-auto md:h-8" quality={100} />
                 </div>
                 <h2 className="mb-1 text-lg font-extrabold uppercase leading-snug tracking-wide sm:text-xl md:text-2xl">
                   WORKING FOR BRIGHTER FUTURES

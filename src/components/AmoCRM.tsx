@@ -168,8 +168,9 @@ export default function AmoCRM({
       window.requestIdleCallback ??
       ((cb: IdleRequestCallback) =>
         window.setTimeout(() => cb({ didTimeout: true, timeRemaining: () => 0 } as IdleDeadline), 5000))
-    idleId = ric(() => loadAmo(), { timeout: 6000 }) as number
-    timeoutId = window.setTimeout(loadAmo, 7000)
+    idleId = ric(() => loadAmo(), { timeout: 12000 }) as number
+    // 2026-09-22: Sin timeout agresivo — solo idle o interacción del usuario
+    timeoutId = window.setTimeout(loadAmo, 15000)
 
     return () => {
       cancelled = true

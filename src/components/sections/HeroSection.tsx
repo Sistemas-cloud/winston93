@@ -122,10 +122,19 @@ export default function HeroSection() {
           width={1366}
           height={768}
           decoding="async"
+          // @ts-expect-error React 18 SSR: fetchpriority en minúsculas para HTML
+          fetchpriority="high"
           fetchPriority="high"
           loading="eager"
           className="absolute inset-0 z-10 h-full w-full object-cover"
-          style={{ aspectRatio: '1366 / 768' }}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            aspectRatio: '1366 / 768',
+          }}
         />
       </picture>
 

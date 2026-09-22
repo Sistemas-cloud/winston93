@@ -1,20 +1,40 @@
 // 2026-09-22: Mobile-first SSR — hero en HTML inicial (mejor LCP); FullPageScroll solo desktop.
+// Secciones below-fold con dynamic() para no descubrir megabytes de imágenes en el primer parse.
 import { useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
 import Navigation from '@/components/Navigation'
 import FullPageScroll from '@/components/FullPageScroll'
 import HeroSection from '@/components/sections/HeroSection'
-import SliderSection from '@/components/sections/ProjectsSection'
-import EducationalOfferSection from '@/components/sections/ServicesSection'
-import ConveniosSection from '@/components/sections/ConveniosSection'
-import OfertaEducativaSection from '@/components/sections/OfertaEducativaSection'
-import CommunityVoices from '@/components/CommunityVoices'
-import VisitCampusSection from '@/components/VisitCampusSection'
 import Seo from '@/components/Seo'
 import { SITE_ROUTES } from '@/lib/seo/routes'
 
+const SliderSection = dynamic(() => import('@/components/sections/ProjectsSection'), {
+  ssr: false,
+  loading: () => <div className="min-h-[70vh] w-full bg-[#0a0a0a]" aria-hidden />,
+})
+const EducationalOfferSection = dynamic(
+  () => import('@/components/sections/ServicesSection'),
+  { ssr: false, loading: () => <div className="min-h-[85vh] w-full bg-white" aria-hidden /> }
+)
+const ConveniosSection = dynamic(() => import('@/components/sections/ConveniosSection'), {
+  ssr: false,
+  loading: () => <div className="min-h-[360px] w-full bg-white" aria-hidden />,
+})
+const OfertaEducativaSection = dynamic(
+  () => import('@/components/sections/OfertaEducativaSection'),
+  { ssr: false, loading: () => <div className="min-h-screen w-full bg-white" aria-hidden /> }
+)
+const CommunityVoices = dynamic(() => import('@/components/CommunityVoices'), {
+  ssr: false,
+  loading: () => <div className="min-h-[280px] w-full bg-[#F7F8FC]" aria-hidden />,
+})
+const VisitCampusSection = dynamic(() => import('@/components/VisitCampusSection'), {
+  ssr: false,
+  loading: () => <div className="min-h-[280px] w-full bg-white" aria-hidden />,
+})
+
 export default function Home() {
   const [currentSection, setCurrentSection] = useState(0)
-  // SSR y primer paint: scroll nativo. FullPageScroll solo en desktop tras hidratar.
   const [useFullPage, setUseFullPage] = useState(false)
 
   const handleSectionChange = (sectionIndex: number) => {
