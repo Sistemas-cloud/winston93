@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Navigation from '@/components/Navigation'
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
-import Image from 'next/image'
+import { AnimatePresence, motion } from 'framer-motion'
+import Head from 'next/head'
 import Seo from '@/components/Seo'
 import { SITE_ROUTES } from '@/lib/seo/routes'
 
@@ -86,7 +86,9 @@ const ExtracurricularCard = ({
         alt={alt}
         width={320}
         height={320}
-        className={`w-80 h-80 object-cover transition-all duration-700 group-hover:scale-105 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+        loading="lazy"
+        decoding="async"
+        className={`h-80 w-80 object-cover transition-all duration-700 group-hover:scale-105 ${loaded ? 'opacity-100' : 'opacity-0'}`}
         onLoad={() => setLoaded(true)}
         onError={() => setLoaded(true)}
       />
@@ -202,8 +204,6 @@ const GalleryModal = ({
 
 export default function PrimariaPage() {
   const [scrolled, setScrolled] = useState(false)
-  const [windowSize, setWindowSize] = useState({ width: 1920, height: 1080 })
-  const { scrollYProgress } = useScroll()
 
   // Estados para la galería
   const [galleryOpen, setGalleryOpen] = useState(false)
@@ -302,27 +302,10 @@ export default function PrimariaPage() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const isScrolled = window.scrollY > 100
-      setScrolled(isScrolled)
+      setScrolled(window.scrollY > 100)
     }
-
-    const handleResize = () => {
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight
-      })
-    }
-
-    // Establecer tamaño inicial
-    handleResize()
-
-    window.addEventListener('scroll', handleScroll)
-    window.addEventListener('resize', handleResize)
-    
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-      window.removeEventListener('resize', handleResize)
-    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   // 2026-07-03: Metadata SEO centralizada para /primaria.
@@ -330,6 +313,15 @@ export default function PrimariaPage() {
 
   return (
     <div className="primaria-page">
+      <Head>
+        {/* 2026-09-22: Preload LCP de Primaria (no el de home) */}
+        <link
+          rel="preload"
+          as="image"
+          href="/images/facilities/fondo_escuela-750.webp"
+          type="image/webp"
+        />
+      </Head>
       <Seo
         title={pageSeo.title}
         description={pageSeo.description}
@@ -340,65 +332,55 @@ export default function PrimariaPage() {
       {/* Navigation - transparente al inicio, azul al hacer scroll */}
       <Navigation currentSection={scrolled ? 1 : 0} />
 
-      {/* Hero Section con imagen de fondo fija - 1/3 en móvil */}
-      <section className="relative h-[33vh] md:h-screen w-full overflow-hidden">
-        {/* Imagen de fondo fija con fundido suave - fachada completa visible */}
-        <motion.div 
-          className="absolute inset-0 bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url('/images/facilities/fondo_escuela.png')`,
-            // 2026-04-10: En móvil evitamos bg-fixed (inestable) y estiramos al 100% para rellenar todo el hero.
-            backgroundAttachment: windowSize.width < 768 ? 'scroll' : 'fixed',
-            backgroundSize: windowSize.width < 768 ? '100% 100%' : 'contain'
-          }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.5, ease: "easeInOut" }}
-        >
-          {/* Overlay con gradiente más suave para no opacar la fachada */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/15 to-transparent"></div>
-        </motion.div>
-
-        {/* Nueva imagen de bandas horizontales con movimiento de izquierda a derecha */}
-        <motion.div 
-          className="absolute inset-0 z-[1] flex items-center justify-center"
-          initial={{ x: -1000, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
-        >
-          <Image
-            src="/images/facilities/pleca_verde.png"
-            alt="Bandas decorativas"
+      {/* 2026-09-22: Hero sin opacity:0 inicial (eso retrasaba LCP ~1.5s+). WebP LCP. */}
+      <section className="relative h-[42vh] w-full overflow-hidden md:h-screen">
+        <div className="absolute inset-0 bg-[#012A9E]">
+          <img
+            src="/images/facilities/fondo_escuela-750.webp"
+            srcSet="/images/facilities/fondo_escuela-750.webp 750w, /images/facilities/fondo_escuela-1280.webp 1280w"
+            sizes="100vw"
+            alt=""
             width={1920}
             height={1080}
-            className="w-full h-full object-cover"
+            decoding="async"
+            fetchPriority="high"
+            loading="eager"
+            className="h-full w-full object-cover object-center"
+            aria-hidden="true"
           />
-        </motion.div>
+          <div className="absolute inset-0 bg-gradient-to-r from-black/25 to-transparent" />
+        </div>
 
-        {/* Imagen del estudiante — debajo del texto para no tapar el copy (2026-04-11). */}
-        <motion.div 
-          className="absolute bottom-0 left-0 z-[5] w-full h-full pointer-events-none"
-          initial={{ y: 1000, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 1.8, delay: 0.8, ease: "easeOut" }}
-        >
-          <Image
-            src="/images/facilities/niño.png"
+        <div className="pointer-events-none absolute bottom-0 left-0 z-[5] h-full w-full">
+          <img
+            src="/images/facilities/nino-400.webp"
+            srcSet="/images/facilities/nino-400.webp 400w, /images/facilities/nino-600.webp 600w"
+            sizes="(max-width:768px) 45vw, 40vw"
             alt="Estudiante de Primaria - Instituto Winston Churchill"
             width={800}
             height={1080}
-            className="absolute bottom-0 left-2 md:left-16 h-full w-auto object-cover object-bottom"
+            decoding="async"
+            fetchPriority="high"
+            loading="eager"
+            className="absolute bottom-0 left-2 h-full w-auto object-cover object-bottom md:left-16"
           />
-        </motion.div>
+        </div>
 
-        {/* 2026-04-11: Capa propia z-30 encima del niño; móvil solo título, md+ título + párrafos; tablet grande alineado al lado derecho del personaje. */}
-        {/* 2026-04-11: Más padding izquierdo en md+ para separar el copy del personaje. */}
-        <div className="absolute inset-0 z-[30] flex flex-col justify-center items-center px-4 pt-10 pb-6 text-center md:items-stretch md:justify-center md:text-left md:pl-[50%] lg:pl-[52%] xl:pl-[50%] md:pr-6 lg:pr-10 xl:pr-16 md:pt-16 md:pb-8 pointer-events-none">
-          <div className="pointer-events-auto max-w-[22rem] sm:max-w-md md:max-w-lg lg:max-w-xl w-full">
-            <h1 className="text-white text-2xl md:text-5xl lg:text-6xl font-bold tracking-wider mb-2 md:mb-4 drop-shadow-lg">PRIMARIA</h1>
-            <div className="hidden md:block text-white text-sm md:text-base leading-relaxed space-y-2 drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">
-              <p className="font-semibold">Etapa avalada por el respaldo académico de Cambridge.</p>
-              <p>Con una formación académica de calidad y el inglés como parte esencial del aprendizaje, acompañamos a nuestros alumnos en una etapa clave para fortalecer su pensamiento crítico y sus valores.</p>
+        <div className="pointer-events-none absolute inset-0 z-[30] flex flex-col items-center justify-center px-4 pb-6 pt-10 text-center md:items-stretch md:justify-center md:pb-8 md:pl-[50%] md:pr-6 md:pt-16 md:text-left lg:pl-[52%] lg:pr-10 xl:pl-[50%] xl:pr-16">
+          <div className="pointer-events-auto w-full max-w-[22rem] sm:max-w-md md:max-w-lg lg:max-w-xl">
+            {/* 2026-09-22: H1 con keyword completo para consistencia título-contenido */}
+            <h1 className="mb-2 text-2xl font-bold tracking-wide text-white drop-shadow-lg md:mb-4 md:text-5xl lg:text-6xl">
+              Primaria — Instituto Winston Churchill
+            </h1>
+            <p className="text-sm font-semibold text-white drop-shadow md:text-base">
+              Educación primaria bilingüe en Ciudad Madero
+            </p>
+            <div className="mt-3 hidden space-y-2 text-sm leading-relaxed text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)] md:block md:text-base">
+              <p>Inglés diario y respaldo de Cambridge.</p>
+              <p>
+                Formamos pensamiento crítico y valores. También ofrecemos
+                extracurriculares y servicio de estancia.
+              </p>
             </div>
           </div>
         </div>
@@ -420,9 +402,23 @@ export default function PrimariaPage() {
         />
         
         {/* Contenido de Educación Bilingüe */}
-        <div className="py-8 md:py-20 relative z-10">
+        <div className="relative z-10 py-8 md:py-20">
           <div className="container mx-auto px-4 md:px-6">
-            <div className="flex flex-col md:flex-row gap-8 md:gap-80 items-start justify-center">
+            {/* 2026-09-22: Intro legible con keyword Primaria */}
+            <div className="mx-auto mb-10 max-w-3xl text-center md:mb-14 md:text-left">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#013BDF]">
+                Nivel primaria
+              </p>
+              <h2 className="mb-4 text-2xl font-extrabold text-[#0038e4] md:text-4xl">
+                Primaria bilingüe con propósito
+              </h2>
+              <p className="text-sm leading-relaxed text-gray-600 md:text-base">
+                La Primaria del Instituto Winston Churchill une inglés, valores y
+                acompañamiento. Es una etapa clave. Aquí se forma el carácter y la
+                seguridad del alumno.
+              </p>
+            </div>
+            <div className="flex flex-col items-start justify-center gap-8 md:flex-row md:gap-80">
               {/* Título a la izquierda */}
               <div className="flex-shrink-0 text-center md:text-left mb-6 md:mb-0">
                 {/* 2026-04-14: "EDUCACIÓN" en #0038e4 y el resto del título en #156dff por solicitud del usuario. */}
@@ -448,15 +444,16 @@ export default function PrimariaPage() {
                     <div className="absolute bottom-0 right-0 w-20 h-20 bg-white rounded-tl-full"></div>
                   </div>
                 </div>
-                <div className="space-y-2 text-gray-600 leading-relaxed text-justify px-4 md:px-0">
+                <div className="space-y-3 px-4 text-justify text-sm leading-relaxed text-gray-600 md:px-0 md:text-base">
                   <p>
-                    En primaria, nuestros alumnos aprenden en un modelo bilingüe con inmersión total en inglés, logrando comprender y expresarse con fluidez. La otra mitad se imparte en español, cumpliendo con el programa oficial de la SEP.
-                  </p>                
-                  <div className="ml-8">
-                    <p>
-                      Desde esta etapa, promovemos el pensamiento emprendedor y la autonomía, fortaleciendo su seguridad, creatividad y habilidades para enfrentar con éxito los retos del mundo actual.
-                    </p>
-                  </div>
+                    En primaria bilingüe, la mitad del día es en inglés. La otra mitad
+                    sigue el programa de la SEP en español. Así el alumno entiende y
+                    habla con fluidez.
+                  </p>
+                  <p>
+                    También impulsamos autonomía y creatividad. Preparamos a cada
+                    estudiante para retos reales, con valores claros.
+                  </p>
                 </div>
               </div>
             </div>
@@ -520,7 +517,8 @@ export default function PrimariaPage() {
               <div className="flex flex-col rounded-2xl bg-blue-600 p-8 text-white">
                 <h3 className="mb-4 text-2xl font-bold">CERTIFICACIÓN INTERNACIONAL</h3>
                 <p className="mb-6 text-justify leading-relaxed">
-                  Contamos con el respaldo del prestigioso programa de Cambridge, diseñado para elevar los estándares educativos en el idioma inglés y proporcionar a nuestros estudiantes las mejores herramientas para su aprendizaje.
+                  Tenemos el respaldo de Cambridge. El programa eleva el inglés
+                  académico. Da a cada alumno mejores herramientas para aprender.
                 </p>
                 <div className="mt-auto flex justify-center pt-2">
                   <img
@@ -540,11 +538,13 @@ export default function PrimariaPage() {
               <div className="bg-[#E3FB07] text-gray-900 p-8 rounded-2xl">
                 <h3 className="text-2xl font-bold mb-4">SERVICIO DE ESTANCIA</h3>
                 {/* 2026-04-16: Se actualiza texto de Servicio de Estancia con copia oficial y horarios correctos. */}
-                <p className="mb-4 leading-relaxed text-justify">
-                  <strong>FLEXIBILIDAD PARA TI, ACOMPAÑAMIENTO PARA ELLOS.</strong>
+                <p className="mb-4 text-justify leading-relaxed">
+                  <strong>Flexibilidad para ti. Acompañamiento para ellos.</strong>
                 </p>
-                <p className="leading-relaxed text-justify">
-                  Sabemos que cada familia tiene diferentes horarios, por eso ofrecemos un servicio de estancia que cuida, acompaña y apoya a nuestros alumnos al terminar su jornada escolar.
+                <p className="text-justify leading-relaxed">
+                  Cada familia tiene horarios distintos. Por eso ofrecemos estancia
+                  después de clases. Cuidamos y acompañamos a los alumnos al terminar
+                  la jornada.
                 </p>
                 {/* 2026-04-16: Se unifica el horario en formato de rango para evitar ambigüedad. */}
                 <div className="mt-4">

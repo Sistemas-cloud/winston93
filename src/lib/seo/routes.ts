@@ -74,16 +74,18 @@ export const SITE_ROUTES: readonly SiteRoute[] = [
   },
   {
     path: '/primaria',
-    title: 'Primaria - Instituto Winston Churchill',
+    title: 'Primaria bilingüe, Cambridge y estancia | Instituto Winston Churchill',
+    // 2026-09-22: Título alineado al contenido + keyword Primaria.
     description:
-      'Educación primaria bilingüe de excelencia en el Instituto Winston Churchill. Formamos estudiantes con pensamiento crítico y valores sólidos.',
+      'Primaria bilingüe en el Instituto Winston Churchill: inglés diario, respaldo Cambridge, extracurriculares y servicio de estancia en Ciudad Madero.',
     keywords: [
-      'primaria',
-      'educación bilingüe',
-      'Winston Churchill',
+      'Primaria',
+      'primaria bilingüe',
+      'Instituto Winston Churchill',
+      'Cambridge',
+      'estancia',
+      'Cd. Madero',
       'educación integral',
-      'valores',
-      'pensamiento crítico',
     ],
     changeFrequency: 'monthly',
     priority: 0.9,
@@ -122,14 +124,16 @@ export const SITE_ROUTES: readonly SiteRoute[] = [
   {
     path: '/winston-life',
     title: 'Winston Life - Instituto Winston Churchill',
+    // 2026-09-22: Meta con keyword "Winston Life" + copy legible.
     description:
-      'Conoce la vida estudiantil en el Instituto Winston Churchill: deportes, emprendimiento y comunidad #SoyWinston.',
+      'Winston Life: vida estudiantil en el Instituto Winston Churchill. Deportes, emprendimiento y comunidad #SoyWinston en Ciudad Madero.',
     keywords: [
       'Winston Life',
       'vida estudiantil',
       'deportes',
       'emprendimiento',
       'SoyWinston',
+      'Instituto Winston Churchill',
     ],
     changeFrequency: 'monthly',
     priority: 0.8,

@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import Head from 'next/head'
 import Navigation from '../components/Navigation'
 import { motion } from 'framer-motion'
 import Seo from '@/components/Seo'
@@ -101,16 +102,6 @@ export default function WinstonLife() {
   const video1Ref = useRef<HTMLVideoElement>(null)
   const video2Ref = useRef<HTMLVideoElement>(null)
 
-  // Precarga de videos
-  useEffect(() => {
-    if (video1Ref.current) {
-      video1Ref.current.load()
-    }
-    if (video2Ref.current) {
-      video2Ref.current.load()
-    }
-  }, [])
-
   // Sincronizar el estado muted con los elementos de video
   useEffect(() => {
     if (video1Ref.current) {
@@ -124,6 +115,38 @@ export default function WinstonLife() {
     }
   }, [video2Muted])
 
+  // 2026-09-22: Cargar src del video solo al entrar en viewport (videos 21–70MB).
+  useEffect(() => {
+    const attach = (video: HTMLVideoElement | null, src: string) => {
+      if (!video) return () => undefined
+      const load = () => {
+        if (video.dataset.srcLoaded === '1') return
+        video.dataset.srcLoaded = '1'
+        const source = video.querySelector('source')
+        if (source && !source.getAttribute('src')) {
+          source.setAttribute('src', src)
+          video.load()
+        }
+      }
+      const io = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            load()
+            io.disconnect()
+          }
+        },
+        { rootMargin: '200px' }
+      )
+      io.observe(video)
+      return () => io.disconnect()
+    }
+    const d1 = attach(video1Ref.current, '/images/Winston Life/video1.mp4')
+    const d2 = attach(video2Ref.current, '/images/Winston Life/video2.mp4')
+    return () => {
+      d1()
+      d2()
+    }
+  }, [])
 
   // Intersection Observer para video 1 - pausar cuando no está visible
   useEffect(() => {
@@ -134,30 +157,19 @@ export default function WinstonLife() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            // Video está visible, reproducir solo si no fue pausado manualmente
             if (!video1ManuallyPaused) {
-              video1.play().catch((error) => {
-                console.log('Error al reproducir video 1:', error)
-              })
+              video1.play().catch(() => undefined)
             }
-          } else {
-            // Video no está visible, pausar (solo si no fue pausado manualmente)
-            if (!video1ManuallyPaused) {
-              video1.pause()
-            }
+          } else if (!video1ManuallyPaused) {
+            video1.pause()
           }
         })
       },
-      {
-        threshold: 0.5 // Se considera visible cuando al menos el 50% está en pantalla
-      }
+      { threshold: 0.5 }
     )
 
     observer.observe(video1)
-
-    return () => {
-      observer.disconnect()
-    }
+    return () => observer.disconnect()
   }, [video1ManuallyPaused])
 
   // Intersection Observer para video 2 - pausar cuando no está visible
@@ -301,6 +313,15 @@ export default function WinstonLife() {
 
   return (
     <>
+      <Head>
+        {/* 2026-09-22: Preload LCP Winston Life */}
+        <link
+          rel="preload"
+          as="image"
+          href="/images/Winston Life/portada-480.webp"
+          type="image/webp"
+        />
+      </Head>
       <Seo
         title={pageSeo.title}
         description={pageSeo.description}
@@ -314,39 +335,42 @@ export default function WinstonLife() {
       {/* 2026-04-10: Sin pt superior; el hero arranca en y=0 y el nav fijo/transparente se superpone a la portada (igual que home en móvil/tablet). */}
       <div className="min-h-screen">
         {/* Banner Principal */}
-        <section className="relative h-screen overflow-hidden">
-          <div className="absolute inset-0">
-            {/* 2026-07-03: Dimensiones explícitas en portada para reducir CLS. */}
+        <section className="relative h-[85vh] min-h-[520px] overflow-hidden md:h-screen">
+          <div className="absolute inset-0 bg-[#012A9E]">
+            {/* 2026-09-22: LCP — WebP responsivo + fetchpriority; sin video en primer paint */}
             <img
-              src="/images/Winston Life/portada.jpg"
+              src="/images/Winston Life/portada-750.webp"
+              srcSet="/images/Winston Life/portada-480.webp 480w, /images/Winston Life/portada-750.webp 750w, /images/Winston Life/portada-1280.webp 1280w"
+              sizes="100vw"
               alt="Winston Life - Instituto Winston Churchill"
               width={1920}
               height={1080}
-              className="w-full h-full object-cover"
+              decoding="async"
+              fetchPriority="high"
+              loading="eager"
+              className="h-full w-full object-cover"
+              style={{ aspectRatio: '1920 / 1080' }}
             />
-            <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+            <div className="absolute inset-0 bg-black/40" />
           </div>
           
-          <div className="relative z-10 h-full flex flex-col items-center justify-center">
-            <div className="text-center text-white mb-12 md:mb-16">
-              {/* 2026-07-03: H1 semántico real conservando las mismas clases visuales. */}
-              <motion.h1
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1 }}
-                className="text-4xl sm:text-6xl md:text-8xl font-bold leading-tight"
-              >
+          <div className="relative z-10 flex h-full flex-col items-center justify-center">
+            <div className="mb-12 text-center text-white md:mb-16">
+              <h1 className="text-4xl font-bold leading-tight sm:text-6xl md:text-8xl">
                 <span className="block text-white">WINSTON</span>
-                <span className="block text-[#E3FB07] text-3xl sm:text-4xl md:text-6xl">LIFE</span>
-              </motion.h1>
+                <span className="block text-3xl text-[#E3FB07] sm:text-4xl md:text-6xl">LIFE</span>
+              </h1>
+              <p className="mx-auto mt-4 max-w-md px-4 text-sm text-white/90 md:text-base">
+                Vida estudiantil, deporte y comunidad en el Instituto Winston Churchill.
+              </p>
             </div>
 
             {/* Cintilla con iconos - Completamente unida con colores sólidos */}
             <motion.div
-              initial={{ opacity: 0, y: 100 }}
+              initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.6 }}
-              className="absolute bottom-0 left-0 right-0 h-28 sm:h-32 flex"
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="absolute bottom-0 left-0 right-0 flex h-28 sm:h-32"
             >
               {/* Winston Olympics - Azul sólido */}
               <div
@@ -477,19 +501,60 @@ export default function WinstonLife() {
           </div>
         </section>
 
+        {/* 2026-09-22: Bloque SEO/legibilidad — texto sustantivo en español claro */}
+        <section className="bg-white px-4 py-14 md:py-16" aria-labelledby="wl-about-heading">
+          <div className="mx-auto max-w-3xl">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#013BDF]">
+              Comunidad
+            </p>
+            <h2 id="wl-about-heading" className="mb-5 text-2xl font-extrabold text-gray-900 md:text-3xl">
+              ¿Qué es Winston Life?
+            </h2>
+            <p className="mb-4 text-sm leading-relaxed text-gray-700 md:text-base">
+              Winston Life es la vida fuera del salón en el Instituto Winston Churchill.
+              Aquí el alumno crece con deporte, proyectos y sentido de pertenencia.
+              Es la forma en que vivimos el día a día en Ciudad Madero.
+            </p>
+            <h3 className="mb-3 text-lg font-bold text-gray-900">Winston Olympics</h3>
+            <p className="mb-4 text-sm leading-relaxed text-gray-700 md:text-base">
+              En Winston Olympics practicamos deporte en equipo. Buscamos disciplina,
+              respeto y salud. Los juegos y competencias refuerzan hábitos sanos.
+              También fortalecen la amistad entre compañeros.
+            </p>
+            <h3 className="mb-3 text-lg font-bold text-gray-900">Entrepreneurs</h3>
+            <p className="mb-4 text-sm leading-relaxed text-gray-700 md:text-base">
+              En Entrepreneurs los alumnos presentan ideas. Aprenden a planear,
+              hablar en público y trabajar en equipo. No es solo un taller.
+              Es práctica real de liderazgo desde edades tempranas.
+            </p>
+            <h3 className="mb-3 text-lg font-bold text-gray-900">#SoyWinston</h3>
+            <p className="mb-4 text-sm leading-relaxed text-gray-700 md:text-base">
+              #SoyWinston es nuestra comunidad. Celebramos logros, eventos y
+              tradiciones del colegio. Familias y alumnos se reconocen en esa identidad.
+              Es pertenencia con valores claros.
+            </p>
+            <ul className="mb-2 list-disc space-y-2 pl-5 text-sm leading-relaxed text-gray-700 md:text-base">
+              <li>Deporte y actividad física con sentido de equipo.</li>
+              <li>Emprendimiento con proyectos concretos.</li>
+              <li>Eventos y vida escolar con la comunidad Winston.</li>
+            </ul>
+          </div>
+        </section>
+
         {/* Video Principal - Pantalla completa */}
-        <section id="winston-olympics" className="relative h-screen overflow-hidden">
+        <section id="winston-olympics" className="relative h-[70vh] min-h-[420px] overflow-hidden bg-black md:h-screen">
           <video
             ref={video1Ref}
             autoPlay
             loop
             muted={video1Muted}
             playsInline
-            className="absolute inset-0 w-full h-full object-cover cursor-pointer"
-            preload="auto"
+            className="absolute inset-0 h-full w-full cursor-pointer object-cover"
+            preload="none"
+            poster="/images/Winston Life/portada-750.webp"
             onClick={toggleVideo1PlayPause}
           >
-            <source src="/images/Winston Life/video1.mp4" type="video/mp4" />
+            <source type="video/mp4" />
             Tu navegador no soporta el elemento de video.
           </video>
           {/* Botón de control de audio */}
@@ -532,7 +597,7 @@ export default function WinstonLife() {
                       <div className="relative group">
                         <div className="bg-gradient-to-br from-white via-blue-50 to-blue-100 p-4 rounded-2xl shadow-lg border-2 border-blue-200 transition-all duration-500 group-hover:shadow-2xl group-hover:border-blue-400 group-hover:bg-gradient-to-br group-hover:from-blue-50 group-hover:via-white group-hover:to-blue-50 group-hover:-translate-y-2">
                           {/* 2026-07-03: Dimensiones explícitas en carrusel Entrepreneurs para reducir CLS. */}
-                          <img src={`/images/Winston Life/emprendedores/emprendedores${num}.${num === 2 ? 'png' : 'jpg'}`} alt={`Programa Entrepreneurs - Actividad ${num}`} width={420} height={300} className="w-[280px] sm:w-[340px] md:w-[420px] h-[210px] sm:h-[250px] md:h-[300px] object-cover rounded-xl transition-all duration-500 group-hover:scale-105 group-hover:brightness-110" />
+                          <img src={`/images/Winston Life/emprendedores/emprendedores${num}.${num === 2 ? 'png' : 'jpg'}`} alt={`Programa Entrepreneurs - Actividad ${num}`} width={420} height={300} loading="lazy" decoding="async" className="w-[280px] sm:w-[340px] md:w-[420px] h-[210px] sm:h-[250px] md:h-[300px] object-cover rounded-xl transition-all duration-500 group-hover:scale-105 group-hover:brightness-110" />
                           <div className="absolute inset-4 bg-gradient-to-t from-blue-700/60 via-blue-500/20 to-[#E3FB07]/25 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
                           <div className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-md rounded-lg p-3 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
                             <p className="text-blue-900 text-sm font-bold text-center uppercase tracking-wide">Programa Entrepreneurs</p>
@@ -552,7 +617,7 @@ export default function WinstonLife() {
                       <div className="relative group">
                         <div className="bg-gradient-to-br from-white via-blue-50 to-blue-100 p-4 rounded-2xl shadow-lg border-2 border-blue-200 transition-all duration-500 group-hover:shadow-2xl group-hover:border-blue-400 group-hover:bg-gradient-to-br group-hover:from-blue-50 group-hover:via-white group-hover:to-blue-50 group-hover:-translate-y-2">
                           {/* 2026-07-03: Dimensiones explícitas en carrusel Entrepreneurs para reducir CLS. */}
-                          <img src={`/images/Winston Life/emprendedores/emprendedores${num}.${num === 2 ? 'png' : 'jpg'}`} alt={`Programa Entrepreneurs - Actividad ${num}`} width={420} height={300} className="w-[280px] sm:w-[340px] md:w-[420px] h-[210px] sm:h-[250px] md:h-[300px] object-cover rounded-xl transition-all duration-500 group-hover:scale-105 group-hover:brightness-110" />
+                          <img src={`/images/Winston Life/emprendedores/emprendedores${num}.${num === 2 ? 'png' : 'jpg'}`} alt={`Programa Entrepreneurs - Actividad ${num}`} width={420} height={300} loading="lazy" decoding="async" className="w-[280px] sm:w-[340px] md:w-[420px] h-[210px] sm:h-[250px] md:h-[300px] object-cover rounded-xl transition-all duration-500 group-hover:scale-105 group-hover:brightness-110" />
                           <div className="absolute inset-4 bg-gradient-to-t from-blue-700/60 via-blue-500/20 to-[#E3FB07]/25 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
                           <div className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-md rounded-lg p-3 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
                             <p className="text-blue-900 text-sm font-bold text-center uppercase tracking-wide">Programa Entrepreneurs</p>
@@ -641,7 +706,9 @@ export default function WinstonLife() {
                     alt={`#Soy Winston ${index + 1}`}
                     width={640}
                     height={320}
-                    className="w-full h-64 sm:h-72 md:h-80 object-cover transition-transform duration-500 group-hover:scale-110"
+                    loading="lazy"
+                    decoding="async"
+                    className="h-64 w-full object-cover transition-transform duration-500 group-hover:scale-110 sm:h-72 md:h-80"
                   />
                   <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
                     <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -667,10 +734,11 @@ export default function WinstonLife() {
             muted={video2Muted}
             playsInline
             className="relative z-10 mx-auto max-h-[100vh] w-full cursor-pointer object-contain"
-            preload="auto"
+            preload="none"
+            poster="/images/Winston Life/portada-750.webp"
             onClick={toggleVideo2PlayPause}
           >
-            <source src="/images/Winston Life/video2.mp4" type="video/mp4" />
+            <source type="video/mp4" />
             Tu navegador no soporta el elemento de video.
           </video>
           {/* Botón de control de audio */}
