@@ -23,10 +23,11 @@ export const SITE_ROUTES: readonly SiteRoute[] = [
   {
     path: '/',
     title: 'Instituto Winston Churchill - Working for a Brighter Future',
-    // 2026-08-21: Meta home sin Oxford.
+    // 2026-09-22: Meta con keyword principal + oraciones cortas (SEO/GEO).
     description:
-      'Instituto educativo con 30 años de experiencia. Educación bilingüe integral: Kínder, Primaria y Secundaria. Respaldados por University of Cambridge.',
+      'Instituto Winston Churchill: colegio bilingüe en Ciudad Madero. Kínder, primaria y secundaria con más de 30 años. Respaldo de University of Cambridge.',
     keywords: [
+      'Instituto Winston Churchill',
       'instituto',
       'educación',
       'bilingüe',
@@ -35,6 +36,7 @@ export const SITE_ROUTES: readonly SiteRoute[] = [
       'secundaria',
       'Winston Churchill',
       'Cambridge',
+      'Ciudad Madero',
     ],
     changeFrequency: 'weekly',
     priority: 1,

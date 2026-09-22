@@ -41,7 +41,7 @@ class MyDocument extends Document {
             type="image/webp"
           />
 
-          {/* 2026-09-22: CSS crítico — fondo claro (el negro solo vive en el hero) */}
+          {/* 2026-09-22: CSS crítico mínimo above-the-fold (fondo claro; negro solo en hero) */}
           <style
             dangerouslySetInnerHTML={{
               __html: `

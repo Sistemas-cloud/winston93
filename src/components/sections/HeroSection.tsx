@@ -163,7 +163,11 @@ export default function HeroSection() {
           <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.28em] text-[#E3FB07] md:text-xs">
             Instituto Winston Churchill
           </p>
-          <p className="mb-4 text-lg font-bold text-white drop-shadow md:text-2xl">
+          {/* 2026-09-22: Lema en inglés marcado con lang=en (legibilidad ES/EN) */}
+          <p
+            lang="en"
+            className="mb-4 text-lg font-bold text-white drop-shadow md:text-2xl"
+          >
             Working for a Brighter Future
           </p>
           <div className="mb-5 flex flex-wrap items-center justify-center gap-3">

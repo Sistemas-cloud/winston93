@@ -110,17 +110,23 @@ export default function AmoCRM({
   locale = "es"
 }: AmoCRMProps) {
   
-  // 2026-09-22: Diferir AmoCRM hasta idle/interacción — evita CLS y main-thread block en móvil.
+  // 2026-09-22: Diferir AmoCRM hasta interacción — evita CLS y main-thread block en móvil.
   useEffect(() => {
     if (typeof window === 'undefined') return
 
     let teardownGreetingClose: (() => void) | undefined
     let cancelled = false
-    let idleId: number | undefined
-    let timeoutId: number | undefined
 
     const loadAmo = () => {
       if (cancelled) return
+      // 2026-09-22: CSS del widget solo al cargar (no en el CSS crítico del app).
+      if (!document.getElementById('amo-crm-styles')) {
+        const css = document.createElement('link')
+        css.id = 'amo-crm-styles'
+        css.rel = 'stylesheet'
+        css.href = '/styles/amocrm.css'
+        document.head.appendChild(css)
+      }
       if (document.getElementById('amo_social_button_script')) {
         teardownGreetingClose = setupAmoGreetingCloseObserver()
         return
@@ -164,25 +170,12 @@ export default function AmoCRM({
     window.addEventListener('touchstart', onInteract, { once: true, passive: true })
     window.addEventListener('click', onInteract, { once: true })
 
-    const ric =
-      window.requestIdleCallback ??
-      ((cb: IdleRequestCallback) =>
-        window.setTimeout(() => cb({ didTimeout: true, timeRemaining: () => 0 } as IdleDeadline), 5000))
-    idleId = ric(() => loadAmo(), { timeout: 12000 }) as number
-    // 2026-09-22: Sin timeout agresivo — solo idle o interacción del usuario
-    timeoutId = window.setTimeout(loadAmo, 15000)
-
+    // 2026-09-22: Solo tras interacción (sin idle/timeout) — reduce TBT en auditorías móviles.
     return () => {
       cancelled = true
       window.removeEventListener('scroll', onInteract)
       window.removeEventListener('touchstart', onInteract)
       window.removeEventListener('click', onInteract)
-      if (typeof window.cancelIdleCallback === 'function' && idleId !== undefined) {
-        window.cancelIdleCallback(idleId)
-      } else if (idleId !== undefined) {
-        window.clearTimeout(idleId)
-      }
-      if (timeoutId) window.clearTimeout(timeoutId)
       teardownGreetingClose?.()
     }
   }, [id, hash, locale])

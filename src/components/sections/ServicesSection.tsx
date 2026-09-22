@@ -63,25 +63,23 @@ export default function EducationalOfferSection() {
                   ? 'opacity-100 translate-y-0 scale-100' 
                   : 'opacity-0 -translate-y-8 scale-95'
               }`} style={{ transitionDelay: '400ms' }}>
-                {/* 2026-08-15: H2 en sección del home (el H1 único vive en index.tsx sr-only). */}
-                <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-[#0050ce] leading-tight mb-2 md:mb-4">
-                  INSTITUTO WINSTON CHURCHILL
+                <h2 className="mb-2 text-2xl font-bold leading-tight text-[#0050ce] md:mb-4 md:text-3xl lg:text-4xl xl:text-5xl">
+                  Instituto Winston Churchill
                 </h2>
-                <p className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-normal text-[#0050ce] mb-2 md:mb-6">
-                  Formando líderes con visión global desde hace más de 30 años.
+                <p className="mb-2 text-lg font-normal text-[#0050ce] md:mb-6 md:text-xl lg:text-2xl xl:text-3xl">
+                  Formamos líderes con visión global. Más de 30 años de experiencia.
                 </p>
               </div>
 
-              {/* Descripción - Entra desde abajo */}
-              <p className={`text-base md:text-base lg:text-lg text-gray-700 leading-relaxed max-w-full md:max-w-lg mx-auto transition-all duration-1000 ease-out ${
-                isVisible 
-                  ? 'opacity-100 translate-y-0' 
-                  : 'opacity-0 translate-y-8'
-              }`} style={{ transitionDelay: '600ms' }}>
-                Ofrecemos una educación integral que impulsa el pensamiento crítico, los valores y 
-                el desarrollo emocional de nuestros alumnos. Respaldados por alianzas 
-                académicas internacionales, preparamos a cada estudiante para enfrentar con éxito los 
-                retos del mundo actual.
+              <p
+                className={`mx-auto max-w-full text-base leading-relaxed text-gray-700 transition-all duration-1000 ease-out md:max-w-lg md:text-lg ${
+                  isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+                }`}
+                style={{ transitionDelay: '600ms' }}
+              >
+                Ofrecemos una educación integral. Impulsamos el pensamiento crítico, los
+                valores y el desarrollo emocional. Con alianzas académicas internacionales,
+                preparamos a cada estudiante para los retos de hoy.
               </p>
             </div>
 

@@ -32,9 +32,9 @@ export const SITE_NAME = 'Instituto Winston Churchill' as const
 
 export const SITE_TAGLINE = 'Working for a Brighter Future' as const
 
-// 2026-08-21: Descripción SEO sin Oxford.
+// 2026-09-22: Descripción SEO con keyword principal "Instituto Winston Churchill".
 export const SITE_DESCRIPTION =
-  'Instituto educativo con 30 años de experiencia. Educación bilingüe integral: Kínder, Primaria y Secundaria. Respaldados por University of Cambridge.' as const
+  'Instituto Winston Churchill: colegio bilingüe en Ciudad Madero. Kínder, primaria y secundaria con más de 30 años. Respaldo de University of Cambridge.' as const
 
 export const SITE_KEYWORDS = [
   'Instituto Winston Churchill',

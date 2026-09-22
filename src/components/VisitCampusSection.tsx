@@ -1,4 +1,5 @@
-// 2026-08-20: Hannia — bloque Visítanos (campus + mapa/CTA), ancla visual real.
+// 2026-08-20: Hannia — bloque Visítanos (campus + mapa/CTA).
+// 2026-09-22: Párrafos más claros y cortos para legibilidad.
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -14,25 +15,35 @@ export default function VisitCampusSection() {
             className="object-cover"
             sizes="(max-width:1024px) 100vw, 50vw"
             priority={false}
+            loading="lazy"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#013BDF]/70 to-transparent lg:bg-gradient-to-r" />
         </div>
 
-        <div className="flex flex-col justify-center px-6 py-12 md:px-12 md:py-16" style={{ backgroundColor: '#F7F8FC' }}>
+        <div
+          className="flex flex-col justify-center px-6 py-12 md:px-12 md:py-16"
+          style={{ backgroundColor: '#F7F8FC' }}
+        >
           <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#013BDF]">
             Campus Cd. Madero
           </p>
-          <h2 id="visit-campus-heading" className="mb-4 text-2xl font-extrabold text-gray-900 md:text-3xl">
-            Visítanos
+          <h2
+            id="visit-campus-heading"
+            className="mb-4 text-2xl font-extrabold text-gray-900 md:text-3xl"
+          >
+            Visita el Instituto Winston Churchill
           </h2>
+          <p className="mb-3 max-w-md text-sm leading-relaxed text-gray-600 md:text-base">
+            Conoce nuestras instalaciones en persona. Habla con admisiones sobre kínder,
+            primaria o secundaria.
+          </p>
           <p className="mb-6 max-w-md text-sm leading-relaxed text-gray-600 md:text-base">
-            Conoce nuestras instalaciones y platica con admisiones. Estamos en Calle 3 #309, Col.
-            Jardín 20 de Noviembre.
+            Estamos en Calle 3 #309, Col. Jardín 20 de Noviembre, Ciudad Madero.
           </p>
           <ul className="mb-8 space-y-2 text-sm text-gray-700">
             <li>
-              <span className="font-semibold text-gray-900">Horario:</span> Lun–Vie 7:00–19:30 · Sáb
-              9:00–13:00
+              <span className="font-semibold text-gray-900">Horario:</span> Lun–Vie
+              7:00–19:30 · Sáb 9:00–13:00
             </li>
             <li>
               <span className="font-semibold text-gray-900">Tel:</span>{' '}

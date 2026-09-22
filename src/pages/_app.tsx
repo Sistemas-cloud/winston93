@@ -1,18 +1,19 @@
 import '@/styles/globals.css'
-import '@/styles/amocrm.css'
 import type { AppProps } from 'next/app'
 import { useState, useEffect } from 'react'
-import { AnimatePresence } from 'framer-motion'
-import PageLoadingScreen from '@/components/PageLoadingScreen'
+import dynamic from 'next/dynamic'
 import Layout from '@/components/Layout'
 import { useRouter } from 'next/router'
-import AmoCRM from '@/components/AmoCRM'
 import GoogleTagManager from '@/components/GoogleTagManager'
 import GoogleAdsTag from '@/components/GoogleAdsTag'
-import WhatsAppFAB from '@/components/WhatsAppFAB'
-import CampaignModal from '@/components/CampaignModal'
-import StickyMobileCTA from '@/components/StickyMobileCTA'
 import { Poppins } from 'next/font/google'
+
+// 2026-09-22: Widgets no críticos fuera del bundle inicial (mejor TBT/LCP móvil).
+const AmoCRM = dynamic(() => import('@/components/AmoCRM'), { ssr: false })
+const WhatsAppFAB = dynamic(() => import('@/components/WhatsAppFAB'), { ssr: false })
+const CampaignModal = dynamic(() => import('@/components/CampaignModal'), { ssr: false })
+const StickyMobileCTA = dynamic(() => import('@/components/StickyMobileCTA'), { ssr: false })
+const PageLoadingScreen = dynamic(() => import('@/components/PageLoadingScreen'), { ssr: false })
 
 // 2026-09-22: Menos pesos de fuente = menos CSS/FOUT; display swap ya activo.
 const poppins = Poppins({
@@ -26,14 +27,13 @@ const poppins = Poppins({
 
 export default function App({ Component, pageProps }: AppProps) {
   const [isPageLoading, setIsPageLoading] = useState(false)
+  const [mountExtras, setMountExtras] = useState(false)
   const router = useRouter()
-
-  // 2026-09-22: Eliminado LoadingScreen inicial (1.5s + partículas) — era el mayor bloqueo de LCP móvil.
 
   useEffect(() => {
     const handleStart = () => setIsPageLoading(true)
     const handleComplete = () => {
-      setTimeout(() => setIsPageLoading(false), 400)
+      window.setTimeout(() => setIsPageLoading(false), 400)
     }
 
     router.events.on('routeChangeStart', handleStart)
@@ -47,12 +47,49 @@ export default function App({ Component, pageProps }: AppProps) {
     }
   }, [router])
 
+  // 2026-09-22: Montar FAB/modal/chat tras idle o interacción (no compiten con LCP).
+  useEffect(() => {
+    let idleId: number | undefined
+    let timeoutId: number | undefined
+    const enable = () => setMountExtras(true)
+    const onInteract = () => {
+      enable()
+      window.removeEventListener('scroll', onInteract)
+      window.removeEventListener('touchstart', onInteract)
+      window.removeEventListener('click', onInteract)
+    }
+    window.addEventListener('scroll', onInteract, { once: true, passive: true })
+    window.addEventListener('touchstart', onInteract, { once: true, passive: true })
+    window.addEventListener('click', onInteract, { once: true })
+
+    const ric =
+      window.requestIdleCallback ??
+      ((cb: IdleRequestCallback) =>
+        window.setTimeout(
+          () => cb({ didTimeout: true, timeRemaining: () => 0 } as IdleDeadline),
+          4000
+        ))
+    idleId = ric(() => enable(), { timeout: 8000 }) as number
+    timeoutId = window.setTimeout(enable, 10000)
+
+    return () => {
+      window.removeEventListener('scroll', onInteract)
+      window.removeEventListener('touchstart', onInteract)
+      window.removeEventListener('click', onInteract)
+      if (typeof window.cancelIdleCallback === 'function' && idleId !== undefined) {
+        window.cancelIdleCallback(idleId)
+      } else if (idleId !== undefined) {
+        window.clearTimeout(idleId)
+      }
+      if (timeoutId) window.clearTimeout(timeoutId)
+    }
+  }, [])
+
   return (
     <div className={`${poppins.variable} font-sans`}>
-      {/* 2026-09-22: GTM/Ads diferidos — no bloquean LCP */}
+      {/* 2026-09-22: GTM/Ads lazyOnload — no bloquean primer paint */}
       <GoogleAdsTag />
       <GoogleTagManager />
-      <AmoCRM />
 
       {router.pathname === '/' ||
       router.pathname === '/programas' ||
@@ -64,13 +101,17 @@ export default function App({ Component, pageProps }: AppProps) {
         </Layout>
       )}
 
-      <AnimatePresence>
-        {isPageLoading && <PageLoadingScreen key="page-loading" />}
-      </AnimatePresence>
+      {isPageLoading && <PageLoadingScreen />}
 
+      {/* 2026-09-22: Sticky/WhatsApp pronto; chat/modal solo tras idle o interacción */}
       <StickyMobileCTA />
       <WhatsAppFAB />
-      <CampaignModal />
+      {mountExtras && (
+        <>
+          <AmoCRM />
+          <CampaignModal />
+        </>
+      )}
     </div>
   )
 }

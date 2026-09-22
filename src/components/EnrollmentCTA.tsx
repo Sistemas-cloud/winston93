@@ -27,8 +27,8 @@ export default function EnrollmentCTA() {
           ¿Estás interesado en inscribir a tu hijo(a)?
         </h2>
         <p className="mx-auto mb-8 max-w-xl text-sm leading-relaxed text-white/85 md:text-base">
-          Agenda una cita o escríbenos por WhatsApp. Te orientamos sobre kínder, primaria y
-          secundaria bilingüe en Ciudad Madero.
+          Agenda una cita o escríbenos por WhatsApp. Te orientamos sobre kínder, primaria
+          y secundaria bilingüe en Ciudad Madero.
         </p>
         <div className="flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
           <Link

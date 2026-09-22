@@ -10,7 +10,7 @@ const LEVELS = [
   {
     name: 'Kínder',
     image: '/images/education/kinder.png',
-    blurb: 'Primeros pasos en un entorno bilingüe lleno de curiosidad y cuidado.',
+    blurb: 'Primeros pasos en inglés. Un entorno seguro, con curiosidad y cuidado.',
     accent: '#013BDF',
     link: 'https://educativo-winston.vercel.app/',
     external: true,
@@ -18,7 +18,7 @@ const LEVELS = [
   {
     name: 'Primaria',
     image: '/images/education/primaria.png',
-    blurb: 'Bases académicas sólidas, valores y pensamiento crítico.',
+    blurb: 'Bases sólidas en lectura y matemáticas. Valores y pensamiento crítico.',
     accent: '#E3FB07',
     link: '/primaria',
     external: false,
@@ -26,7 +26,7 @@ const LEVELS = [
   {
     name: 'Secundaria',
     image: '/images/education/secundaria.png',
-    blurb: 'Preparación integral para el futuro con visión global.',
+    blurb: 'Preparación integral para el siguiente paso. Disciplina y visión global.',
     accent: '#012A9E',
     link: '/secundaria',
     external: false,
@@ -85,8 +85,8 @@ export default function OfertaEducativaSection({
             </TitleTag>
             <div className="mx-auto my-5 h-1 w-14 rounded-full bg-[#E3FB07]" />
             <p className="mx-auto max-w-xl text-sm leading-relaxed text-gray-500 md:text-base">
-              Un camino bilingüe de Kínder a Secundaria. Conoce cada etapa y da el siguiente paso
-              con la familia Winston.
+              Un camino bilingüe de kínder a secundaria. Conoce cada etapa. Da el
+              siguiente paso con la familia del Instituto Winston Churchill.
             </p>
           </motion.div>
 

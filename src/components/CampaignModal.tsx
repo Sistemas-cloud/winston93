@@ -124,15 +124,25 @@ export default function CampaignModal() {
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    // 2026-09-22: Retrasar modal hasta después de LCP (~5s) para no competir con paint ni provocar CLS temprano.
+    // 2026-09-22: Modal tras 12s o scroll — no compite con LCP ni CLS temprano.
     let cancelled = false
-    const t = window.setTimeout(() => {
+    const openModal = () => {
       if (!cancelled) setOpen(true)
-    }, 5000)
+    }
+    const t = window.setTimeout(openModal, 12000)
+    const onScroll = () => {
+      if (window.scrollY > 400) {
+        openModal()
+        window.removeEventListener('scroll', onScroll)
+        window.clearTimeout(t)
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
 
     return () => {
       cancelled = true
       window.clearTimeout(t)
+      window.removeEventListener('scroll', onScroll)
     }
   }, [])
 
