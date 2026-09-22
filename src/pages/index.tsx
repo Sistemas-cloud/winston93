@@ -10,7 +10,7 @@ import { SITE_ROUTES } from '@/lib/seo/routes'
 
 const SliderSection = dynamic(() => import('@/components/sections/ProjectsSection'), {
   ssr: false,
-  loading: () => <div className="min-h-[70vh] w-full bg-[#0a0a0a]" aria-hidden />,
+  loading: () => <div className="min-h-[70vh] w-full bg-[#012A9E]" aria-hidden />,
 })
 const EducationalOfferSection = dynamic(
   () => import('@/components/sections/ServicesSection'),
@@ -77,7 +77,7 @@ export default function Home() {
   const homeSeo = SITE_ROUTES.find((route) => route.path === '/')!
 
   const nativeSections = (
-    <div className="w-full pb-28 md:pb-0">
+    <div className="w-full">
       <section className="min-h-[85vh] w-full md:min-h-[90vh] lg:h-screen">
         <HeroSection />
       </section>
@@ -94,7 +94,7 @@ export default function Home() {
       <section className="min-h-[360px] w-full md:min-h-[450px] lg:h-screen">
         <ConveniosSection />
       </section>
-      <section className="min-h-screen w-full">
+      <section className="w-full">
         <OfertaEducativaSection />
       </section>
     </div>

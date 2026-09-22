@@ -53,7 +53,7 @@ export default function OfertaEducativaSection({
   }, [])
 
   return (
-    <div ref={sectionRef} className="relative flex w-full min-h-screen flex-col bg-[#FAFBFF]">
+    <div ref={sectionRef} className="relative flex w-full flex-col bg-[#FAFBFF]">
       {/* Bloque oferta */}
       <section className="relative flex-1 overflow-hidden px-4 pb-16 pt-24 md:px-8 md:pb-20 md:pt-28">
         {/* Atmósfera suave */}
@@ -167,8 +167,9 @@ export default function OfertaEducativaSection({
 
       {/* Footer de sección (compacto) — se mantiene para no romper home / oferta */}
       <div className="flex-shrink-0">
+        {/* 2026-09-22: pb-28 en móvil = espacio del sticky CTA, mismo azul (sin franja negra) */}
         <footer
-          className={`relative overflow-hidden text-white ${isMobile ? 'h-[170px]' : 'h-[24vh]'}`}
+          className={`relative overflow-hidden text-white ${isMobile ? 'min-h-[170px] pb-28' : 'h-[24vh]'}`}
         >
           <div className="absolute inset-0" style={{ backgroundColor: '#013BDF' }} />
 

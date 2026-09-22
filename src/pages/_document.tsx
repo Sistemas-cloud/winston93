@@ -41,13 +41,13 @@ class MyDocument extends Document {
             type="image/webp"
           />
 
-          {/* 2026-09-22: CSS crítico mínimo above-the-fold */}
+          {/* 2026-09-22: CSS crítico — fondo claro (el negro solo vive en el hero) */}
           <style
             dangerouslySetInnerHTML={{
               __html: `
                 html{scroll-behavior:smooth}
-                body{margin:0;background:#000}
-                .home-page{min-height:100vh;background:#000}
+                body{margin:0;background:#fff}
+                .home-page{min-height:100vh;background:#fff}
                 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
               `,
             }}
