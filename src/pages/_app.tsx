@@ -17,10 +17,11 @@ import { Poppins } from 'next/font/google'
 // 2026-09-22: Menos pesos de fuente = menos CSS/FOUT; display swap ya activo.
 const poppins = Poppins({
   subsets: ['latin'],
-  weight: ['400', '600', '700', '800'],
+  weight: ['400', '700', '800'],
   variable: '--font-poppins',
   display: 'swap',
   preload: true,
+  adjustFontFallback: true,
 })
 
 export default function App({ Component, pageProps }: AppProps) {

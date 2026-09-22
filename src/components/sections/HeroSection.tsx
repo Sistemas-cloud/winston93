@@ -1,13 +1,11 @@
-// 2026-09-22: Performance móvil — poster LCP (WebP/AVIF), video diferido, sin preload=auto.
+// 2026-09-22: Performance móvil — poster LCP (WebP), video diferido, sin preload=auto.
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 
-const POSTER_AVIF_640 = '/images/slider/SLIDE_INICIO_1-640.avif'
-const POSTER_AVIF_960 = '/images/slider/SLIDE_INICIO_1-960.avif'
-const POSTER_AVIF_1280 = '/images/slider/SLIDE_INICIO_1-1280.avif'
-const POSTER_WEBP_640 = '/images/slider/SLIDE_INICIO_1-640.webp'
-const POSTER_WEBP_960 = '/images/slider/SLIDE_INICIO_1-960.webp'
-const POSTER_WEBP_1280 = '/images/slider/SLIDE_INICIO_1-1280.webp'
+// Un solo formato en preload+img evita doble descarga AVIF+WebP.
+const POSTER_480 = '/images/slider/SLIDE_INICIO_1-480.webp'
+const POSTER_750 = '/images/slider/SLIDE_INICIO_1-750.webp'
+const POSTER_1280 = '/images/slider/SLIDE_INICIO_1-1280.webp'
 const POSTER_JPG = '/images/slider/SLIDE_INICIO_1-lcp.jpg'
 
 export default function HeroSection() {
@@ -24,16 +22,12 @@ export default function HeroSection() {
     return () => window.removeEventListener('resize', update)
   }, [])
 
-  // 2026-09-22: En móvil el LCP es el poster; el video solo tras idle/interacción.
-  // En desktop se carga tras requestIdleCallback para no competir con LCP.
   useEffect(() => {
     let idleId: number | undefined
     let timeoutId: number | undefined
-
     const enableVideo = () => setShouldLoadVideo(true)
 
     if (isMobile) {
-      // Móvil: esperar gesto o idle largo (no bloquear LCP con 20MB)
       const onInteract = () => {
         enableVideo()
         window.removeEventListener('touchstart', onInteract)
@@ -41,7 +35,7 @@ export default function HeroSection() {
       }
       window.addEventListener('touchstart', onInteract, { once: true, passive: true })
       window.addEventListener('click', onInteract, { once: true })
-      timeoutId = window.setTimeout(enableVideo, 8000)
+      timeoutId = window.setTimeout(enableVideo, 10000)
       return () => {
         window.removeEventListener('touchstart', onInteract)
         window.removeEventListener('click', onInteract)
@@ -49,8 +43,10 @@ export default function HeroSection() {
       }
     }
 
-    const ric = window.requestIdleCallback ?? ((cb: IdleRequestCallback) =>
-      window.setTimeout(() => cb({ didTimeout: false, timeRemaining: () => 0 } as IdleDeadline), 2500))
+    const ric =
+      window.requestIdleCallback ??
+      ((cb: IdleRequestCallback) =>
+        window.setTimeout(() => cb({ didTimeout: false, timeRemaining: () => 0 } as IdleDeadline), 2500))
     idleId = ric(() => enableVideo(), { timeout: 4000 }) as number
 
     return () => {
@@ -64,7 +60,6 @@ export default function HeroSection() {
 
   useEffect(() => {
     if (!shouldLoadVideo || !videoRef.current) return
-
     const video = videoRef.current
     const tryPlay = async () => {
       try {
@@ -78,10 +73,8 @@ export default function HeroSection() {
         setVideoReady(false)
       }
     }
-
-    if (video.readyState >= 2) {
-      void tryPlay()
-    } else {
+    if (video.readyState >= 2) void tryPlay()
+    else {
       video.addEventListener('canplay', () => void tryPlay(), { once: true })
       video.load()
     }
@@ -103,40 +96,31 @@ export default function HeroSection() {
   }
 
   return (
-    <div className="relative h-full min-h-[85vh] w-full overflow-hidden md:min-h-screen">
-      {/* 2026-09-22: Imagen LCP con dimensiones/aspect-ratio fijos — evita CLS y acelera paint */}
-      <picture>
-        <source
-          type="image/avif"
-          srcSet={`${POSTER_AVIF_640} 640w, ${POSTER_AVIF_960} 960w, ${POSTER_AVIF_1280} 1280w`}
-          sizes="100vw"
-        />
-        <source
-          type="image/webp"
-          srcSet={`${POSTER_WEBP_640} 640w, ${POSTER_WEBP_960} 960w, ${POSTER_WEBP_1280} 1280w`}
-          sizes="100vw"
-        />
-        <img
-          src={POSTER_JPG}
-          alt=""
-          width={1366}
-          height={768}
-          decoding="async"
-          // @ts-expect-error React 18 SSR: fetchpriority en minúsculas para HTML
-          fetchpriority="high"
-          fetchPriority="high"
-          loading="eager"
-          className="absolute inset-0 z-10 h-full w-full object-cover"
-          style={{
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            aspectRatio: '1366 / 768',
-          }}
-        />
-      </picture>
+    <div
+      className="relative h-full min-h-[85vh] w-full overflow-hidden bg-black md:min-h-screen"
+      style={{ minHeight: '85vh' }}
+    >
+      {/* 2026-09-22: LCP — un solo WebP responsivo + estilos inline (pinta antes del CSS bundle) */}
+      <img
+        src={POSTER_480}
+        srcSet={`${POSTER_480} 480w, ${POSTER_750} 750w, ${POSTER_1280} 1280w`}
+        sizes="100vw"
+        alt=""
+        width={1366}
+        height={768}
+        decoding="async"
+        fetchPriority="high"
+        loading="eager"
+        className="absolute inset-0 z-10 h-full w-full object-cover"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          aspectRatio: '1366 / 768',
+        }}
+      />
 
       {showPlayOverlay && (
         <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/40">
@@ -164,11 +148,7 @@ export default function HeroSection() {
           poster={POSTER_JPG}
           controls={false}
           className="absolute inset-0 z-20 h-full w-full object-cover transition-opacity duration-700"
-          style={{
-            objectFit: 'cover',
-            objectPosition: 'center',
-            opacity: videoReady ? 1 : 0,
-          }}
+          style={{ opacity: videoReady ? 1 : 0, objectFit: 'cover' }}
           onCanPlay={() => {
             setVideoReady(true)
             setShowPlayOverlay(false)

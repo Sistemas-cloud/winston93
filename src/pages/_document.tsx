@@ -33,11 +33,11 @@ class MyDocument extends Document {
           <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
           <link rel="dns-prefetch" href="https://gso.amocrm.com" />
 
-          {/* 2026-09-22: Preload poster LCP (móvil prioriza 640w WebP) */}
+          {/* 2026-09-22: Preload exacto del LCP móvil (480w WebP ~15KB) */}
           <link
             rel="preload"
             as="image"
-            href="/images/slider/SLIDE_INICIO_1-640.webp"
+            href="/images/slider/SLIDE_INICIO_1-480.webp"
             type="image/webp"
           />
 

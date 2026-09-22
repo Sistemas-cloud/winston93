@@ -31,15 +31,15 @@ export default function GoogleAdsTag() {
 
   return (
     <>
-      {/* 2026-09-22: afterInteractive — Ads deja de bloquear el primer paint */}
+      {/* 2026-09-22: Ads también lazy — no compite con LCP (GTM ya lo estaba) */}
       <Script
         id="google-ads-gtag-loader"
-        strategy="afterInteractive"
+        strategy="lazyOnload"
         src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_ID}`}
       />
       <Script
         id="google-ads-gtag-config"
-        strategy="afterInteractive"
+        strategy="lazyOnload"
         dangerouslySetInnerHTML={{
           __html: `
             window.dataLayer = window.dataLayer || [];
