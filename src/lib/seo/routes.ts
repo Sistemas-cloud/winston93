@@ -188,16 +188,20 @@ export const SITE_ROUTES: readonly SiteRoute[] = [
     priority: 0.95,
   },
   // 2026-08-20: Slot SEO para guía visual / requisitos (infografía pendiente).
+  // 2026-09-25: Title/description alineados a “requisitos de admisión” (solo esta ruta).
   {
     path: '/admisiones/requisitos',
-    title: 'Guía de registro y requisitos - Admisiones Winston',
+    title:
+      'Requisitos de admisión — Instituto Winston Churchill, Ciudad Madero',
     description:
-      'Guía visual del registro para examen de admisión y requisitos por nivel en el Instituto Winston Churchill.',
+      'Consulta los requisitos de admisión, la guía de registro y el examen de admisión del Instituto Winston Churchill en Ciudad Madero. Colegio bilingüe con más de 30 años.',
     keywords: [
+      'requisitos de admisión',
       'requisitos admisión',
       'registro examen',
       'guía admisión',
       'Winston Churchill',
+      'Ciudad Madero',
     ],
     changeFrequency: 'monthly',
     priority: 0.7,
