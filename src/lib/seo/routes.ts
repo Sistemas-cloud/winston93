@@ -22,7 +22,8 @@ export interface SiteRoute {
 export const SITE_ROUTES: readonly SiteRoute[] = [
   {
     path: '/',
-    title: 'Instituto Winston Churchill - Working for a Brighter Future',
+    // 2026-09-25: Title SEO local (spam update Sep 2026) — solo home.
+    title: 'Instituto Winston Churchill | Colegio bilingüe en Cd. Madero',
     // 2026-09-22: Meta con keyword principal + oraciones cortas (SEO/GEO).
     description:
       'Instituto Winston Churchill: colegio bilingüe en Ciudad Madero. Kínder, primaria y secundaria con más de 30 años. Respaldo de University of Cambridge.',

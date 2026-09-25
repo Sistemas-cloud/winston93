@@ -1,4 +1,5 @@
 // 2026-09-22: Hannia — bloque de profundidad SEO/GEO (español claro, keyword natural).
+// 2026-09-25: Bloque "Educación bilingüe en Ciudad Madero" (spam update Sep 2026, solo home).
 import Link from 'next/link'
 
 export default function HomeAboutSection() {
@@ -40,18 +41,28 @@ export default function HomeAboutSection() {
           <li>Comunidad #soywinston con acompañamiento cercano a las familias.</li>
         </ul>
 
-        <h3 className="mb-3 text-lg font-bold text-gray-900">
-          Nuestra oferta educativa
-        </h3>
-        <p className="mb-3 text-sm leading-relaxed text-gray-700 md:text-base">
-          En kínder sembramos hábitos y el primer contacto con el inglés. En primaria
-          fortalecemos lectura, matemáticas y confianza. En secundaria preparamos el
-          siguiente paso académico con disciplina y visión global.
+        {/* 2026-09-25: Texto SEO local (Oxford/Cambridge/estancia); fusionado con oferta previa. */}
+        <h2 className="mb-4 text-xl font-extrabold leading-tight text-gray-900 md:text-2xl">
+          Educación bilingüe en Ciudad Madero
+        </h2>
+        <p className="mb-4 text-sm leading-relaxed text-gray-700 md:text-base">
+          El Instituto Winston Churchill ofrece educación bilingüe desde kínder hasta
+          secundaria, con más de 30 años formando alumnos en Ciudad Madero, Tamaulipas.
+          El campus está en Calle 3 #309, Colonia Jardín 20 de Noviembre.
+        </p>
+        <p className="mb-4 text-sm leading-relaxed text-gray-700 md:text-base">
+          En kínder y primaria trabajamos con el programa Oxford, con inglés desde los
+          primeros años. En secundaria usamos el programa Cambridge, que certifica el
+          inglés con reconocimiento internacional. En ambos niveles se incorpora el
+          francés.
+        </p>
+        <p className="mb-4 text-sm leading-relaxed text-gray-700 md:text-base">
+          Hay estancia hasta las 7:00 p.m., apoyo en tareas y talleres por la tarde.
+          Contamos con sistema de becas e inscripciones abiertas.
         </p>
         <p className="mb-6 text-sm leading-relaxed text-gray-700 md:text-base">
-          Si buscas un colegio con trayectoria real y una propuesta clara, te esperamos
-          en nuestro campus. Agenda una visita o habla con admisiones. Estamos listos
-          para orientarte.
+          Si buscas un colegio bilingüe en Ciudad Madero o Tampico, agenda una visita
+          con admisiones.
         </p>
 
         <div className="flex flex-wrap gap-3">
