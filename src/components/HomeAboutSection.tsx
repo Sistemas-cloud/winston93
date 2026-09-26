@@ -41,7 +41,7 @@ export default function HomeAboutSection() {
           <li>Comunidad #soywinston con acompañamiento cercano a las familias.</li>
         </ul>
 
-        {/* 2026-09-25: Texto SEO local (Oxford/Cambridge/estancia); fusionado con oferta previa. */}
+        {/* 2026-09-25: Texto SEO local (Cambridge/estancia); fusionado con oferta previa. 2026-09-26: se elimina Oxford (sin relación con el instituto). */}
         <h2 className="mb-4 text-xl font-extrabold leading-tight text-gray-900 md:text-2xl">
           Educación bilingüe en Ciudad Madero
         </h2>
@@ -51,10 +51,9 @@ export default function HomeAboutSection() {
           El campus está en Calle 3 #309, Colonia Jardín 20 de Noviembre.
         </p>
         <p className="mb-4 text-sm leading-relaxed text-gray-700 md:text-base">
-          En kínder y primaria trabajamos con el programa Oxford, con inglés desde los
-          primeros años. En secundaria usamos el programa Cambridge, que certifica el
-          inglés con reconocimiento internacional. En ambos niveles se incorpora el
-          francés.
+          Desde kínder trabajamos el inglés desde los primeros años. En primaria y
+          secundaria contamos con el respaldo de Cambridge, que certifica el inglés con
+          reconocimiento internacional. En secundaria también se incorpora el francés.
         </p>
         <p className="mb-4 text-sm leading-relaxed text-gray-700 md:text-base">
           Hay estancia hasta las 7:00 p.m., apoyo en tareas y talleres por la tarde.
