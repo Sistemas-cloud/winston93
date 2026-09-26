@@ -89,13 +89,14 @@ const PageLoadingScreen = () => {
           }}
           className="mb-6"
         >
+          {/* 2026-09-26: Sin priority — transición de ruta no debe competir con LCP. */}
           <Image
             src="/images/logos/logo_winston.png"
             alt="Winston Churchill"
             width={300}
             height={75}
             className="h-20 w-auto mx-auto drop-shadow-lg"
-            priority
+            sizes="80px"
             quality={100}
           />
         </motion.div>

@@ -1,4 +1,5 @@
 import AnimatedElement from '@/components/AnimatedElement'
+import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 
 export default function EducationalOfferSection() {
@@ -43,11 +44,13 @@ export default function EducationalOfferSection() {
                 {/* Formas geométricas de fondo - Responsive */}
                  {/* 2026-03-27: Escala responsive de imagen para evitar recortes en móvil/tablet manteniendo el diseño base. */}
                 {/* 2026-09-22: Dimensiones + lazy para no competir con LCP */}
-                <img
+                {/* 2026-09-26: next/image + sizes (below-fold); sin recomprimir originales ni priority. */}
+                <Image
                   src="/images/students/niños_left.jpg"
                   alt="Estudiantes del Instituto Winston Churchill"
                   width={800}
                   height={1000}
+                  sizes="(max-width: 768px) 90vw, 45vw"
                   loading="lazy"
                   decoding="async"
                   className="relative z-10 h-[260px] sm:h-[320px] md:h-[500px] lg:h-[620px] xl:h-[700px] w-auto max-w-none object-contain"

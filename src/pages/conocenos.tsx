@@ -40,11 +40,15 @@ export default function ConocenosPage() {
       {/* ── Banner principal — pantalla completa ── */}
       <section className="relative w-full h-screen flex items-center justify-center overflow-hidden">
         {/* 2026-07-03: width/height para reservar espacio y reducir CLS. */}
+        {/* 2026-09-26: sizes + eager (LCP de página); sin priority next/image (solo home). */}
         <img
           src="/images/conocenos/portada-conoce.png"
           alt="Conócenos - Instituto Winston Churchill"
           width={1920}
           height={1080}
+          sizes="100vw"
+          loading="eager"
+          decoding="async"
           className="absolute inset-0 w-full h-full object-cover object-center"
         />
         <div className="absolute inset-0 bg-black/40" />
@@ -95,12 +99,15 @@ export default function ConocenosPage() {
             >
               {/* Pleca reposicionada: más arriba (-top-8) y más a la derecha (-right-8) */}
               {/* 2026-07-03: Dimensiones explícitas para reducir CLS en imágenes decorativas y de contenido. */}
+              {/* 2026-09-26: lazy en assets below-fold de /conocenos. */}
               <img
                 src="/images/conocenos/pleca-verde.png"
                 // 2026-08-15: Alt descriptivo para auditoría SEO (pleca decorativa).
                 alt="Detalle decorativo verde del Instituto Winston Churchill"
                 width={128}
                 height={128}
+                loading="lazy"
+                decoding="async"
                 className="absolute -top-8 -right-8 z-10 w-24 md:w-28 lg:w-32 pointer-events-none select-none"
               />
               <img
@@ -108,6 +115,9 @@ export default function ConocenosPage() {
                 alt="Estudiantes del Instituto Winston Churchill"
                 width={800}
                 height={600}
+                sizes="(max-width: 768px) 100vw, 50vw"
+                loading="lazy"
+                decoding="async"
                 className="w-full h-auto rounded-2xl object-contain relative z-0"
               />
             </div>
@@ -151,11 +161,15 @@ export default function ConocenosPage() {
               style={{ transitionDelay: '300ms' }}
             >
               {/* 2026-07-03: Dimensiones explícitas para reducir CLS. */}
+              {/* 2026-09-26: lazy + sizes en imagen de visión. */}
               <img
                 src="/images/conocenos/pza2.png"
                 alt="Estudiantes del Instituto Winston Churchill"
                 width={800}
                 height={600}
+                sizes="(max-width: 768px) 100vw, 50vw"
+                loading="lazy"
+                decoding="async"
                 className="w-full h-auto rounded-2xl object-contain"
               />
             </div>

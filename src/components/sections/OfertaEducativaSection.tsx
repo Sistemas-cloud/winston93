@@ -177,7 +177,8 @@ export default function OfertaEducativaSection({
             <div className="relative z-10 flex h-full flex-col justify-between px-4 py-2">
               <div className="flex-1">
                 <div className="mb-3 flex items-center">
-                  <img src="/images/logos/logo_winston.png" alt="Winston" width={60} height={16} className="h-4 w-auto" />
+                  {/* 2026-09-26: next/image lazy en logo del footer de oferta educativa. */}
+                  <Image src="/images/logos/logo_winston.png" alt="Winston" width={60} height={16} className="h-4 w-auto" sizes="60px" loading="lazy" />
                 </div>
                 <h2 className="mb-2 text-[9px] font-extrabold uppercase leading-tight tracking-wide">
                   WORKING FOR BRIGHTER FUTURES
@@ -218,7 +219,8 @@ export default function OfertaEducativaSection({
             <div className="relative z-10 container mx-auto px-4 py-4 sm:px-6 md:px-10 md:py-6">
               <div className="max-w-2xl">
                 <div className="mb-3 flex items-center md:mb-4">
-                  <img src="/images/logos/logo_winston.png" alt="Winston" width={70} height={19} className="h-5 w-auto md:h-6" />
+                  {/* 2026-09-26: next/image lazy en logo footer desktop de oferta educativa. */}
+                  <Image src="/images/logos/logo_winston.png" alt="Winston" width={70} height={19} className="h-5 w-auto md:h-6" sizes="70px" loading="lazy" />
                 </div>
                 <h2 className="mb-1 text-xs font-extrabold uppercase leading-snug tracking-wide sm:text-sm md:mb-2 md:text-base">
                   WORKING FOR BRIGHTER FUTURES

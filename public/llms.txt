@@ -1,0 +1,27 @@
+# Instituto Winston Churchill
+
+> Colegio bilingüe en Ciudad Madero, Tamaulipas, México. Más de 30 años formando estudiantes. Respaldo de University of Cambridge en primaria y secundaria. Francés en secundaria. Estancia hasta las 7 p.m.
+
+## Datos de contacto
+
+- Nombre: Instituto Winston Churchill
+- Sitio: https://www.winston93.edu.mx
+- Dirección: Calle 3 #309, Col. Jardín 20 de Noviembre, Cd. Madero, Tamps.
+- Teléfono: 833 437 8743
+- Horario: Lun–Vie 7:00–19:30; Sáb 9:00–13:00
+- Certificación: University of Cambridge (primaria y secundaria)
+- Idiomas: inglés (Cambridge); francés en secundaria
+- Estancia: hasta las 7 p.m.
+
+## Páginas
+
+- [Inicio](https://www.winston93.edu.mx/): Presentación del instituto y oferta educativa
+- [Primaria](https://www.winston93.edu.mx/primaria): Educación primaria bilingüe con Cambridge
+- [Secundaria](https://www.winston93.edu.mx/secundaria): Educación secundaria bilingüe con Cambridge y francés
+- [Admisiones](https://www.winston93.edu.mx/admisiones): Proceso de inscripción y visita al campus
+- [Requisitos de admisión](https://www.winston93.edu.mx/admisiones/requisitos): Requisitos para ingresar
+- [Conócenos](https://www.winston93.edu.mx/conocenos): Misión, visión e identidad institucional
+- [Contacto](https://www.winston93.edu.mx/contacto): Formulario y datos de contacto
+- [Programas](https://www.winston93.edu.mx/programas): Programas académicos y extracurriculares
+- [Winston Life](https://www.winston93.edu.mx/winston-life): Vida estudiantil y actividades
+- [Servicios en línea](https://www.winston93.edu.mx/servicios-en-linea): Acceso a servicios digitales del instituto

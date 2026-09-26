@@ -80,13 +80,14 @@ export default function Navigation({ currentSection = 0 }: NavigationProps) {
               className="transition-transform duration-300 hover:scale-105 cursor-pointer"
               title="Ir a la página principal"
             >
+              {/* 2026-09-26: Sin priority — solo LCP de home debe competir por ancho de banda. */}
               <Image 
                 src="/images/logos/logo_winston.png" 
                 alt="Instituto Winston Churchill" 
                 width={120}
                 height={30}
                 className="h-8 w-auto sm:h-10"
-                priority
+                sizes="120px"
                 quality={100}
               />
             </Link>

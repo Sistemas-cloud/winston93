@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
 
 export default function ConveniosSection() {
   const [isVisible, setIsVisible] = useState(false)
@@ -66,11 +67,13 @@ export default function ConveniosSection() {
             style={{ transitionDelay: '300ms' }}>
             {/* 2026-04-10: Imagen móvil más grande y con leve desplazamiento a la derecha para centrar visualmente. */}
             {/* 2026-07-03: Dimensiones explícitas para reducir CLS. */}
-            <img
+            {/* 2026-09-26: next/image + sizes/lazy; sin recomprimir PNG fuente (evitar regresión PR #6/#7). */}
+            <Image
               src="/images/logos/convenios.png"
               alt="Convenios y Alianzas Académicas - Instituto Winston Churchill"
               width={1200}
               height={600}
+              sizes="(max-width: 768px) 100vw, 90vw"
               loading="lazy"
               decoding="async"
               className="w-[108%] max-w-none h-auto object-contain translate-x-3"
@@ -94,11 +97,13 @@ export default function ConveniosSection() {
                 }`} style={{ transitionDelay: '200ms' }}>
                   {/* 2026-03-27: Escala reducida para evitar solape con texto lateral. */}
                   {/* 2026-07-03: Dimensiones explícitas para reducir CLS. */}
-                  <img
+                  {/* 2026-09-26: next/image + sizes/lazy en layout desktop/tablet. */}
+                  <Image
                     src="/images/logos/convenios.png"
                     alt="Convenios y Alianzas Académicas - Instituto Winston Churchill"
                     width={1200}
                     height={600}
+                    sizes="(max-width: 1024px) 90vw, 80vw"
                     loading="lazy"
                     decoding="async"
                     className="w-auto h-auto object-contain scale-90 sm:scale-95 md:scale-100 lg:scale-110 xl:scale-125 2xl:scale-140"

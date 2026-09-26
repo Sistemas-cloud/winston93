@@ -115,13 +115,14 @@ export default function ContactoPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
           <div className="mx-4 flex w-full max-w-lg flex-col items-center rounded-2xl bg-white p-12 shadow-2xl">
             <div className="relative mb-6">
+              {/* 2026-09-26: Sin priority — overlay de envío no es LCP de home. */}
               <Image
                 src="/images/logos/logo_winston.png"
                 alt="Winston Churchill"
                 width={400}
                 height={100}
                 className="h-24 w-24 animate-pulse"
-                priority
+                sizes="96px"
                 quality={100}
               />
               <div className="absolute -right-3 -top-3 h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
