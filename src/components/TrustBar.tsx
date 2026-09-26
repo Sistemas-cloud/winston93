@@ -1,5 +1,5 @@
 // 2026-08-20: Hannia — barra de confianza bajo el hero (credenciales institucionales).
-// 2026-08-21: Se elimina Oxford; se mantiene Cambridge y campus local.
+// 2026-08-21: Se mantiene solo Cambridge y campus local.
 const ITEMS = [
   { label: '30+ años', sub: 'de experiencia' },
   { label: 'Bilingüe', sub: 'formación integral' },
