@@ -101,6 +101,7 @@ export default function HeroSection() {
       style={{ minHeight: '85vh' }}
     >
       {/* 2026-09-22: LCP — un solo WebP responsivo + estilos inline (pinta antes del CSS bundle) */}
+      {/* 2026-09-26: Se mantiene <img> nativo (no next/image) para evitar doble descarga AVIF+WebP; priority/LCP solo aquí en home. */}
       <img
         src={POSTER_480}
         srcSet={`${POSTER_480} 480w, ${POSTER_750} 750w, ${POSTER_1280} 1280w`}

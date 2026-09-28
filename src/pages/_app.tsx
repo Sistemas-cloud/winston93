@@ -16,6 +16,7 @@ const StickyMobileCTA = dynamic(() => import('@/components/StickyMobileCTA'), { 
 const PageLoadingScreen = dynamic(() => import('@/components/PageLoadingScreen'), { ssr: false })
 
 // 2026-09-22: Menos pesos de fuente = menos CSS/FOUT; display swap ya activo.
+// 2026-09-26: Confirmar display:'swap' (sin tocar patrón _app de PR #5/#6/#7).
 const poppins = Poppins({
   subsets: ['latin'],
   weight: ['400', '700', '800'],

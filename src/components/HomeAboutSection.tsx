@@ -41,7 +41,7 @@ export default function HomeAboutSection() {
           <li>Comunidad #soywinston con acompañamiento cercano a las familias.</li>
         </ul>
 
-        {/* 2026-09-25: Texto SEO local (Cambridge/estancia); fusionado con oferta previa. 2026-09-26: se elimina Oxford (sin relación con el instituto). */}
+        {/* 2026-09-25: Texto SEO local (Cambridge/estancia); fusionado con oferta previa. 2026-09-26: solo Cambridge. */}
         <h2 className="mb-4 text-xl font-extrabold leading-tight text-gray-900 md:text-2xl">
           Educación bilingüe en Ciudad Madero
         </h2>

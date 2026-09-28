@@ -176,13 +176,14 @@ const LoadingScreen = () => {
           }}
           className="mb-8"
         >
+          {/* 2026-09-26: Sin priority — pantalla de carga no debe adelantarse al LCP de home. */}
           <Image
             src="/images/logos/logo_winston.png"
             alt="Winston Churchill"
             width={400}
             height={100}
             className="h-28 w-auto mx-auto drop-shadow-lg"
-            priority
+            sizes="112px"
             quality={100}
           />
         </motion.div>

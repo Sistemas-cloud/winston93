@@ -36,13 +36,15 @@ export default function AdmissionGuideSlot({ variant = 'compact' }: AdmissionGui
 
         {ready ? (
           <div className="overflow-hidden rounded-2xl bg-white shadow-md ring-1 ring-gray-100">
+            {/* 2026-09-26: sizes + lazy; sin priority (no es LCP de home). */}
             <Image
               src={src}
               alt="Guía de registro para el examen de admisión — Instituto Winston Churchill"
               width={1200}
               height={1600}
               className="h-auto w-full"
-              priority={variant === 'full'}
+              sizes="(max-width: 768px) 100vw, 896px"
+              loading="lazy"
             />
             <div className="flex flex-wrap justify-center gap-3 border-t border-gray-100 p-4">
               <a

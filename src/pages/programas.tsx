@@ -134,6 +134,7 @@ function ProgramBlock({ program, index }: { program: Program; index: number }) {
               />
               <div className="relative overflow-hidden rounded-[1.25rem] bg-white shadow-[0_24px_80px_rgba(1,59,223,0.12)] ring-1 ring-black/[0.04] md:rounded-[1.5rem]">
                 <motion.div style={{ scale: imgScale }} className="origin-center">
+                  {/* 2026-09-26: Lazy por defecto; priority solo en LCP de home. */}
                   <Image
                     src={program.image}
                     alt={program.imageAlt}
@@ -141,7 +142,7 @@ function ProgramBlock({ program, index }: { program: Program; index: number }) {
                     height={program.h}
                     sizes="(max-width: 1024px) 100vw, 65vw"
                     className="h-auto w-full"
-                    priority={index === 0}
+                    loading="lazy"
                   />
                 </motion.div>
               </div>

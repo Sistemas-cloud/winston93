@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import Image from 'next/image'
 import AnimatedElement from '@/components/AnimatedElement'
 
 export default function SliderSection() {
@@ -53,16 +54,17 @@ export default function SliderSection() {
       {/* Imágenes de fondo — solo la activa en DOM para no descargar 3 JPG grandes */}
       <div className="absolute inset-0">
         {slides.map((slide, index) =>
+          // 2026-09-26: next/image fill + sizes (sección diferida); sin priority ni recomprimir JPG.
           index === currentSlide ? (
             <div key={index} className="absolute inset-0 z-10 opacity-100">
-              <img
+              <Image
                 src={slide.image}
                 alt={`${slide.title} ${slide.subtitle}`}
-                width={1920}
-                height={1080}
+                fill
+                sizes="100vw"
                 loading="lazy"
                 decoding="async"
-                className="h-full w-full object-cover"
+                className="object-cover"
               />
             </div>
           ) : null
