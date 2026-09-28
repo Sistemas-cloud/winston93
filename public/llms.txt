@@ -1,6 +1,6 @@
 # Instituto Winston Churchill
 
-> Colegio bilingüe en Ciudad Madero, Tamaulipas, México. Más de 30 años formando estudiantes. Respaldo de University of Cambridge en primaria y secundaria. Francés en secundaria. Estancia hasta las 7 p.m.
+> Colegio bilingüe en Ciudad Madero, Tamaulipas, México. Más de 30 años formando estudiantes. Respaldo de University of Cambridge en primaria y secundaria. Francés desde 4.º de primaria y en secundaria. Doble titulación con validez en México y Estados Unidos. Estancia hasta las 7 p.m.
 
 ## Datos de contacto
 
@@ -9,14 +9,14 @@
 - Dirección: Calle 3 #309, Col. Jardín 20 de Noviembre, Cd. Madero, Tamps.
 - Teléfono: 833 437 8743
 - Horario: Lun–Vie 7:00–19:30; Sáb 9:00–13:00
-- Certificación: University of Cambridge (primaria y secundaria)
-- Idiomas: inglés (Cambridge); francés en secundaria
+- Certificación: University of Cambridge (primaria y secundaria); doble titulación con validez en México y Estados Unidos
+- Idiomas: inglés (Cambridge); francés desde 4.º de primaria y en secundaria
 - Estancia: hasta las 7 p.m.
 
 ## Páginas
 
 - [Inicio](https://www.winston93.edu.mx/): Presentación del instituto y oferta educativa
-- [Primaria](https://www.winston93.edu.mx/primaria): Educación primaria bilingüe con Cambridge
+- [Primaria](https://www.winston93.edu.mx/primaria): Educación primaria bilingüe con Cambridge; francés desde 4.º grado
 - [Secundaria](https://www.winston93.edu.mx/secundaria): Educación secundaria bilingüe con Cambridge y francés
 - [Admisiones](https://www.winston93.edu.mx/admisiones): Proceso de inscripción y visita al campus
 - [Requisitos de admisión](https://www.winston93.edu.mx/admisiones/requisitos): Requisitos para ingresar

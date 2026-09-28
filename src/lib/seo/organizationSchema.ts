@@ -4,7 +4,6 @@
 
 import {
   SITE_ADDRESS,
-  SITE_DESCRIPTION,
   SITE_LOGO_PATH,
   SITE_NAME,
   SITE_PHONE,
@@ -52,7 +51,9 @@ export function getOrganizationSchema(): OrganizationSchema {
     url: SITE_URL,
     logo: absoluteUrl(SITE_LOGO_PATH),
     image: absoluteUrl(SITE_LOGO_PATH),
-    description: SITE_DESCRIPTION,
+    // 2026-09-28: Descripción JSON-LD con francés desde 4.º de primaria y doble titulación MX/US (confirmado Sistemas 2); sin alterar meta visibles del sitio.
+    description:
+      'Instituto Winston Churchill: colegio bilingüe en Ciudad Madero. Kínder, primaria y secundaria con más de 30 años. Respaldo de University of Cambridge. Francés desde 4.º de primaria y en secundaria. Doble titulación con validez en México y Estados Unidos.',
     telephone: SITE_PHONE,
     address: {
       '@type': 'PostalAddress',
