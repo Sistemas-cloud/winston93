@@ -31,7 +31,6 @@ class MyDocument extends Document {
           {/* 2026-09-22: Preconnect/dns-prefetch para terceros diferidos */}
           <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
           <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-          <link rel="dns-prefetch" href="https://gso.amocrm.com" />
 
           {/* 2026-09-22: Preload exacto del LCP móvil (480w WebP ~15KB) */}
           <link

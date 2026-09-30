@@ -9,7 +9,7 @@ import GoogleAdsTag from '@/components/GoogleAdsTag'
 import { Poppins } from 'next/font/google'
 
 // 2026-09-22: Widgets no críticos fuera del bundle inicial (mejor TBT/LCP móvil).
-const AmoCRM = dynamic(() => import('@/components/AmoCRM'), { ssr: false })
+// 2026-09-30: Widget de Kommo (AmoCRM) retirado a petición de Dirección General.
 const WhatsAppFAB = dynamic(() => import('@/components/WhatsAppFAB'), { ssr: false })
 const CampaignModal = dynamic(() => import('@/components/CampaignModal'), { ssr: false })
 const StickyMobileCTA = dynamic(() => import('@/components/StickyMobileCTA'), { ssr: false })
@@ -107,12 +107,7 @@ export default function App({ Component, pageProps }: AppProps) {
       {/* 2026-09-22: Sticky/WhatsApp pronto; chat/modal solo tras idle o interacción */}
       <StickyMobileCTA />
       <WhatsAppFAB />
-      {mountExtras && (
-        <>
-          <AmoCRM />
-          <CampaignModal />
-        </>
-      )}
+      {mountExtras && <CampaignModal />}
     </div>
   )
 }
