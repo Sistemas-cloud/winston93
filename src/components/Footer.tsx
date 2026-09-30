@@ -3,6 +3,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import FooterLegal from '@/components/FooterLegal'
+import { PRIVACY_NOTICE_PATH } from '@/lib/legal'
 
 export default function Footer() {
   const router = useRouter()
@@ -74,12 +76,13 @@ export default function Footer() {
               >
                 OFERTA EDUCATIVA
               </Link>
-              <a
-                href="#"
+              {/* 2026-09-30: Enlace real al aviso de privacidad (antes href="#"). */}
+              <Link
+                href={PRIVACY_NOTICE_PATH}
                 className="font-medium uppercase tracking-wide text-[10px] hover:text-yellow-400 transition-colors block"
               >
                 AVISO DE PRIVACIDAD
-              </a>
+              </Link>
             </div>
             
             {/* 2026-04-16: Se activa enlace de WhatsApp con el número institucional actualizado. */}
@@ -119,6 +122,11 @@ export default function Footer() {
                 </a>
               </div>
             </AnimatedElement>
+          </div>
+
+          {/* 2026-09-30: Incorporación SEP + aviso + preferencias de cookies. */}
+          <div className="mt-3">
+            <FooterLegal />
           </div>
         </div>
       ) : (
@@ -166,9 +174,10 @@ export default function Footer() {
                   <Link href="/contacto" className="text-sm font-semibold uppercase tracking-wide transition-colors hover:text-[#E3FB07]">
                     Contacto
                   </Link>
-                  <a href="#" className="text-sm font-semibold uppercase tracking-wide transition-colors hover:text-[#E3FB07]">
+                  {/* 2026-09-30: Enlace real al aviso de privacidad (antes href="#"). */}
+                  <Link href={PRIVACY_NOTICE_PATH} className="text-sm font-semibold uppercase tracking-wide transition-colors hover:text-[#E3FB07]">
                     Aviso de privacidad
-                  </a>
+                  </Link>
                 </div>
               </div>
             </AnimatedElement>
@@ -195,6 +204,11 @@ export default function Footer() {
               <span className="sr-only">YouTube</span>
               <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.016 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
             </a>
+          </div>
+
+          {/* 2026-09-30: Incorporación SEP + aviso + preferencias de cookies. */}
+          <div className="mt-8">
+            <FooterLegal />
           </div>
         </div>
       )}

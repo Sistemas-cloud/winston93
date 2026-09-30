@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import GoogleTagManager from '@/components/GoogleTagManager'
 import GoogleAdsTag from '@/components/GoogleAdsTag'
 import { Poppins } from 'next/font/google'
+import { useCookieConsent } from '@/lib/cookie-consent'
 
 // 2026-09-22: Widgets no críticos fuera del bundle inicial (mejor TBT/LCP móvil).
 // 2026-09-30: Widget de Kommo (AmoCRM) retirado a petición de Dirección General.
@@ -14,6 +15,7 @@ const WhatsAppFAB = dynamic(() => import('@/components/WhatsAppFAB'), { ssr: fal
 const CampaignModal = dynamic(() => import('@/components/CampaignModal'), { ssr: false })
 const StickyMobileCTA = dynamic(() => import('@/components/StickyMobileCTA'), { ssr: false })
 const PageLoadingScreen = dynamic(() => import('@/components/PageLoadingScreen'), { ssr: false })
+const CookieBanner = dynamic(() => import('@/components/CookieBanner'), { ssr: false })
 
 // 2026-09-22: Menos pesos de fuente = menos CSS/FOUT; display swap ya activo.
 // 2026-09-26: Confirmar display:'swap' (sin tocar patrón _app de PR #5/#6/#7).
@@ -30,6 +32,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const [isPageLoading, setIsPageLoading] = useState(false)
   const [mountExtras, setMountExtras] = useState(false)
   const router = useRouter()
+  const cookieConsent = useCookieConsent()
 
   useEffect(() => {
     const handleStart = () => setIsPageLoading(true)
@@ -89,8 +92,13 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <div className={`${poppins.variable} font-sans`}>
       {/* 2026-09-22: GTM/Ads lazyOnload — no bloquean primer paint */}
-      <GoogleAdsTag />
-      <GoogleTagManager />
+      {/* 2026-09-30: GTM/Ads solo tras "Aceptar todas" en el banner de cookies. */}
+      {cookieConsent === 'all' && (
+        <>
+          <GoogleAdsTag />
+          <GoogleTagManager />
+        </>
+      )}
 
       {router.pathname === '/' ||
       router.pathname === '/programas' ||
@@ -107,7 +115,9 @@ export default function App({ Component, pageProps }: AppProps) {
       {/* 2026-09-22: Sticky/WhatsApp pronto; chat/modal solo tras idle o interacción */}
       <StickyMobileCTA />
       <WhatsAppFAB />
-      {mountExtras && <CampaignModal />}
+      {/* 2026-09-30: El modal de campaña espera la decisión de cookies para no tapar el banner. */}
+      {mountExtras && cookieConsent != null && <CampaignModal />}
+      <CookieBanner />
     </div>
   )
 }

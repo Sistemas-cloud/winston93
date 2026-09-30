@@ -3,8 +3,10 @@
 import Navigation from '@/components/Navigation'
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import Seo from '@/components/Seo'
 import { SITE_ROUTES } from '@/lib/seo/routes'
+import { PRIVACY_NOTICE_PATH, SIMPLIFIED_PRIVACY_NOTICE } from '@/lib/legal'
 
 export default function ContactoPage() {
   const [parentName, setParentName] = useState('')
@@ -13,6 +15,8 @@ export default function ContactoPage() {
   const [message, setMessage] = useState('')
   const [phone, setPhone] = useState('')
   const [companyWebsite, setCompanyWebsite] = useState('')
+  // 2026-09-30: Aceptación obligatoria del aviso de privacidad (LFPDPPP).
+  const [privacyAccepted, setPrivacyAccepted] = useState(false)
   const [formStartedAt, setFormStartedAt] = useState(0)
   const [submitting, setSubmitting] = useState(false)
   const [feedback, setFeedback] = useState<{ type: 'ok' | 'error' | null; text: string }>({
@@ -32,6 +36,10 @@ export default function ContactoPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!privacyAccepted) {
+      setFeedback({ type: 'error', text: 'Debes aceptar el Aviso de Privacidad para enviar.' })
+      return
+    }
     setSubmitting(true)
     setFeedback({ type: null, text: '' })
 
@@ -47,6 +55,7 @@ export default function ContactoPage() {
           phone,
           companyWebsite,
           formStartedAt,
+          privacyAccepted,
         }),
       })
 
@@ -62,6 +71,7 @@ export default function ContactoPage() {
       setEmail('')
       setMessage('')
       setPhone('')
+      setPrivacyAccepted(false)
     } catch {
       setFeedback({
         type: 'error',
@@ -297,6 +307,34 @@ export default function ContactoPage() {
                 {feedback.text}
               </div>
             )}
+
+            {/* 2026-09-30: Aviso de privacidad simplificado + aceptación obligatoria antes de enviar. */}
+            <div className="space-y-3 rounded-lg border border-gray-200 bg-[#F7F8FC] p-4">
+              <p className="text-xs leading-relaxed text-gray-600">
+                {SIMPLIFIED_PRIVACY_NOTICE} Consulta nuestro{' '}
+                <Link
+                  href={PRIVACY_NOTICE_PATH}
+                  target="_blank"
+                  className="font-semibold text-[#013BDF] underline-offset-2 hover:underline"
+                >
+                  Aviso de Privacidad
+                </Link>
+                .
+              </p>
+              <label htmlFor="privacyAccepted" className="flex cursor-pointer items-start gap-3">
+                <input
+                  id="privacyAccepted"
+                  type="checkbox"
+                  required
+                  checked={privacyAccepted}
+                  onChange={(e) => setPrivacyAccepted(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-[#013BDF]"
+                />
+                <span className="text-sm font-medium text-gray-800">
+                  He leído y acepto el Aviso de Privacidad
+                </span>
+              </label>
+            </div>
 
             <button
               type="submit"

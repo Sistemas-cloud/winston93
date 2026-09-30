@@ -11,8 +11,10 @@ interface LayoutProps {
 export default function Layout({ children, showFooter = true }: LayoutProps) {
   const router = useRouter()
   // 2026-08-20: Hannia — CTA inscripción en páginas con Layout; omitir en /contacto (ya tiene form).
+  // 2026-09-30: Tampoco en /aviso-de-privacidad (página legal).
   const showEnrollmentCta =
     router.pathname !== '/contacto' &&
+    router.pathname !== '/aviso-de-privacidad' &&
     router.pathname !== '/admisiones' &&
     !router.pathname.startsWith('/admisiones/')
 

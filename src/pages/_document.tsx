@@ -8,7 +8,6 @@ import Document, {
   type DocumentContext,
   type DocumentInitialProps,
 } from 'next/document'
-import { GoogleTagManagerNoScript } from '@/components/GoogleTagManager'
 import { SITE_LANG, SITE_LOGO_PATH, SITE_NAME } from '@/lib/seo/site-config'
 
 class MyDocument extends Document {
@@ -28,9 +27,7 @@ class MyDocument extends Document {
           <meta name="theme-color" content="#013BDF" />
           <meta name="application-name" content={SITE_NAME} />
 
-          {/* 2026-09-22: Preconnect/dns-prefetch para terceros diferidos */}
-          <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
-          <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+          {/* 2026-09-30: Sin preconnect a Google: GTM/Ads solo cargan tras consentimiento. */}
 
           {/* 2026-09-22: Preload exacto del LCP móvil (480w WebP ~15KB) */}
           <link
@@ -52,8 +49,8 @@ class MyDocument extends Document {
             }}
           />
         </Head>
+        {/* 2026-09-30: Sin <noscript> de GTM — cargaría Google sin consentimiento de cookies. */}
         <body>
-          <GoogleTagManagerNoScript />
           <Main />
           <NextScript />
         </body>

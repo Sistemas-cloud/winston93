@@ -52,6 +52,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ ok: false, message: 'Campos requeridos faltantes' })
   }
 
+  // 2026-09-30: Sin aceptación explícita del aviso de privacidad no se tratan los datos.
+  if (req.body?.privacyAccepted !== true) {
+    return res.status(400).json({ ok: false, message: 'Debes aceptar el Aviso de Privacidad' })
+  }
+  const privacyAcceptedAt = new Date().toLocaleString('es-MX', {
+    timeZone: 'America/Monterrey',
+  })
+
   // Respuesta silenciosa a bots (no incentivar reintentos)
   if (isSpam(req.body || {})) {
     console.warn('[contacto] spam bloqueado', { email, parentName })
@@ -84,6 +92,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         <p><strong>Teléfono:</strong> ${phone}</p>
         <p><strong>Mensaje:</strong></p>
         <p>${(message || '').replace(/\n/g, '<br/>')}</p>
+        <p><strong>Aviso de privacidad:</strong> aceptado en el formulario web (${privacyAcceptedAt})</p>
       `,
     })
 

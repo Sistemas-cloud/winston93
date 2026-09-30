@@ -206,4 +206,19 @@ export const SITE_ROUTES: readonly SiteRoute[] = [
     changeFrequency: 'monthly',
     priority: 0.7,
   },
+  // 2026-09-30: Aviso de privacidad integral (LFPDPPP 2025).
+  {
+    path: '/aviso-de-privacidad',
+    title: 'Aviso de Privacidad — Instituto Winston Churchill, A.C.',
+    description:
+      'Aviso de privacidad integral del Instituto Winston Churchill, A.C.: datos que recabamos, finalidades, derechos ARCO, uso de imagen de alumnos y cookies.',
+    keywords: [
+      'aviso de privacidad',
+      'datos personales',
+      'derechos ARCO',
+      'Instituto Winston Churchill',
+    ],
+    changeFrequency: 'yearly',
+    priority: 0.3,
+  },
 ] as const
