@@ -1,6 +1,8 @@
 // 2026-07-03: Componente SEO reutilizable para Pages Router (next/head).
 // Centraliza title, description, keywords, authors, canonical, Open Graph,
 // Twitter Cards y JSON-LD Schema.org en todas las páginas.
+// 2026-10-06: Okara CWV — prop opcional preloadImage para hint <link rel="preload">
+//             de la imagen LCP en páginas que no tienen hero propio.
 
 import Head from 'next/head'
 import { getOrganizationSchema } from '@/lib/seo/organizationSchema'
@@ -26,6 +28,13 @@ export interface SeoProps {
   noindex?: boolean
   /** Incluye JSON-LD de la organización (por defecto true en todas las páginas). */
   includeOrganizationSchema?: boolean
+  /**
+   * Ruta (pública) de la imagen LCP de esta página.
+   * Si se pasa, se emite <link rel="preload" as="image"> para acortar el LCP
+   * en páginas interiores sin hero de video/imagen propio.
+   * Ejemplo: "/images/logos/logo_winston.png"
+   */
+  preloadImage?: string
 }
 
 function formatKeywords(keywords?: readonly string[] | string): string {
@@ -46,6 +55,7 @@ export default function Seo({
   ogImage,
   noindex = false,
   includeOrganizationSchema = true,
+  preloadImage,
 }: SeoProps) {
   const canonicalUrl = absoluteUrl(path)
   const imageUrl = absoluteUrl(ogImage ?? SITE_OG_IMAGE_PATH)
@@ -68,6 +78,11 @@ export default function Seo({
         content={noindex ? 'noindex, nofollow' : 'index, follow'}
       />
       <link rel="canonical" href={canonicalUrl} />
+
+      {/* Preload LCP image si la página lo especifica (páginas sin hero propio) */}
+      {preloadImage && (
+        <link rel="preload" as="image" href={preloadImage} />
+      )}
 
       {/* Open Graph */}
       <meta property="og:type" content="website" />

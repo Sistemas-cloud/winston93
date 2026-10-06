@@ -1,5 +1,6 @@
 // 2026-08-20: Hannia — página ligera para la guía visual (placeholder hasta que exista el PNG).
 // 2026-09-25: SEO — H1 con keyword, párrafos de apoyo y CTAs a rutas internas existentes.
+// 2026-10-06: Okara CWV — preloadImage del logo (LCP candidate en esta página sin hero).
 import Link from 'next/link'
 import Navigation from '@/components/Navigation'
 import Seo from '@/components/Seo'
@@ -16,6 +17,7 @@ export default function RequisitosAdmisionPage() {
         description={pageSeo.description}
         path={pageSeo.path}
         keywords={pageSeo.keywords}
+        preloadImage="/images/logos/logo_winston.png"
       />
       <Navigation currentSection={1} />
 
