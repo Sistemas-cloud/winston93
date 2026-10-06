@@ -135,14 +135,18 @@ function ProgramBlock({ program, index }: { program: Program; index: number }) {
               <div className="relative overflow-hidden rounded-[1.25rem] bg-white shadow-[0_24px_80px_rgba(1,59,223,0.12)] ring-1 ring-black/[0.04] md:rounded-[1.5rem]">
                 <motion.div style={{ scale: imgScale }} className="origin-center">
                   {/* 2026-09-26: Lazy por defecto; priority solo en LCP de home. */}
+                  {/* 2026-10-06: Okara WebP/AVIF — next/image sirve automáticamente avif→webp→jpg
+                      gracias a formats: ['image/avif', 'image/webp'] en next.config.js.
+                      quality=80 reduce peso en imágenes fuente muy grandes (6000x4000). */}
                   <Image
                     src={program.image}
                     alt={program.imageAlt}
                     width={program.w}
                     height={program.h}
-                    sizes="(max-width: 1024px) 100vw, 65vw"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 100vw, 65vw"
                     className="h-auto w-full"
                     loading="lazy"
+                    quality={80}
                   />
                 </motion.div>
               </div>
