@@ -115,8 +115,8 @@ export default function App({ Component, pageProps }: AppProps) {
       {/* 2026-09-22: Sticky/WhatsApp pronto; chat/modal solo tras idle o interacción */}
       <StickyMobileCTA />
       <WhatsAppFAB />
-      {/* 2026-09-30: El modal de campaña espera la decisión de cookies para no tapar el banner. */}
-      {mountExtras && cookieConsent != null && <CampaignModal />}
+      {/* 2026-10-13: El modal de campaña se muestra al entrar; el banner de cookies queda por encima (z-[210]). */}
+      <CampaignModal />
       <CookieBanner />
     </div>
   )

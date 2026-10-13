@@ -28,13 +28,14 @@ export default function CookieBanner() {
 
   if (!open) return null
 
+  // 2026-10-13: z-[210] para quedar por encima del popup de campaña (z-[200]), que ahora abre al entrar.
   return (
     <div
       role="dialog"
       aria-live="polite"
       aria-labelledby="cookie-banner-title"
       aria-describedby="cookie-banner-text"
-      className="fixed inset-x-0 bottom-0 z-[150] border-t border-gray-200 bg-white px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4 shadow-[0_-8px_30px_rgba(0,0,0,0.12)] md:inset-x-auto md:bottom-6 md:left-6 md:max-w-md md:rounded-2xl md:border md:pb-5 md:pt-5"
+      className="fixed inset-x-0 bottom-0 z-[210] border-t border-gray-200 bg-white px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4 shadow-[0_-8px_30px_rgba(0,0,0,0.12)] md:inset-x-auto md:bottom-6 md:left-6 md:max-w-md md:rounded-2xl md:border md:pb-5 md:pt-5"
     >
       <p
         id="cookie-banner-title"

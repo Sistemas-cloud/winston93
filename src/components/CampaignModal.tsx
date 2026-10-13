@@ -4,31 +4,9 @@ import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { OPEN_HOUSE_FORM_URL } from '@/components/sections/OpenHouseSection'
 
+// 2026-10-13: El popup se abre en cuanto se entra al sitio (antes esperaba 12 s o scroll).
 export default function CampaignModal() {
-  const [open, setOpen] = useState(false)
-
-  useEffect(() => {
-    // 2026-09-22: Modal tras 12s o scroll — no compite con LCP ni CLS temprano.
-    let cancelled = false
-    const openModal = () => {
-      if (!cancelled) setOpen(true)
-    }
-    const t = window.setTimeout(openModal, 12000)
-    const onScroll = () => {
-      if (window.scrollY > 400) {
-        openModal()
-        window.removeEventListener('scroll', onScroll)
-        window.clearTimeout(t)
-      }
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-
-    return () => {
-      cancelled = true
-      window.clearTimeout(t)
-      window.removeEventListener('scroll', onScroll)
-    }
-  }, [])
+  const [open, setOpen] = useState(true)
 
   useEffect(() => {
     if (!open) return
