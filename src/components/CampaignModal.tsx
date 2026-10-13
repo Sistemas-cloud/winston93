@@ -2,7 +2,7 @@
 // 2026-10-13: El contenido del modal (reloj "30 años") se reemplaza por la imagen del Open House 21 nov 2026.
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { OPEN_HOUSE_FORM_URL } from '@/components/sections/OpenHouseSection'
+import { OPEN_HOUSE_FORM_URL } from '@/lib/open-house'
 
 // 2026-10-13: El popup se abre en cuanto se entra al sitio (antes esperaba 12 s o scroll).
 export default function CampaignModal() {
