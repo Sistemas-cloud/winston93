@@ -2,7 +2,7 @@
 // 2026-10-13: El contenido del modal (reloj "30 años") se reemplaza por la imagen del Open House 21 nov 2026.
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
+import { OPEN_HOUSE_FORM_URL } from '@/components/sections/OpenHouseSection'
 
 export default function CampaignModal() {
   const [open, setOpen] = useState(false)
@@ -55,7 +55,14 @@ export default function CampaignModal() {
         className="relative w-full max-w-3xl overflow-hidden rounded-2xl shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <Link href="/admisiones#examen-admision" onClick={dismiss} className="block">
+        {/* 2026-10-13: La imagen lleva al formulario de registro del Open House. */}
+        <a
+          href={OPEN_HOUSE_FORM_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={dismiss}
+          className="block"
+        >
           <Image
             src="/images/open-house/open-house-popup.webp"
             alt="Open House Winston, 21 de noviembre de 2026, Primaria y Secundaria. Instituto de campeones."
@@ -64,7 +71,7 @@ export default function CampaignModal() {
             sizes="(min-width: 768px) 768px, 100vw"
             className="h-auto w-full"
           />
-        </Link>
+        </a>
 
         <button
           type="button"
