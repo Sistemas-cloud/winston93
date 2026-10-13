@@ -8,6 +8,7 @@ import HomeAboutSection from '@/components/HomeAboutSection'
 import CommunityVoices from '@/components/CommunityVoices'
 import VisitCampusSection from '@/components/VisitCampusSection'
 import EducationalOfferSection from '@/components/sections/ServicesSection'
+import OpenHouseSection from '@/components/sections/OpenHouseSection'
 import Seo from '@/components/Seo'
 import { SITE_ROUTES } from '@/lib/seo/routes'
 
@@ -76,6 +77,8 @@ export default function Home() {
       <HomeAboutSection />
       <CommunityVoices />
       <VisitCampusSection />
+      {/* 2026-10-13: Banner Open House antes del slider; las demás secciones solo se recorren hacia abajo. */}
+      <OpenHouseSection />
       <section className="min-h-[70vh] w-full md:min-h-[75vh] lg:h-screen">
         <div className="h-full">
           <SliderSection />
@@ -111,6 +114,8 @@ export default function Home() {
       {useFullPage ? (
         <FullPageScroll onSectionChange={handleSectionChange}>
           <HeroSection />
+          {/* 2026-10-13: Pantalla Open House entre el video y el slider. */}
+          <OpenHouseSection />
           <SliderSection />
           <EducationalOfferSection />
           <ConveniosSection />

@@ -686,11 +686,53 @@ export default function WinstonLife() {
         {/* Sección #SOY WINSTON */}
         <section id="soy-winston" className="py-14 md:py-20 bg-gray-50">
           <div className="container mx-auto px-6">
+            {/* 2026-10-02: Título #SOY WINSTON con color de marca (azul + lima) y movimiento: entrada al hacer scroll, brillo en bucle y subrayado animado. */}
             <div className="text-center mb-10 md:mb-16">
-              <h2 className="text-3xl md:text-5xl font-bold text-gray-600 mb-4">
-                #SOY WINSTON
-              </h2>
+              <motion.h2
+                className="text-3xl md:text-5xl font-extrabold tracking-tight mb-4"
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.6 }}
+                transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <motion.span
+                  className="inline-block text-[#013BDF]"
+                  initial={{ rotate: -12, scale: 0.6 }}
+                  whileInView={{ rotate: 0, scale: 1 }}
+                  viewport={{ once: true, amount: 0.6 }}
+                  transition={{ type: 'spring', stiffness: 260, damping: 14, delay: 0.25 }}
+                >
+                  #
+                </motion.span>
+                <span className="sw-title-shine">SOY WINSTON</span>
+              </motion.h2>
+              <motion.div
+                aria-hidden="true"
+                className="mx-auto h-1.5 w-24 md:w-32 rounded-full bg-gradient-to-r from-[#E3FB07] via-[#9BE15D] to-[#013BDF] origin-left"
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={{ once: true, amount: 0.6 }}
+                transition={{ duration: 0.8, ease: 'easeOut', delay: 0.35 }}
+              />
             </div>
+            <style jsx>{`
+              .sw-title-shine {
+                background-image: linear-gradient(100deg, #013bdf 0%, #013bdf 40%, #5b8cff 50%, #013bdf 60%, #013bdf 100%);
+                background-size: 250% 100%;
+                background-position: 100% 0;
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+                animation: sw-shine 4.5s ease-in-out infinite;
+              }
+              @keyframes sw-shine {
+                0% { background-position: 100% 0; }
+                60%, 100% { background-position: 0% 0; }
+              }
+              @media (prefers-reduced-motion: reduce) {
+                .sw-title-shine { animation: none; }
+              }
+            `}</style>
             
             {/* Grid de imágenes */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-8 max-w-6xl mx-auto">
