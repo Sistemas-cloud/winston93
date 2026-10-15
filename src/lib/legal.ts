@@ -14,7 +14,8 @@ export const LEGAL_ENTITY = {
   phoneHref: 'tel:+528334378743',
 } as const
 
-export const PRIVACY_NOTICE_UPDATED_AT = '30 de septiembre de 2026' as const
+// 2026-10-15: Se informa la transferencia a Google Ads (audiencias) de datos de padres y prospectos.
+export const PRIVACY_NOTICE_UPDATED_AT = '15 de octubre de 2026' as const
 
 export interface SchoolIncorporation {
   level: 'Primaria' | 'Secundaria'
@@ -36,4 +37,4 @@ export const SCHOOL_INCORPORATIONS: readonly SchoolIncorporation[] = [
 ] as const
 
 export const SIMPLIFIED_PRIVACY_NOTICE =
-  'Los datos personales recabados serán tratados por Instituto Winston Churchill, A.C. para atención de informes y trámites escolares.' as const
+  'Los datos personales recabados serán tratados por Instituto Winston Churchill, A.C. para atención de informes y trámites escolares. El correo y el teléfono de padres, madres, tutores o prospectos también pueden usarse para mostrarles publicidad institucional en Google Ads. Puede negarse a ese uso escribiendo al correo del aviso de privacidad. No se comparten datos de alumnos ni datos de salud.' as const

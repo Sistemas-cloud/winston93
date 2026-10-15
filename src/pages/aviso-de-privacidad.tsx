@@ -1,5 +1,6 @@
 // 2026-09-30: Aviso de privacidad integral (LFPDPPP 2025) — incluye uso de imagen de alumnos
 // y sección de cookies enlazada desde el banner de consentimiento (#cookies).
+// 2026-10-15: Se informa el envío de correo y teléfono de padres y prospectos a Google Ads.
 import type { ReactNode } from 'react'
 import Link from 'next/link'
 import Navigation from '@/components/Navigation'
@@ -140,6 +141,7 @@ export default function AvisoDePrivacidadPage() {
               items={[
                 'Enviarle información sobre eventos, campañas de inscripción y actividades institucionales.',
                 'Aplicar encuestas de satisfacción y calidad del servicio.',
+                'Incluir el correo electrónico y el teléfono de padres, madres, tutores o prospectos en audiencias de Google Ads, para mostrarles anuncios del Instituto según la etapa de su proceso de informes o admisión.',
               ]}
             />
             <p>
@@ -187,6 +189,21 @@ export default function AvisoDePrivacidadPage() {
               (por ejemplo, servicios de correo electrónico, alojamiento web y plataformas
               escolares). Estos proveedores están obligados a mantener la confidencialidad de
               la información y a usarla solo para los fines que el Instituto les indique.
+            </p>
+            {/* 2026-10-15: Transferencia a Google Ads. Solo adultos; sin alumnos ni datos de salud. */}
+            <p>
+              <strong>Publicidad en Google Ads.</strong> Para la finalidad secundaria de
+              publicidad institucional, el Instituto puede transferir a Google LLC (Google Ads)
+              únicamente el nombre, el correo electrónico y el teléfono de padres, madres,
+              tutores o prospectos. Google los usa para identificar si esa persona tiene una
+              cuenta de Google y mostrarle anuncios del Instituto. No vendemos esos datos.
+            </p>
+            <p>
+              Esta transferencia <strong>no incluye datos de alumnos ni aspirantes menores de
+              edad, ni datos de salud, CURP, domicilio fiscal ni información del expediente
+              escolar</strong>. Si no desea que sus datos se envíen a Google Ads, escriba a{' '}
+              {mail}. Dejaremos de incluirlo y solicitaremos a Google que lo retire de nuestras
+              audiencias. Esa negativa no afecta la inscripción ni los servicios del Instituto.
             </p>
           </Section>
 
@@ -253,6 +270,12 @@ export default function AvisoDePrivacidadPage() {
               decisión en cualquier momento desde el enlace &ldquo;Preferencias de
               cookies&rdquo; al pie de cada página, o eliminarlas desde la configuración de su
               navegador.
+            </p>
+            <p>
+              Eso es distinto del envío de correo y teléfono a Google Ads descrito en la sección
+              5. Las cookies solo registran la visita al sitio. La audiencia de Google Ads usa
+              datos de contacto que usted nos proporcionó y puede rechazarse por correo, aunque
+              haya aceptado las cookies.
             </p>
             <p>
               La página de contacto muestra un mapa de Google Maps. Al visualizarlo, Google puede
