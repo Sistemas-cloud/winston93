@@ -4,6 +4,7 @@ import Navigation from '../components/Navigation'
 import { motion } from 'framer-motion'
 import Seo from '@/components/Seo'
 import { SITE_ROUTES } from '@/lib/seo/routes'
+import WinstonLife from '@/components/WinstonLife'
 
 // Componente Modal para la galería
 interface GalleryModalProps {
@@ -89,7 +90,7 @@ const GalleryModal: React.FC<GalleryModalProps> = ({
   )
 }
 
-export default function WinstonLife() {
+export default function WinstonLifePage() {
   const [galleryOpen, setGalleryOpen] = useState(false)
   const [currentGallery, setCurrentGallery] = useState<string | null>(null)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
@@ -501,8 +502,14 @@ export default function WinstonLife() {
           </div>
         </section>
 
-        {/* 2026-09-22: Bloque SEO/legibilidad — texto sustantivo en español claro */}
-        <section className="bg-white px-4 py-14 md:py-16" aria-labelledby="wl-about-heading">
+        {/* 2026-10-17: Collage orgánico + bento — scroll natural (sin pin) */}
+        <WinstonLife />
+
+        {/* 2026-10-17: z-1 + fondo sólido — nunca bajo el sticky de WinstonLife */}
+        <section
+          className="relative z-[1] bg-white px-4 py-14 md:py-16"
+          aria-labelledby="wl-about-heading"
+        >
           <div className="mx-auto max-w-3xl">
             <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#013BDF]">
               Comunidad
