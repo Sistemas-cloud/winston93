@@ -786,20 +786,21 @@ function setupDesktopTimeline(
     settleStart
   )
 
+  // Cierre: entra al salir del sticky (está fuera del collage)
   if (refs.closing) {
-    gsap.set(refs.closing, { opacity: 0, y: 28, filter: 'blur(10px)', scale: 0.92 })
-    tl.to(
-      refs.closing,
-      {
-        opacity: 1,
-        y: 0,
-        filter: 'blur(0px)',
-        scale: 1,
-        ease: 'none',
-        duration: 0.1,
+    gsap.set(refs.closing, { opacity: 0, y: 24, filter: 'blur(8px)' })
+    gsap.to(refs.closing, {
+      opacity: 1,
+      y: 0,
+      filter: 'blur(0px)',
+      duration: 0.9,
+      ease: 'expo.out',
+      scrollTrigger: {
+        trigger: refs.closing,
+        start: 'top 92%',
+        once: true,
       },
-      settleStart + 0.02
-    )
+    })
   }
 
   // Decor derecha: entra con pop
@@ -919,11 +920,12 @@ function DesktopStage({
   stickerLayerRefs: React.MutableRefObject<(HTMLDivElement | null)[]>
 }) {
   return (
+    <>
     <div
       ref={(el) => {
         stageWrapRef.current = el
       }}
-      className="relative pb-[min(8vh,3.5rem)]"
+      className="relative"
       style={{
         height: `${CONFIG.STAGE_SCROLL}vh`,
         backgroundColor: CONFIG.bg,
@@ -1151,28 +1153,30 @@ function DesktopStage({
             />
           </div>
         </div>
-
-        {/* Cierre debajo del collage — sin solape ni corte */}
-        <p
-          ref={(el) => {
-            closingRef.current = el
-          }}
-          className="pointer-events-none absolute bottom-[2.5%] left-1/2 z-[45] w-[min(90%,42rem)] -translate-x-1/2 text-center font-[family-name:var(--wl-display)] uppercase leading-[1.05] tracking-tight"
-          style={{
-            color: CONFIG.bright,
-            fontSize: 'clamp(1.15rem, 2.4vw, 1.85rem)',
-            opacity: 0,
-          }}
-        >
-          <span
-            className="mb-2 mx-auto block h-1 w-10 rounded-sm"
-            style={{ backgroundColor: CONFIG.lime }}
-            aria-hidden
-          />
-          {CONFIG.closingText}
-        </p>
       </div>
     </div>
+
+    {/* Fuera del sticky: nunca tapa videos del collage */}
+    <p
+      ref={(el) => {
+        closingRef.current = el
+      }}
+      className="relative z-[1] mx-auto w-[min(92%,40rem)] px-4 pb-14 pt-10 text-center font-[family-name:var(--wl-display)] uppercase leading-[1.1] tracking-tight"
+      style={{
+        backgroundColor: CONFIG.bg,
+        color: CONFIG.bright,
+        fontSize: 'clamp(1.25rem, 2.6vw, 2rem)',
+        opacity: 0,
+      }}
+    >
+      <span
+        className="mx-auto mb-3 block h-1 w-10 rounded-sm"
+        style={{ backgroundColor: CONFIG.lime }}
+        aria-hidden
+      />
+      {CONFIG.closingText}
+    </p>
+    </>
   )
 }
 
