@@ -497,7 +497,15 @@ export default function PrimariaPage() {
               TECNOLOGÍA
             </ExtracurricularCard>
 
-            <ExtracurricularCard src="/images/extracurriculares/entrepreneurs.jpg" alt="Entrepreneurs" overlayColor="bg-[#0038e4] bg-opacity-60" onClick={() => openGallery('entrepreneurs')}>
+            {/* 2026-10-19: Conector → /programas#finanzas-emprendimiento */}
+            <ExtracurricularCard
+              src="/images/extracurriculares/entrepreneurs.jpg"
+              alt="Entrepreneurs"
+              overlayColor="bg-[#0038e4] bg-opacity-60"
+              onClick={() => {
+                window.location.href = '/programas#finanzas-emprendimiento'
+              }}
+            >
               ENTREPRENEURS
             </ExtracurricularCard>
 

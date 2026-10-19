@@ -1,138 +1,122 @@
+// 2026-10-19: Hannia — convenios tipográficos (beca / empresa / alianzas) en lugar del PNG monolítico.
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 
+const BECA = ['UNE', 'IEST Anáhuac', 'Tecmilenio'] as const
+const EMPRESA = ['Pemex', 'IMSS', 'CFE', 'Telmex'] as const
+const ALIANZAS = ['Cambridge', 'Narrative 4', 'COPARMEX', 'AMMJE'] as const
+
 export default function ConveniosSection() {
   const [isVisible, setIsVisible] = useState(false)
-  const [isTablet, setIsTablet] = useState(false)
-  // 2026-09-22: Mobile-first SSR — evita descargar layout desktop + PNG grande en móvil.
-  const [isMobile, setIsMobile] = useState(true)
   const sectionRef = useRef<HTMLDivElement>(null)
-
-  // Detectar dispositivo
-  useEffect(() => {
-    const updateDeviceType = () => {
-      const width = window.innerWidth
-      const height = window.innerHeight
-      const isLandscape = width > height
-      
-      // Móvil: < 768px
-      setIsMobile(width < 768)
-      
-      // Tablet: (768-1024px) O (landscape con altura <= 900px) - incluye Nest Hub y Nest Hub Max
-      const isTabletDevice = (width >= 768 && width <= 1024) || (isLandscape && height <= 900)
-      setIsTablet(isTabletDevice)
-    }
-    
-    updateDeviceType()
-    window.addEventListener('resize', updateDeviceType)
-    window.addEventListener('orientationchange', updateDeviceType)
-    
-    return () => {
-      window.removeEventListener('resize', updateDeviceType)
-      window.removeEventListener('orientationchange', updateDeviceType)
-    }
-  }, [])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-        }
+        if (entry.isIntersecting) setIsVisible(true)
       },
-      { threshold: 0.3 }
+      { threshold: 0.2 }
     )
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
-    }
-
+    if (sectionRef.current) observer.observe(sectionRef.current)
     return () => observer.disconnect()
   }, [])
 
   return (
-    <div ref={sectionRef} className="h-full w-full relative overflow-hidden bg-white">
+    <div
+      ref={sectionRef}
+      id="convenios-alianzas"
+      className="relative flex h-full min-h-[420px] w-full items-center overflow-hidden bg-white px-4 py-12 md:min-h-0 md:px-8 md:py-16"
+    >
+      <div
+        className={`mx-auto w-full max-w-6xl transition-all duration-700 ease-out ${
+          isVisible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
+        }`}
+      >
+        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-[#013BDF]">
+          Red Winston
+        </p>
+        <h2 className="mb-2 text-2xl font-extrabold uppercase tracking-tight text-gray-900 md:text-3xl">
+          Convenios y alianzas estratégicas
+        </h2>
+        <p className="mb-10 max-w-2xl text-sm leading-relaxed text-gray-600 md:text-base">
+          Becas directas para egresados, vínculos con empresas y alianzas académicas que
+          abren puertas reales a nuestros alumnos.
+        </p>
 
-      {/* 2026-04-10: Layout móvil — título encima e imagen centrada */}
-      {isMobile && (
-        <div className="flex flex-col items-center justify-center h-full py-6 px-4 gap-4">
-          <div className={`transition-all duration-700 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}
-            style={{ transitionDelay: '150ms' }}>
-            {/* 2026-04-10: Titulo móvil aumentado para equiparar jerarquía visual con Oferta Educativa (text-2xl). */}
-            <h2 className="font-bold tracking-widest text-2xl text-[#013BDF] uppercase text-center">
-              CONVENIOS Y CERTIFICACIONES
-            </h2>
-          </div>
-          <div className={`w-full flex justify-center transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'}`}
-            style={{ transitionDelay: '300ms' }}>
-            {/* 2026-04-10: Imagen móvil más grande y con leve desplazamiento a la derecha para centrar visualmente. */}
-            {/* 2026-07-03: Dimensiones explícitas para reducir CLS. */}
-            {/* 2026-09-26: next/image + sizes/lazy; sin recomprimir PNG fuente (evitar regresión PR #6/#7). */}
-            <Image
-              src="/images/logos/convenios.png"
-              alt="Convenios y Alianzas Académicas - Instituto Winston Churchill"
-              width={1200}
-              height={600}
-              sizes="(max-width: 768px) 100vw, 90vw"
-              loading="lazy"
-              decoding="async"
-              className="w-[108%] max-w-none h-auto object-contain translate-x-3"
-            />
-          </div>
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-8">
+          <Group
+            title="Convenios con beca directa"
+            subtitle="A nuestros egresados"
+            items={BECA}
+            accent="#E3FB07"
+          />
+          <Group
+            title="Convenios con empresas"
+            subtitle="Experiencia y proyección"
+            items={EMPRESA}
+            accent="#013BDF"
+          />
+          <Group
+            title="Alianzas estratégicas"
+            subtitle="Del Instituto"
+            items={ALIANZAS}
+            accent="#E3FB07"
+            showCambridge
+          />
         </div>
-      )}
-
-      {/* Layout tablet / desktop — sin cambios respecto al diseño original */}
-      {!isMobile && (
-        <div className="h-[300px] md:h-full flex items-center justify-center">
-          <div className="w-full px-4 md:px-8">
-            <div className="flex items-center justify-center h-full">
-              
-              {/* 2026-03-27: Corrección de escalas responsive válidas para conservar proporciones en tablet/desktop. */}
-              <div className="relative flex items-center justify-center w-full max-w-7xl ml-2 sm:ml-4 md:ml-12 lg:ml-16">
-                <div className={`relative w-full flex items-center justify-center transition-all duration-1000 ease-out ${
-                  isVisible 
-                    ? 'opacity-100 translate-y-0 scale-100' 
-                    : 'opacity-0 translate-y-8 scale-95'
-                }`} style={{ transitionDelay: '200ms' }}>
-                  {/* 2026-03-27: Escala reducida para evitar solape con texto lateral. */}
-                  {/* 2026-07-03: Dimensiones explícitas para reducir CLS. */}
-                  {/* 2026-09-26: next/image + sizes/lazy en layout desktop/tablet. */}
-                  <Image
-                    src="/images/logos/convenios.png"
-                    alt="Convenios y Alianzas Académicas - Instituto Winston Churchill"
-                    width={1200}
-                    height={600}
-                    sizes="(max-width: 1024px) 90vw, 80vw"
-                    loading="lazy"
-                    decoding="async"
-                    className="w-auto h-auto object-contain scale-90 sm:scale-95 md:scale-100 lg:scale-110 xl:scale-125 2xl:scale-140"
-                  />
-                  
-                  {/* 2026-03-27: Texto vertical anclado al margen derecho del bloque. */}
-                  <div className={`absolute right-2 sm:right-3 md:right-4 lg:right-6 xl:right-8 top-1/2 transform -translate-y-1/2 transition-all duration-1000 ease-out ${
-                    isVisible 
-                      ? 'opacity-100 translate-x-0' 
-                      : 'opacity-0 translate-x-8'
-                  }`} style={{ transitionDelay: '600ms' }}>
-                    <div className="text-white transform rotate-90 origin-center whitespace-nowrap drop-shadow-[0_2px_6px_rgba(0,0,0,0.35)]">
-                      <h2 className={`font-bold tracking-widest ${
-                        isTablet 
-                          ? 'text-sm' 
-                          : 'text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl'
-                      }`}>
-                        CONVENIOS Y CERTIFICACIONES
-                      </h2>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      )}
-
+      </div>
     </div>
   )
-} 
+}
+
+function Group({
+  title,
+  subtitle,
+  items,
+  accent,
+  showCambridge,
+}: {
+  title: string
+  subtitle: string
+  items: readonly string[]
+  accent: string
+  showCambridge?: boolean
+}) {
+  return (
+    <div className="border-t-2 pt-5" style={{ borderColor: accent }}>
+      <h3 className="mb-1 text-sm font-extrabold uppercase tracking-wide text-gray-900">
+        {title}
+      </h3>
+      <p className="mb-5 text-[11px] font-medium uppercase tracking-[0.16em] text-gray-500">
+        {subtitle}
+      </p>
+      <ul className="space-y-3">
+        {items.map((name) => (
+          <li
+            key={name}
+            className="flex items-center gap-3 text-base font-bold tracking-tight text-[#013BDF] md:text-lg"
+          >
+            <span
+              className="h-1.5 w-1.5 shrink-0 rounded-full"
+              style={{ backgroundColor: accent === '#E3FB07' ? '#013BDF' : accent }}
+              aria-hidden
+            />
+            {name}
+          </li>
+        ))}
+      </ul>
+      {showCambridge && (
+        <div className="mt-6">
+          <Image
+            src="/images/logos/cambridge.png"
+            alt="University of Cambridge"
+            width={140}
+            height={48}
+            className="h-10 w-auto object-contain opacity-90"
+            loading="lazy"
+          />
+        </div>
+      )}
+    </div>
+  )
+}

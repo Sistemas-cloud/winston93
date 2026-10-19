@@ -109,14 +109,18 @@ export const SITE_ROUTES: readonly SiteRoute[] = [
   },
   {
     path: '/programas',
-    title: 'Programas de Mindfulness y Emprendimiento | Winston Churchill',
+    title: 'Finanzas, Tecnología, Mindfulness y Formación | Winston Churchill',
     description:
-      'Descubre nuestros programas especializados en formación social, educación financiera y mindfulness en el Instituto Winston Churchill.',
+      'Programas Winston: finanzas y emprendimiento, tecnología e innovación con IA y robótica, mindfulness (Narrative 4) y formación social.',
     keywords: [
       'programas',
       'mindfulness',
       'emprendimiento',
-      'educación financiera',
+      'finanzas',
+      'tecnología',
+      'robótica',
+      'inteligencia artificial',
+      'Narrative 4',
       'Winston Churchill',
     ],
     changeFrequency: 'monthly',

@@ -25,34 +25,47 @@ interface Program {
 
 const PROGRAMS: Program[] = [
   {
-    id: 'educacion-financiera',
+    id: 'finanzas-emprendimiento',
     num: '01',
-    title: 'Educación financiera',
+    title: 'Finanzas y emprendimiento',
     subtitle: 'Entrepreneurs',
-    lead: 'Fomentamos la cultura del emprendimiento desde edades tempranas.',
-    body: 'Nuestros alumnos no sólo imaginan ideas innovadoras: aprenden a construir un negocio desde cero. Desarrollan planes de negocio reales, crean estrategias de marketing, realizan proyecciones financieras básicas y presentan sus proyectos de forma profesional, fortaleciendo liderazgo, pensamiento estratégico y toma de decisiones.',
+    lead: 'Asociación exclusiva con COPARMEX y AMMJE para formar emprendedores desde edades tempranas.',
+    body: 'Nuestros alumnos no sólo imaginan ideas innovadoras: aprenden a construir un negocio desde cero. Desarrollan planes de negocio reales, crean estrategias de marketing, realizan proyecciones financieras básicas y presentan sus proyectos de forma profesional — con el respaldo de alianzas como COPARMEX y AMMJE — fortaleciendo liderazgo, pensamiento estratégico y toma de decisiones.',
     image: '/images/PROGRAMAS/emprende.jpg',
     w: 1920,
     h: 1280,
-    imageAlt: 'Programa Entrepreneurs — Instituto Winston Churchill',
+    imageAlt: 'Programa Entrepreneurs — Finanzas y emprendimiento Winston',
     glow: 'rgba(255, 180, 42, 0.28)',
   },
   {
-    id: 'mindfulness',
+    id: 'tecnologia-innovacion',
     num: '02',
+    title: 'Tecnología e innovación',
+    subtitle: 'Programación, IA y robótica',
+    lead: 'Formación en programación avanzada con inteligencia artificial, desde el preescolar hasta la secundaria.',
+    body: 'Integramos tecnología y robótica en el día a día académico. Los alumnos exploran programación, pensamiento computacional e inteligencia artificial con proyectos reales, y participan en robótica como eje explícito de innovación — preparándolos para un mundo digital con criterio y creatividad.',
+    image: '/images/secundaria/robotica.png',
+    w: 1200,
+    h: 800,
+    imageAlt: 'Tecnología, programación, IA y robótica — Instituto Winston Churchill',
+    glow: 'rgba(1, 59, 223, 0.28)',
+  },
+  {
+    id: 'mindfulness',
+    num: '03',
     title: 'Mindfulness',
-    subtitle: 'Bienestar y concentración',
-    lead: 'Atención plena para el bienestar emocional y la concentración.',
-    body: 'Con ejercicios de respiración, enfoque y relajación, nuestros alumnos aprenden a gestionar sus emociones y mejorar su rendimiento académico.',
+    subtitle: 'Narrative 4 · resiliencia',
+    lead: 'Formación emocional basada en mindfulness, con enfoque en resiliencia y empatía.',
+    body: 'Con ejercicios de respiración, enfoque y relajación — y el respaldo del programa Narrative 4 — fortalecemos la resiliencia y la empatía. Nuestros alumnos aprenden a gestionar emociones, a escucharse y a mejorar su rendimiento académico con bienestar real.',
     image: '/images/PROGRAMAS/socioemocional.jpg',
     w: 6000,
     h: 4000,
-    imageAlt: 'Programa Mindfulness — Instituto Winston Churchill',
+    imageAlt: 'Programa Mindfulness y Narrative 4 — Instituto Winston Churchill',
     glow: 'rgba(1, 59, 223, 0.22)',
   },
   {
     id: 'formacion-social',
-    num: '03',
+    num: '04',
     title: 'Formación social y humana',
     subtitle: 'Comunidad y valores',
     lead: 'Entendimiento del mundo a través del respeto y la participación.',
@@ -81,8 +94,15 @@ function ProgramBlock({ program, index }: { program: Program; index: number }) {
     <section
       ref={ref}
       id={program.id}
+      // 2026-10-19: ancla legacy educacion-financiera → finanzas-emprendimiento
+      {...(program.id === 'finanzas-emprendimiento'
+        ? { 'data-legacy-anchor': 'educacion-financiera' }
+        : {})}
       className="scroll-mt-28 relative overflow-hidden"
     >
+      {program.id === 'finanzas-emprendimiento' && (
+        <div id="educacion-financiera" className="pointer-events-none absolute -top-28 h-px w-px" aria-hidden />
+      )}
       <div
         className="absolute inset-0"
         style={{
@@ -282,8 +302,8 @@ export default function ProgramasPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.14, ease }}
           >
-            Emprendimiento, mindfulness y formación humana — experiencias que forman carácter
-            más allá del aula, en Ciudad Madero.
+            Finanzas y emprendimiento, tecnología e innovación, mindfulness y formación
+            humana — experiencias que forman carácter más allá del aula.
           </motion.p>
 
           <motion.nav
@@ -331,9 +351,9 @@ export default function ProgramasPage() {
       {/* Intro strip */}
       <div className="border-b border-[#013BDF]/5 bg-white/80 px-4 py-8 backdrop-blur-sm md:py-10">
         <p className="mx-auto max-w-2xl text-center text-sm leading-relaxed text-gray-500 md:text-base">
-          Tres caminos. Una misma familia{' '}
+          Cuatro caminos. Una misma familia{' '}
           <span className="font-semibold text-[#013BDF]">Winston</span>. Diseñados para acompañar
-          el crecimiento académico con propósito.
+          el crecimiento académico con propósito — incluyendo robótica y programación con IA.
         </p>
       </div>
 

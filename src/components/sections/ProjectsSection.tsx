@@ -74,7 +74,11 @@ export default function SliderSection() {
       <div className="absolute inset-0">
         {/* 2026-09-26: next/image fill + sizes (sección diferida); sin priority ni recomprimir JPG. */}
         {/* 2026-10-13: En móvil el Open House se encuadra a la derecha, donde está el texto del evento. */}
-        <div key={currentSlide} className="absolute inset-0 z-10 opacity-100">
+        <div
+          key={currentSlide}
+          className="absolute inset-0 z-10 transition-opacity duration-700 ease-out"
+          style={{ animation: 'wlSlideFade 0.7s ease-out' }}
+        >
           <Image
             src={slide.image}
             alt={slide.openHouse ? OPEN_HOUSE_ALT : `${slide.title} ${slide.subtitle}`}
@@ -88,7 +92,22 @@ export default function SliderSection() {
         {!slide.openHouse && (
           <div className="absolute inset-0 z-20 bg-gradient-to-t from-black/75 via-black/30 to-black/10 md:bg-black/25 lg:bg-black/20"></div>
         )}
+        {/* 2026-10-19: Desvanecido lateral del carrete mientras corre */}
+        <div
+          className="pointer-events-none absolute inset-y-0 left-0 z-[25] w-12 bg-gradient-to-r from-black/35 to-transparent md:w-20"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute inset-y-0 right-0 z-[25] w-12 bg-gradient-to-l from-black/35 to-transparent md:w-20"
+          aria-hidden
+        />
       </div>
+      <style>{`
+        @keyframes wlSlideFade {
+          from { opacity: 0.35; transform: scale(1.02); }
+          to { opacity: 1; transform: scale(1); }
+        }
+      `}</style>
 
       {/* 2026-04-14: Flechas posicionadas absolutas a los lados, sin indicadores (quitados en todos los dispositivos). */}
       {/* Flecha izquierda */}

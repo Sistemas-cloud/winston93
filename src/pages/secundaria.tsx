@@ -503,12 +503,29 @@ export default function SecundariaPage() {
           {/* Grid de materias extracurriculares */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1 mb-4 max-w-7xl mx-auto justify-items-center">
             {/* 2026-04-14: Ajuste de tono azul en hover de extracurriculares al color institucional #0038e4. */}
-            <ExtracurricularCard src="/images/secundaria/emprende.png" alt="Entrepreneurs" overlayColor="bg-[#0038e4] bg-opacity-40" onClick={() => openGallery('educacionFinanciera')}>
+            {/* 2026-10-19: Conector → /programas#finanzas-emprendimiento */}
+            <ExtracurricularCard
+              src="/images/secundaria/emprende.png"
+              alt="Entrepreneurs"
+              overlayColor="bg-[#0038e4] bg-opacity-40"
+              onClick={() => {
+                window.location.href = '/programas#finanzas-emprendimiento'
+              }}
+            >
               ENTREPRENEURS
             </ExtracurricularCard>
 
             {/* 2026-04-14: Ajuste de tono naranja en hover de extracurriculares al color exacto #ff7c00. */}
-            <ExtracurricularCard src="/images/secundaria/robotica.png" alt="Robótica" overlayColor="bg-[#ff7c00] bg-opacity-60" textColor="text-black" onClick={() => openGallery('robotica')}>
+            {/* 2026-10-19: Conector → /programas#tecnologia-innovacion */}
+            <ExtracurricularCard
+              src="/images/secundaria/robotica.png"
+              alt="Robótica"
+              overlayColor="bg-[#ff7c00] bg-opacity-60"
+              textColor="text-black"
+              onClick={() => {
+                window.location.href = '/programas#tecnologia-innovacion'
+              }}
+            >
               ROBÓTICA
             </ExtracurricularCard>
 

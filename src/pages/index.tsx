@@ -8,6 +8,7 @@ import HomeAboutSection from '@/components/HomeAboutSection'
 import CommunityVoices from '@/components/CommunityVoices'
 import VisitCampusSection from '@/components/VisitCampusSection'
 import EducationalOfferSection from '@/components/sections/ServicesSection'
+import FortalezasSection from '@/components/sections/FortalezasSection'
 import Seo from '@/components/Seo'
 import { SITE_ROUTES } from '@/lib/seo/routes'
 
@@ -18,7 +19,11 @@ const SliderSection = dynamic(() => import('@/components/sections/ProjectsSectio
 })
 const ConveniosSection = dynamic(() => import('@/components/sections/ConveniosSection'), {
   ssr: false,
-  loading: () => <div className="min-h-[360px] w-full bg-white" aria-hidden />,
+  loading: () => <div className="min-h-[420px] w-full bg-white" aria-hidden />,
+})
+const MarcasSection = dynamic(() => import('@/components/sections/MarcasSection'), {
+  ssr: false,
+  loading: () => <div className="min-h-[160px] w-full bg-[#F9F9F9]" aria-hidden />,
 })
 const OfertaEducativaSection = dynamic(
   () => import('@/components/sections/OfertaEducativaSection'),
@@ -74,6 +79,8 @@ export default function Home() {
         <HeroSection />
       </section>
       <HomeAboutSection />
+      {/* 2026-10-19: Fortalezas + Winston USA (pedido marketing CAMBIOS WEB) */}
+      <FortalezasSection />
       <CommunityVoices />
       <VisitCampusSection />
       {/* 2026-10-13: El banner Open House pasó a ser la primera diapositiva del slider. */}
@@ -85,9 +92,10 @@ export default function Home() {
       <section className="min-h-[85vh] w-full md:min-h-[90vh] lg:h-screen">
         <EducationalOfferSection />
       </section>
-      <section className="min-h-[360px] w-full md:min-h-[450px] lg:h-screen">
+      <section className="min-h-[420px] w-full md:min-h-[520px] lg:min-h-screen">
         <ConveniosSection />
       </section>
+      <MarcasSection />
       <section className="w-full">
         <OfertaEducativaSection />
       </section>
@@ -112,9 +120,11 @@ export default function Home() {
       {useFullPage ? (
         <FullPageScroll onSectionChange={handleSectionChange}>
           <HeroSection />
+          <FortalezasSection />
           <SliderSection />
           <EducationalOfferSection />
           <ConveniosSection />
+          <MarcasSection />
           <OfertaEducativaSection />
         </FullPageScroll>
       ) : (

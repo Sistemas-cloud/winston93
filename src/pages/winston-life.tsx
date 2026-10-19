@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import Head from 'next/head'
+import Link from 'next/link'
 import Navigation from '../components/Navigation'
 import { motion } from 'framer-motion'
 import { Anton } from 'next/font/google'
@@ -877,12 +878,18 @@ export default function WinstonLifePage() {
           </button>
         </section>
 
-        {/* Sección ENTREPRENEURS */}
+        {/* Sección ENTREPRENEURS — 2026-10-19: imágenes conectan a /programas#finanzas-emprendimiento */}
         <section id="entrepreneurs" className="py-14 md:py-20 bg-white overflow-hidden">
-          <div className="text-center mb-10 md:mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold text-gray-600 mb-4">
+          <div className="mb-10 text-center md:mb-16">
+            <h2 className="mb-4 text-3xl font-bold text-gray-600 md:text-5xl">
               ENTREPRENEURS
             </h2>
+            <Link
+              href="/programas#finanzas-emprendimiento"
+              className="inline-flex text-sm font-bold uppercase tracking-[0.14em] text-[#013BDF] hover:underline"
+            >
+              Ver Finanzas y emprendimiento →
+            </Link>
           </div>
           <div className="w-full">
             {/* Track duplicado: dos grupos idénticos para loop perfecto */}
@@ -892,7 +899,11 @@ export default function WinstonLifePage() {
                 <div className="flex items-center gap-4">
                   {[1,2,3,4,5,6,7].map((num) => (
                     <div key={`a-${num}`} className="flex-shrink-0">
-                      <div className="relative group">
+                      <Link
+                        href="/programas#finanzas-emprendimiento"
+                        className="relative block group"
+                        aria-label="Ir a Finanzas y emprendimiento"
+                      >
                         <div className="bg-gradient-to-br from-white via-blue-50 to-blue-100 p-4 rounded-2xl shadow-lg border-2 border-blue-200 transition-all duration-500 group-hover:shadow-2xl group-hover:border-blue-400 group-hover:bg-gradient-to-br group-hover:from-blue-50 group-hover:via-white group-hover:to-blue-50 group-hover:-translate-y-2">
                           {/* 2026-07-03: Dimensiones explícitas en carrusel Entrepreneurs para reducir CLS. */}
                           <img src={`/images/Winston Life/emprendedores/emprendedores${num}.${num === 2 ? 'png' : 'jpg'}`} alt={`Programa Entrepreneurs - Actividad ${num}`} width={420} height={300} loading="lazy" decoding="async" className="w-[280px] sm:w-[340px] md:w-[420px] h-[210px] sm:h-[250px] md:h-[300px] object-cover rounded-xl transition-all duration-500 group-hover:scale-105 group-hover:brightness-110" />
@@ -904,7 +915,7 @@ export default function WinstonLifePage() {
                           <div className="absolute top-2 left-2 w-3 h-3 bg-[#E3FB07] rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 delay-100"></div>
                           <div className="absolute top-2 right-2 w-3 h-3 bg-blue-600 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 delay-200"></div>
                         </div>
-                      </div>
+                      </Link>
                     </div>
                   ))}
                 </div>

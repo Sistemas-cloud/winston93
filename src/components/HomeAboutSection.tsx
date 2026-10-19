@@ -36,7 +36,8 @@ export default function HomeAboutSection() {
         </h3>
         <ul className="mb-6 list-disc space-y-2 pl-5 text-sm leading-relaxed text-gray-700 md:text-base">
           <li>Trayectoria de más de tres décadas en la región.</li>
-          <li>Formación bilingüe de kínder a secundaria.</li>
+          <li>Formación trilingüe: inglés diario y francés en secundaria.</li>
+          <li>Programa académico cimentado en tecnología, innovación y emprendimiento.</li>
           <li>Respaldo académico de University of Cambridge.</li>
           <li>Comunidad #soywinston con acompañamiento cercano a las familias.</li>
         </ul>
