@@ -574,7 +574,11 @@ export default function WinstonLifePage() {
       <Navigation currentSection={0} />
 
       {/* 2026-04-10: Sin pt superior; el hero arranca en y=0 y el nav fijo/transparente se superpone a la portada (igual que home en móvil/tablet). */}
-      <div className={`min-h-screen ${heroAnton.variable}`}>
+      {/* 2026-10-19: fondo #F9F9F9 continuo con el collage — sin franja blanca en el morph */}
+      <div
+        className={`min-h-screen ${heroAnton.variable}`}
+        style={{ backgroundColor: '#F9F9F9' }}
+      >
         {/* Título volador: morph hero → watermark collage */}
         <div
           ref={flyTitleRef}
@@ -601,8 +605,12 @@ export default function WinstonLifePage() {
         <section
           ref={heroSectionRef}
           className="relative h-[85vh] min-h-[520px] overflow-hidden md:h-screen"
+          style={{ backgroundColor: '#F9F9F9' }}
         >
-          <div ref={heroBgRef} className="absolute inset-0 origin-center bg-[#012A9E] will-change-transform">
+          <div
+            ref={heroBgRef}
+            className="absolute inset-0 origin-center will-change-transform"
+          >
             {/* 2026-09-22: LCP — WebP responsivo + fetchpriority; sin video en primer paint */}
             <img
               src="/images/Winston Life/portada-750.webp"
@@ -787,9 +795,10 @@ export default function WinstonLifePage() {
         {/* 2026-10-17: Collage orgánico + bento — scroll natural (sin pin) */}
         <WinstonLife id="winston-life-collage" />
 
-        {/* 2026-10-17: z-1 + fondo sólido — nunca bajo el sticky de WinstonLife */}
+        {/* 2026-10-17: z-1 + mismo #F9F9F9 del collage — sin corte de blancos */}
         <section
-          className="relative z-[1] bg-white px-4 py-14 md:py-16"
+          className="relative z-[1] px-4 py-14 md:py-16"
+          style={{ backgroundColor: '#F9F9F9' }}
           aria-labelledby="wl-about-heading"
         >
           <div className="mx-auto max-w-3xl">

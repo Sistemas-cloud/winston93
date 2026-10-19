@@ -72,13 +72,12 @@ const CONFIG = {
     emprende: { x: 52, y: 29.4, w: 43, rot: 0, z: 20 },
   } as const,
 
-  /** Captions anclados a cada celda */
+  /** Captions anclados a cada celda (closing va fuera del canvas) */
   captions: {
     campus: { x: 6, y: 22, w: 20 },
     comunidad: { x: 53, y: 22, w: 20 },
     deporte: { x: 6, y: 48, w: 20 },
     emprende: { x: 53, y: 48, w: 20 },
-    closing: { x: 5, y: 51.5, w: 22 },
   } as const,
 
   /** Caída desde fuera → aterrizan en grid */
@@ -1151,26 +1150,27 @@ function DesktopStage({
               }}
             />
           </div>
-
-          <p
-            ref={(el) => {
-              closingRef.current = el
-            }}
-            className="pointer-events-none absolute z-[45] font-[family-name:var(--wl-display)] uppercase leading-none tracking-tight"
-            style={{
-              left: u(CONFIG.captions.closing.x),
-              top: u(CONFIG.captions.closing.y),
-              width: u(CONFIG.captions.closing.w),
-              color: CONFIG.accent,
-              WebkitTextStroke: `1.5px ${CONFIG.brand}`,
-              paintOrder: 'stroke fill',
-              fontSize: u(3.4),
-              opacity: 0,
-            }}
-          >
-            {CONFIG.closingText}
-          </p>
         </div>
+
+        {/* Cierre debajo del collage — sin solape ni corte */}
+        <p
+          ref={(el) => {
+            closingRef.current = el
+          }}
+          className="pointer-events-none absolute bottom-[2.5%] left-1/2 z-[45] w-[min(90%,42rem)] -translate-x-1/2 text-center font-[family-name:var(--wl-display)] uppercase leading-[1.05] tracking-tight"
+          style={{
+            color: CONFIG.bright,
+            fontSize: 'clamp(1.15rem, 2.4vw, 1.85rem)',
+            opacity: 0,
+          }}
+        >
+          <span
+            className="mb-2 mx-auto block h-1 w-10 rounded-sm"
+            style={{ backgroundColor: CONFIG.lime }}
+            aria-hidden
+          />
+          {CONFIG.closingText}
+        </p>
       </div>
     </div>
   )
@@ -1287,14 +1287,17 @@ function MobileStack({
         ref={(el) => {
           closingRef.current = el
         }}
-        className="mt-14 font-[family-name:var(--wl-display)] text-3xl uppercase tracking-tight"
+        className="mt-14 text-center font-[family-name:var(--wl-display)] text-2xl uppercase leading-snug tracking-tight sm:text-3xl"
         style={{
-          color: CONFIG.accent,
-          WebkitTextStroke: `1.5px ${CONFIG.brand}`,
-          paintOrder: 'stroke fill',
+          color: CONFIG.bright,
           opacity: 0,
         }}
       >
+        <span
+          className="mb-2 mx-auto block h-1 w-10 rounded-sm"
+          style={{ backgroundColor: CONFIG.lime }}
+          aria-hidden
+        />
         {CONFIG.closingText}
       </p>
     </div>
