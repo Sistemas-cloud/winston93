@@ -66,18 +66,19 @@ const CONFIG = {
 
   /** Videos más grandes; solape leve */
   slots: {
-    campus: { x: 1, y: 4, w: 46, rot: -3.5, z: 20 },
-    comunidad: { x: 49, y: 1, w: 40, rot: 2.8, z: 10 },
-    deporte: { x: 12, y: 23, w: 44, rot: -2, z: 30 },
-    emprende: { x: 56, y: 28, w: 36, rot: 3.5, z: 25 },
+    campus: { x: 0, y: 2, w: 50, rot: -3.2, z: 20 },
+    comunidad: { x: 47, y: 0, w: 44, rot: 2.6, z: 10 },
+    deporte: { x: 8, y: 20, w: 48, rot: -2, z: 30 },
+    emprende: { x: 52, y: 24, w: 40, rot: 3.2, z: 25 },
   } as const,
 
+  /** Captions más arriba para no cortar el título al borde del canvas */
   captions: {
-    campus: { x: 3, y: 32, w: 20 },
-    comunidad: { x: 50, y: 26, w: 16 },
-    deporte: { x: 14, y: 50, w: 24 },
-    emprende: { x: 60, y: 51, w: 20 },
-    closing: { x: 3, y: 50, w: 18 },
+    campus: { x: 2, y: 30, w: 22 },
+    comunidad: { x: 48, y: 24, w: 18 },
+    deporte: { x: 10, y: 44, w: 26 },
+    emprende: { x: 54, y: 42, w: 24 },
+    closing: { x: 2, y: 48, w: 20 },
   } as const,
 
   /** Caída desde fuera — rotación exagerada */
@@ -982,19 +983,19 @@ function DesktopStage({
             height: u(CONFIG.canvasH),
           }}
         >
-          {/* Título watermark: fill suave + contorno delante (los videos lo cruzan) */}
+          {/* Título watermark: WINSTON / LIFE enteros (sin wrap a mitad de palabra) */}
           <div
-            className="pointer-events-none absolute left-0 top-[2%] z-0"
-            style={{ width: u(52) }}
+            className="pointer-events-none absolute left-[1%] top-[1%] z-0"
+            style={{ width: u(96) }}
           >
             <h2
               ref={(el) => {
                 fillTitleRef.current = el
               }}
-              className="font-[family-name:var(--wl-display)] uppercase leading-[0.8] tracking-[-0.045em]"
+              className="font-[family-name:var(--wl-display)] uppercase leading-[0.82] tracking-[-0.04em]"
               style={{
                 color: CONFIG.brand,
-                fontSize: u(23),
+                fontSize: u(15.5),
                 opacity: 0.12,
               }}
               aria-hidden
@@ -1005,12 +1006,12 @@ function DesktopStage({
               ref={(el) => {
                 strokeTitleRef.current = el
               }}
-              className="pointer-events-none absolute left-0 top-0 z-[50] font-[family-name:var(--wl-display)] uppercase leading-[0.8] tracking-[-0.045em]"
+              className="pointer-events-none absolute left-0 top-0 z-[50] font-[family-name:var(--wl-display)] uppercase leading-[0.82] tracking-[-0.04em]"
               style={{
                 color: 'transparent',
-                WebkitTextStroke: `calc(var(--wl-u) * 0.2) ${CONFIG.brand}`,
-                fontSize: u(23),
-                opacity: 0.42,
+                WebkitTextStroke: `calc(var(--wl-u) * 0.18) ${CONFIG.brand}`,
+                fontSize: u(15.5),
+                opacity: 0.4,
               }}
             >
               <span className="sr-only">Winston Life</span>
@@ -1069,7 +1070,7 @@ function DesktopStage({
                   ref={(el) => {
                     captionRefs.current[i] = el
                   }}
-                  className="pointer-events-none absolute z-[40]"
+                  className="pointer-events-none absolute z-[40] overflow-visible"
                   style={{
                     left: u(cap.x),
                     top: u(cap.y),
@@ -1078,7 +1079,7 @@ function DesktopStage({
                   }}
                 >
                   <div
-                    className="rounded-xl px-[0.6em] py-[0.5em]"
+                    className="rounded-xl px-[0.65em] pb-[0.65em] pt-[0.5em]"
                     style={{
                       background: 'rgba(249,249,249,.92)',
                       boxShadow: '0 8px 28px -12px rgba(10,42,107,.28)',
@@ -1103,10 +1104,11 @@ function DesktopStage({
                     </p>
                     <h3
                       data-copy-part
-                      className="mt-[0.3em] font-[family-name:var(--wl-display)] uppercase leading-none tracking-tight"
+                      className="mt-[0.35em] font-[family-name:var(--wl-display)] uppercase leading-[0.92] tracking-tight"
                       style={{
                         color: CONFIG.textColors[cfg.id].title,
-                        fontSize: u(2.8),
+                        fontSize: u(2.5),
+                        paddingBottom: '0.08em',
                       }}
                     >
                       {cfg.title}
@@ -1352,10 +1354,15 @@ function TitleLetters({
   return (
     <span aria-hidden={ariaHidden}>
       {lines.map((line) => (
-        <span key={line} className="block overflow-hidden">
+        <span key={line} className="block whitespace-nowrap overflow-hidden">
           {line.split('').map((ch, i) => (
-            <span key={`${line}-${i}`} data-letter className="inline-block">
-              {ch}
+            <span
+              key={`${line}-${i}`}
+              data-letter
+              className="inline-block"
+              style={{ whiteSpace: ch === ' ' ? 'pre' : undefined }}
+            >
+              {ch === ' ' ? '\u00A0' : ch}
             </span>
           ))}
         </span>
