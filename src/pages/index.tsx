@@ -19,11 +19,7 @@ const SliderSection = dynamic(() => import('@/components/sections/ProjectsSectio
 })
 const ConveniosSection = dynamic(() => import('@/components/sections/ConveniosSection'), {
   ssr: false,
-  loading: () => <div className="min-h-[420px] w-full bg-white" aria-hidden />,
-})
-const MarcasSection = dynamic(() => import('@/components/sections/MarcasSection'), {
-  ssr: false,
-  loading: () => <div className="min-h-[160px] w-full bg-[#F9F9F9]" aria-hidden />,
+  loading: () => <div className="min-h-[360px] w-full bg-white" aria-hidden />,
 })
 const OfertaEducativaSection = dynamic(
   () => import('@/components/sections/OfertaEducativaSection'),
@@ -92,10 +88,9 @@ export default function Home() {
       <section className="min-h-[85vh] w-full md:min-h-[90vh] lg:h-screen">
         <EducationalOfferSection />
       </section>
-      <section className="min-h-[420px] w-full md:min-h-[520px] lg:min-h-screen">
+      <section className="min-h-[360px] w-full md:min-h-[450px] lg:h-screen">
         <ConveniosSection />
       </section>
-      <MarcasSection />
       <section className="w-full">
         <OfertaEducativaSection />
       </section>
@@ -124,7 +119,6 @@ export default function Home() {
           <SliderSection />
           <EducationalOfferSection />
           <ConveniosSection />
-          <MarcasSection />
           <OfertaEducativaSection />
         </FullPageScroll>
       ) : (
