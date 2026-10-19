@@ -1,10 +1,13 @@
-// 2026-10-19: Oferta educativa en acordeón. Mismas fotos, textos y enlaces.
-// Pages Router: el componente ya corre en cliente; sin "use client" ni librerías nuevas.
-// Tipografía de marca (Poppins), no se cargan fuentes extra.
-import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from 'react'
+// 2026-10-19: Oferta educativa — acordeón, continuidad y cierre. Mismos textos y enlaces.
+// Pages Router: cliente sin "use client". Sin librerías nuevas. Poppins de marca.
+import {
+  useEffect,
+  useRef,
+  useState,
+  type MouseEvent as ReactMouseEvent,
+} from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import EnrollmentCTA from '@/components/EnrollmentCTA'
 import FooterLegal from '@/components/FooterLegal'
 import { PRIVACY_NOTICE_PATH } from '@/lib/legal'
 
@@ -35,6 +38,13 @@ const LEVELS = [
   },
 ] as const
 
+const CLOSE_HEAD = 'Da el siguiente paso con la familia Winston'
+
+function firstSentence(text: string) {
+  const match = text.match(/^[^.!?]+[.!?]?/)
+  return match ? match[0].trim() : text
+}
+
 export default function OfertaEducativaSection({
   // 2026-08-15: En /oferta-educativa el título es H1; en home (sección) es H2.
   isPageTitle = false,
@@ -45,22 +55,39 @@ export default function OfertaEducativaSection({
   includeClosing?: boolean
 }) {
   const [isMobile, setIsMobile] = useState(false)
+  const [isStacked, setIsStacked] = useState(false)
   const [active, setActive] = useState(0)
   const [inView, setInView] = useState(false)
+  const [pathIn, setPathIn] = useState(false)
+  const [closeIn, setCloseIn] = useState(false)
+  const [pathProgress, setPathProgress] = useState(0)
+  const [reduced, setReduced] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
+  const pathRef = useRef<HTMLElement>(null)
+  const closeRef = useRef<HTMLElement>(null)
   const TitleTag = isPageTitle ? 'h1' : 'h2'
 
   useEffect(() => {
-    const update = () => setIsMobile(window.innerWidth < 768)
+    const update = () => {
+      setIsMobile(window.innerWidth < 768)
+      setIsStacked(window.innerWidth < 900)
+    }
     update()
     window.addEventListener('resize', update)
     return () => window.removeEventListener('resize', update)
   }, [])
 
   useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const sync = () => setReduced(mq.matches)
+    sync()
+    mq.addEventListener('change', sync)
+    return () => mq.removeEventListener('change', sync)
+  }, [])
+
+  useEffect(() => {
     const node = sectionRef.current
     if (!node) return
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (reduced) {
       setInView(true)
       return
@@ -72,14 +99,87 @@ export default function OfertaEducativaSection({
           observer.disconnect()
         }
       },
+      { threshold: 0.2 }
+    )
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [reduced])
+
+  useEffect(() => {
+    const node = pathRef.current
+    if (!node) return
+    if (reduced) {
+      setPathIn(true)
+      setPathProgress(1)
+      return
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setPathIn(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.2 }
+    )
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [reduced])
+
+  useEffect(() => {
+    const node = closeRef.current
+    if (!node || !includeClosing) return
+    if (reduced) {
+      setCloseIn(true)
+      return
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setCloseIn(true)
+          observer.disconnect()
+        }
+      },
       { threshold: 0.25 }
     )
     observer.observe(node)
     return () => observer.disconnect()
-  }, [])
+  }, [reduced, includeClosing])
+
+  useEffect(() => {
+    if (reduced) {
+      setPathProgress(1)
+      return
+    }
+    const el = pathRef.current
+    if (!el) return
+
+    let raf = 0
+    const measure = () => {
+      raf = 0
+      const rect = el.getBoundingClientRect()
+      const vh = window.innerHeight || 1
+      const start = vh * 0.85
+      const end = vh * 0.25
+      const raw = (start - rect.top) / (start - end + rect.height * 0.35)
+      setPathProgress(Math.min(1, Math.max(0, raw)))
+    }
+    const onScroll = () => {
+      if (raf) return
+      raf = window.requestAnimationFrame(measure)
+    }
+    measure()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      if (raf) window.cancelAnimationFrame(raf)
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+    }
+  }, [reduced])
 
   const moveCard = (event: ReactMouseEvent<HTMLElement>) => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    if (reduced || window.innerWidth < 900) return
     const card = event.currentTarget
     const rect = card.getBoundingClientRect()
     const px = (event.clientX - rect.left) / rect.width
@@ -101,34 +201,48 @@ export default function OfertaEducativaSection({
     <div className="relative flex w-full flex-col overflow-x-hidden bg-white">
       <section
         ref={sectionRef}
-        className={`oe relative overflow-hidden px-4 md:px-8 ${inView ? 'is-in' : ''} ${
-          includeClosing ? 'pb-16 pt-24 md:pb-20 md:pt-28' : 'pb-12 pt-20 md:pb-16 md:pt-24'
+        className={`oe relative overflow-x-hidden px-4 md:px-8 ${inView ? 'is-in' : ''} ${
+          includeClosing ? 'pb-10 pt-24 md:pb-12 md:pt-28' : 'pb-10 pt-20 md:pb-12 md:pt-24'
         }`}
       >
-        <div className="oe-glow oe-glow-a" aria-hidden />
-        <div className="oe-glow oe-glow-b" aria-hidden />
+        <div className="oe-glow-wrap" aria-hidden>
+          <div className="oe-glow oe-glow-a" />
+          <div className="oe-glow oe-glow-b" />
+        </div>
+
         <div className="oe-head">
           <p className="oe-kicker">Instituto Winston Churchill</p>
           <TitleTag className="oe-title">
-            <span className="oe-mask"><span className="oe-word">Oferta</span></span>{' '}
-            <span className="oe-mask"><span className="oe-word">educativa</span></span>
+            <span className="oe-mask">
+              <span className="oe-word">Oferta</span>
+            </span>{' '}
+            <span className="oe-mask">
+              <span className="oe-word">educativa</span>
+            </span>
           </TitleTag>
           <div className="oe-bar" />
           <p className="oe-lead">
-            Un camino bilingüe de kínder a secundaria. Conoce cada etapa. Da el
-            siguiente paso con la familia del Instituto Winston Churchill.
+            Un camino bilingüe de kínder a secundaria. Conoce cada etapa. Da el siguiente paso con
+            la familia del Instituto Winston Churchill.
           </p>
         </div>
 
         <div className="oe-row">
           {LEVELS.map((level, index) => {
+            const ctaOpen = active === index || isStacked
             const explore = level.external ? (
-              <a href={level.link} target="_blank" rel="noopener noreferrer" className="oe-link">
+              <a
+                href={level.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="oe-link"
+                tabIndex={ctaOpen ? undefined : -1}
+              >
                 Explorar nivel
                 <span className="oe-arrow" aria-hidden />
               </a>
             ) : (
-              <Link href={level.link} className="oe-link">
+              <Link href={level.link} className="oe-link" tabIndex={ctaOpen ? undefined : -1}>
                 Explorar nivel
                 <span className="oe-arrow" aria-hidden />
               </Link>
@@ -136,7 +250,7 @@ export default function OfertaEducativaSection({
             return (
               <article
                 key={level.name}
-                className={`oe-card${active === index ? ' is-active' : ''}`}
+                className={`oe-card${active === index || isStacked ? ' is-active' : ''}`}
                 style={{ ['--c' as string]: level.color }}
                 tabIndex={0}
                 onMouseEnter={() => setActive(index)}
@@ -152,7 +266,7 @@ export default function OfertaEducativaSection({
                       src={level.image}
                       alt={`Estudiante de ${level.name} — Instituto Winston Churchill`}
                       fill
-                      sizes="230px"
+                      sizes="(max-width: 900px) 130px, 230px"
                       className="oe-img"
                     />
                   </div>
@@ -160,8 +274,12 @@ export default function OfertaEducativaSection({
                 <div className="oe-body">
                   <h3 className="oe-name">{level.name}</h3>
                   <span className="oe-rule" aria-hidden />
-                  <div className="oe-reveal">
-                    <p>{level.blurb}</p>
+                  <p className="oe-blurb">{level.blurb}</p>
+                  <div
+                    className="oe-cta"
+                    aria-hidden={!ctaOpen}
+                    {...(!ctaOpen ? { inert: true } : {})}
+                  >
                     {explore}
                   </div>
                 </div>
@@ -169,6 +287,41 @@ export default function OfertaEducativaSection({
             )
           })}
         </div>
+
+        {/* 2026-10-19: Línea de continuidad Kínder → Primaria → Secundaria. */}
+        <section
+          ref={pathRef}
+          className={`oe-path${pathIn ? ' is-in' : ''}${reduced ? ' is-reduced' : ''}`}
+          aria-labelledby="oe-path-heading"
+          style={{ ['--oe-path' as string]: String(pathProgress) }}
+        >
+          <h2 id="oe-path-heading" className="oe-path-title">
+            Un camino, tres etapas
+          </h2>
+          <div className="oe-path-track" aria-hidden>
+            <span className="oe-path-base" />
+            <span className="oe-path-fill" />
+            <ol className="oe-path-dots">
+              {LEVELS.map((level, index) => {
+                const reached = pathProgress >= (index + 0.35) / LEVELS.length || reduced
+                return (
+                  <li
+                    key={level.name}
+                    className={`oe-path-dot${reached ? ' is-on' : ''}`}
+                    style={{ ['--c' as string]: level.color }}
+                  >
+                    <span className="oe-path-orb" />
+                    <span className="oe-path-meta">
+                      <strong>{level.name}</strong>
+                      <span>{firstSentence(level.blurb)}</span>
+                    </span>
+                  </li>
+                )
+              })}
+            </ol>
+          </div>
+        </section>
+
         <style jsx global>{`
           .oe {
             --oe-blue: #1546e8;
@@ -176,29 +329,52 @@ export default function OfertaEducativaSection({
             --oe-lime: #dfff00;
             --oe-cyan: #00d8ff;
             --oe-muted: #5b6490;
-            --oe-ease: cubic-bezier(.16,1,.3,1);
+            --oe-ease: cubic-bezier(.16, 1, .3, 1);
             background: #fff;
             color: var(--oe-ink);
             font-family: var(--font-poppins), Poppins, sans-serif;
           }
+          .oe-glow-wrap {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+          }
           .oe-glow {
             position: absolute;
-            z-index: 0;
-            width: 340px; height: 340px;
+            width: 320px;
+            height: 320px;
             border-radius: 999px;
             filter: blur(90px);
-            opacity: .35;
-            pointer-events: none;
-            animation: oeFloat 18s ease-in-out infinite alternate;
+            opacity: .3;
+            animation: oeDrift 18s ease-in-out infinite alternate;
           }
-          .oe-glow-a { left: -120px; top: 40px; background: var(--oe-lime); }
-          .oe-glow-b { right: -120px; top: 180px; background: #9db4ff; animation-delay: -6s; }
-          @keyframes oeFloat {
-            from { transform: translate3d(0,0,0); }
-            to { transform: translate3d(28px,-36px,0); }
+          .oe-glow-a {
+            left: 4%;
+            top: 8%;
+            background: var(--oe-lime);
           }
-          .oe-head, .oe-row { position: relative; z-index: 1; }
-          .oe-head { text-align: center; margin-bottom: 2.5rem; }
+          .oe-glow-b {
+            right: 6%;
+            top: 28%;
+            background: #9db4ff;
+            animation-delay: -6s;
+          }
+          @keyframes oeDrift {
+            from { transform: translate3d(0, 0, 0); }
+            to { transform: translate3d(24px, -28px, 0); }
+          }
+          .oe-head,
+          .oe-row,
+          .oe-path {
+            position: relative;
+            z-index: 1;
+          }
+          .oe-head {
+            text-align: center;
+            margin-bottom: 2.5rem;
+          }
           .oe-kicker {
             margin: 0 0 .8rem;
             color: var(--oe-blue);
@@ -215,7 +391,11 @@ export default function OfertaEducativaSection({
             letter-spacing: -0.03em;
             line-height: .95;
           }
-          .oe-mask { display: inline-block; overflow: hidden; vertical-align: bottom; }
+          .oe-mask {
+            display: inline-block;
+            overflow: hidden;
+            vertical-align: bottom;
+          }
           .oe-word {
             display: inline-block;
             transform: translateY(105%);
@@ -224,7 +404,8 @@ export default function OfertaEducativaSection({
           .oe.is-in .oe-word { transform: translateY(0); }
           .oe.is-in .oe-mask + .oe-mask .oe-word { transition-delay: .12s; }
           .oe-bar {
-            width: 0; height: 5px;
+            width: 0;
+            height: 5px;
             margin: 1rem auto 0;
             border-radius: 999px;
             background: var(--oe-lime);
@@ -243,30 +424,38 @@ export default function OfertaEducativaSection({
           .oe.is-in .oe-lead { opacity: 1; }
           .oe-row {
             display: flex;
+            align-items: flex-start;
             max-width: 1180px;
-            height: 600px;
             margin: 0 auto;
             gap: 20px;
           }
           .oe-card {
             position: relative;
-            display: flex;
+            display: grid;
+            grid-template-rows: auto auto;
             flex: 1;
-            flex-direction: column;
             min-width: 0;
+            min-height: 560px;
+            height: auto;
             overflow: hidden;
             border: 1px solid #e3e8fb;
             border-radius: 28px;
             background: #f6f8ff;
             cursor: pointer;
-            transition: flex 1s var(--oe-ease), background 1s var(--oe-ease), box-shadow 1s var(--oe-ease);
+            transition:
+              flex 1s var(--oe-ease),
+              background 1s var(--oe-ease),
+              box-shadow 1s var(--oe-ease);
           }
           .oe-card.is-active {
             flex: 1.7;
             background: #fff;
-            box-shadow: 0 40px 80px -30px rgba(21,70,232,.35);
+            box-shadow: 0 40px 80px -30px rgba(21, 70, 232, .35);
           }
-          .oe-card:focus-visible { outline: 3px solid var(--oe-blue); outline-offset: 3px; }
+          .oe-card:focus-visible {
+            outline: 3px solid var(--oe-blue);
+            outline-offset: 3px;
+          }
           .oe-card::before {
             content: '';
             position: absolute;
@@ -274,19 +463,27 @@ export default function OfertaEducativaSection({
             z-index: 2;
             pointer-events: none;
             opacity: 0;
-            background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 20%), rgba(21,70,232,.10), transparent 60%);
+            background: radial-gradient(
+              420px circle at var(--mx, 50%) var(--my, 20%),
+              rgba(21, 70, 232, .1),
+              transparent 60%
+            );
             transition: opacity .4s var(--oe-ease);
           }
           .oe-card.is-active::before { opacity: 1; }
           .oe-stage {
             position: relative;
             display: flex;
-            align-items: flex-end;
+            align-items: flex-start;
             justify-content: center;
-            height: 320px;
-            margin-top: 18px;
+            width: 100%;
+            /* 264 foto + 18 halo + aire superior */
+            min-height: calc(264px + 18px + 28px);
+            padding: 28px 18px 0 0;
+            box-sizing: border-box;
           }
-          .oe-halo, .oe-arch {
+          .oe-halo,
+          .oe-arch {
             width: 230px;
             height: 264px;
             border-radius: 115px 115px 18px 18px;
@@ -294,22 +491,37 @@ export default function OfertaEducativaSection({
           .oe-halo {
             position: absolute;
             z-index: 0;
+            top: 28px;
+            left: 50%;
+            margin-left: -115px;
             background: var(--c);
-            opacity: .55;
-            transform: translateY(30px) scale(.86);
+            opacity: .5;
+            transform: translate(14px, 14px);
             transition: transform 1s var(--oe-ease), opacity 1s var(--oe-ease);
           }
-          .oe-card.is-active .oe-halo { opacity: 1; transform: translateY(0) scale(1.12); }
+          .oe-card.is-active .oe-halo {
+            opacity: 1;
+            transform: translate(18px, 18px);
+          }
           .oe-arch {
             position: relative;
             z-index: 1;
+            flex: none;
             overflow: hidden;
             clip-path: inset(100% 0 0 0 round 115px 115px 18px 18px);
             transition: clip-path 1.2s var(--oe-ease), transform .2s linear;
           }
-          .oe.is-in .oe-card:nth-child(1) .oe-arch { clip-path: inset(0 round 115px 115px 18px 18px); }
-          .oe.is-in .oe-card:nth-child(2) .oe-arch { clip-path: inset(0 round 115px 115px 18px 18px); transition: clip-path 1.2s var(--oe-ease) .15s, transform .2s linear; }
-          .oe.is-in .oe-card:nth-child(3) .oe-arch { clip-path: inset(0 round 115px 115px 18px 18px); transition: clip-path 1.2s var(--oe-ease) .3s, transform .2s linear; }
+          .oe.is-in .oe-card:nth-child(1) .oe-arch {
+            clip-path: inset(0 round 115px 115px 18px 18px);
+          }
+          .oe.is-in .oe-card:nth-child(2) .oe-arch {
+            clip-path: inset(0 round 115px 115px 18px 18px);
+            transition: clip-path 1.2s var(--oe-ease) .15s, transform .2s linear;
+          }
+          .oe.is-in .oe-card:nth-child(3) .oe-arch {
+            clip-path: inset(0 round 115px 115px 18px 18px);
+            transition: clip-path 1.2s var(--oe-ease) .3s, transform .2s linear;
+          }
           .oe-img {
             object-fit: cover;
             object-position: center 16%;
@@ -317,7 +529,14 @@ export default function OfertaEducativaSection({
             transition: transform 6s ease-out;
           }
           .oe-card.is-active .oe-img { transform: scale(1.02); }
-          .oe-body { position: relative; z-index: 3; padding: 8px 22px 26px; }
+          .oe-body {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            margin-top: 40px;
+            padding: 8px 32px 32px;
+          }
           .oe-name {
             margin: 0;
             color: var(--oe-ink);
@@ -327,35 +546,49 @@ export default function OfertaEducativaSection({
           }
           .oe-rule {
             display: block;
-            width: 30px; height: 4px;
+            width: 30px;
+            height: 4px;
             margin: 10px 0 0;
             border-radius: 999px;
             background: var(--c);
             transition: width 1s var(--oe-ease);
           }
           .oe-card.is-active .oe-rule { width: 90px; }
-          .oe-reveal {
+          .oe-blurb {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            overflow: hidden;
+            margin: 12px 0 0;
+            color: var(--oe-muted);
+            font-size: 15px;
+            line-height: 1.45;
+          }
+          .oe-cta {
+            margin-top: 14px;
             max-height: 0;
             overflow: hidden;
             opacity: 0;
-            transition: max-height 1s var(--oe-ease), opacity .6s var(--oe-ease);
+            visibility: hidden;
+            transition:
+              max-height 1s var(--oe-ease),
+              opacity .6s var(--oe-ease),
+              visibility 0s linear .6s;
           }
-          .oe-card.is-active .oe-reveal {
-            max-height: 160px;
+          .oe-card.is-active .oe-cta {
+            max-height: 56px;
             opacity: 1;
-            transition-delay: .15s;
-          }
-          .oe-reveal p {
-            margin: 12px 0 0;
-            color: var(--oe-muted);
-            font-size: .92rem;
-            line-height: 1.45;
+            visibility: visible;
+            transition:
+              max-height 1s var(--oe-ease),
+              opacity .6s var(--oe-ease) .12s,
+              visibility 0s linear 0s;
           }
           .oe-link {
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            margin-top: 14px;
             color: var(--oe-blue);
             font-size: .78rem;
             font-weight: 800;
@@ -363,177 +596,559 @@ export default function OfertaEducativaSection({
             text-transform: uppercase;
             text-decoration: none;
           }
-          .oe-link:focus-visible { outline: 3px solid var(--oe-blue); outline-offset: 3px; }
+          .oe-link:focus-visible {
+            outline: 3px solid var(--oe-blue);
+            outline-offset: 3px;
+          }
           .oe-arrow {
             position: relative;
             display: inline-block;
-            width: 22px; height: 2px;
+            width: 22px;
+            height: 2px;
             background: currentColor;
             transition: width .4s var(--oe-ease);
           }
           .oe-arrow::after {
             content: '';
             position: absolute;
-            right: -1px; top: -4px;
+            right: -1px;
+            top: -4px;
             border-top: 5px solid transparent;
             border-bottom: 5px solid transparent;
             border-left: 7px solid currentColor;
           }
-          .oe-link:hover .oe-arrow, .oe-link:focus-visible .oe-arrow { width: 40px; }
-          @media (max-width: 860px) {
-            .oe-row { flex-direction: column; height: auto; }
-            .oe-card, .oe-card.is-active {
+          .oe-link:hover .oe-arrow,
+          .oe-link:focus-visible .oe-arrow {
+            width: 40px;
+          }
+
+          /* —— Continuidad —— */
+          .oe-path {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 96px 0 24px;
+          }
+          .oe-path-title {
+            margin: 0 0 2.5rem;
+            text-align: center;
+            color: var(--oe-ink);
+            font-weight: 800;
+            font-size: clamp(1.8rem, 3.4vw, 2.8rem);
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity 1s var(--oe-ease), transform 1s var(--oe-ease);
+          }
+          .oe-path.is-in .oe-path-title {
+            opacity: 1;
+            transform: translateY(0);
+          }
+          .oe-path-track {
+            position: relative;
+            padding-top: 9px;
+          }
+          .oe-path-base,
+          .oe-path-fill {
+            position: absolute;
+            left: 8%;
+            right: 8%;
+            top: 17px;
+            height: 3px;
+            border-radius: 999px;
+            transform-origin: left center;
+          }
+          .oe-path-base { background: #e3e8fb; }
+          .oe-path-fill {
+            background: var(--oe-blue);
+            transform: scaleX(var(--oe-path, 0));
+            transition: transform .05s linear;
+          }
+          .oe-path-dots {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+          }
+          .oe-path-dot {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 14px;
+          }
+          .oe-path-orb {
+            width: 18px;
+            height: 18px;
+            border-radius: 999px;
+            background: var(--c);
+            box-shadow: 0 0 0 4px #fff;
+            transform: scale(1);
+            transition: transform 1s var(--oe-ease);
+          }
+          .oe-path-dot.is-on .oe-path-orb { transform: scale(1.4); }
+          .oe-path-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            max-width: 22ch;
+          }
+          .oe-path-meta strong {
+            color: var(--oe-ink);
+            font-size: .95rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+          }
+          .oe-path-meta span {
+            color: var(--oe-muted);
+            font-size: .86rem;
+            line-height: 1.45;
+          }
+
+          /* —— Cierre —— */
+          .oe-close {
+            position: relative;
+            overflow: hidden;
+            margin-top: 24px;
+            padding: 96px 1.25rem;
+            border-radius: 40px 40px 0 0;
+            background: #1546e8;
+            color: #fff;
+            text-align: center;
+            font-family: var(--font-poppins), Poppins, sans-serif;
+          }
+          .oe-close-glow {
+            position: absolute;
+            left: 50%;
+            top: 10%;
+            width: 420px;
+            height: 420px;
+            margin-left: -210px;
+            border-radius: 999px;
+            background: #dfff00;
+            filter: blur(90px);
+            opacity: .25;
+            pointer-events: none;
+          }
+          .oe-close-inner {
+            position: relative;
+            z-index: 1;
+            max-width: 820px;
+            margin: 0 auto;
+          }
+          .oe-close-title {
+            margin: 0;
+            font-weight: 800;
+            font-size: clamp(2rem, 4.4vw, 3.6rem);
+            letter-spacing: -0.03em;
+            line-height: 1.05;
+          }
+          .oe-close-title .oe-mask { vertical-align: bottom; }
+          .oe-close-title .oe-word {
+            transform: translateY(110%);
+            transition: transform 1s var(--oe-ease);
+          }
+          .oe-close.is-in .oe-close-title .oe-word { transform: translateY(0); }
+          .oe-close.is-in .oe-close-title .oe-mask:nth-child(2) .oe-word { transition-delay: .06s; }
+          .oe-close.is-in .oe-close-title .oe-mask:nth-child(3) .oe-word { transition-delay: .12s; }
+          .oe-close.is-in .oe-close-title .oe-mask:nth-child(4) .oe-word { transition-delay: .18s; }
+          .oe-close.is-in .oe-close-title .oe-mask:nth-child(5) .oe-word { transition-delay: .24s; }
+          .oe-close.is-in .oe-close-title .oe-mask:nth-child(6) .oe-word { transition-delay: .3s; }
+          .oe-close.is-in .oe-close-title .oe-mask:nth-child(7) .oe-word { transition-delay: .36s; }
+          .oe-close-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 14px;
+            margin-top: 2rem;
+          }
+          .oe-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            height: 56px;
+            padding: 0 1.4rem;
+            border-radius: 999px;
+            font-size: .82rem;
+            font-weight: 800;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: transform .35s var(--oe-ease), background .35s var(--oe-ease), color .35s var(--oe-ease);
+          }
+          .oe-btn-solid {
+            background: #dfff00;
+            color: #0a1240;
+          }
+          .oe-btn-ghost {
+            border: 1.5px solid #fff;
+            color: #fff;
+            background: transparent;
+          }
+          .oe-btn:focus-visible {
+            outline: 3px solid #fff;
+            outline-offset: 3px;
+          }
+          .oe-btn .oe-arrow {
+            background: currentColor;
+          }
+          .oe-btn .oe-arrow::after {
+            border-left-color: currentColor;
+          }
+          .oe-btn:hover .oe-arrow,
+          .oe-btn:focus-visible .oe-arrow {
+            width: 40px;
+          }
+          .oe-close-usa {
+            display: inline-block;
+            margin-top: 1.5rem;
+            color: rgba(255, 255, 255, .82);
+            font-size: .9rem;
+            font-weight: 600;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+          }
+          .oe-close-usa:hover,
+          .oe-close-usa:focus-visible {
+            color: #dfff00;
+          }
+          .oe-close-usa:focus-visible {
+            outline: 3px solid #fff;
+            outline-offset: 3px;
+          }
+          .oe-close-usa small {
+            display: block;
+            margin-top: .25rem;
+            font-size: .78rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, .7);
+            text-decoration: none;
+          }
+
+          @media (max-width: 899px) {
+            .oe-row {
+              flex-direction: column;
+              gap: 14px;
+            }
+            .oe-card,
+            .oe-card.is-active {
+              display: grid;
+              grid-template-columns: 130px 1fr;
+              grid-template-rows: auto;
               flex: none;
-              flex-direction: row;
               align-items: center;
               gap: 14px;
               width: 100%;
+              min-height: 0;
               padding: 14px;
               box-shadow: none;
             }
-            .oe-stage { width: 130px; height: 150px; margin: 0; flex: none; }
+            .oe-stage {
+              width: 130px;
+              min-height: 150px;
+              margin: 0;
+              padding: 0;
+              flex: none;
+            }
             .oe-halo { display: none; }
-            .oe-arch, .oe.is-in .oe-arch {
-              width: 130px; height: 150px;
+            .oe-arch,
+            .oe.is-in .oe-arch {
+              width: 130px;
+              height: 150px;
               border-radius: 65px 65px 12px 12px;
               clip-path: none;
               transform: none !important;
             }
-            .oe-body { padding: 0; }
-            .oe-reveal, .oe-card.is-active .oe-reveal {
+            .oe-body {
+              margin-top: 0;
+              padding: 0;
+            }
+            .oe-blurb {
+              -webkit-line-clamp: unset;
+              line-clamp: unset;
+              font-size: .9rem;
+            }
+            .oe-cta,
+            .oe-card.is-active .oe-cta {
               max-height: none;
               opacity: 1;
+              visibility: visible;
             }
+            .oe-path {
+              padding: 72px 0 8px;
+            }
+            .oe-path-track {
+              padding-top: 0;
+              padding-left: 28px;
+            }
+            .oe-path-base,
+            .oe-path-fill {
+              left: 8px;
+              right: auto;
+              top: 0;
+              bottom: 0;
+              width: 3px;
+              height: auto;
+              transform-origin: top center;
+            }
+            .oe-path-fill {
+              transform: scaleY(var(--oe-path, 0));
+            }
+            .oe-path-dots {
+              grid-template-columns: 1fr;
+              gap: 28px;
+            }
+            .oe-path-dot {
+              flex-direction: row;
+              align-items: flex-start;
+              text-align: left;
+              gap: 16px;
+            }
+            .oe-path-meta { max-width: none; }
+            .oe-close {
+              padding: 72px 1.1rem;
+              border-radius: 28px 28px 0 0;
+            }
+            .oe-close-actions { flex-direction: column; align-items: stretch; }
+            .oe-btn { width: 100%; }
           }
+
           @media (prefers-reduced-motion: reduce) {
-            .oe-word { transform: none !important; }
+            .oe-word,
+            .oe-close-title .oe-word { transform: none !important; }
             .oe-bar { width: 56px !important; transition: none !important; }
             .oe-lead { opacity: 1 !important; }
             .oe-arch { clip-path: none !important; transition: none !important; }
             .oe-glow { animation: none !important; }
-            .oe-card, .oe-halo, .oe-img, .oe-reveal, .oe-rule, .oe-arrow { transition: none !important; }
+            .oe-path-title { opacity: 1 !important; transform: none !important; }
+            .oe-path-fill { transform: scaleX(1) !important; }
+            .oe-path-dot .oe-path-orb { transform: scale(1.4) !important; }
+            .oe-card,
+            .oe-halo,
+            .oe-img,
+            .oe-cta,
+            .oe-rule,
+            .oe-arrow,
+            .oe-path-orb,
+            .oe-btn { transition: none !important; }
+          }
+          @media (max-width: 899px) and (prefers-reduced-motion: reduce) {
+            .oe-path-fill { transform: scaleY(1) !important; }
           }
         `}</style>
       </section>
 
       {includeClosing && (
         <>
-      <EnrollmentCTA />
-
-      {/* Footer de sección (compacto) — se mantiene para no romper home / oferta */}
-      <div className="flex-shrink-0">
-        {/* 2026-09-22: pb-28 en móvil = espacio del sticky CTA, mismo azul (sin franja negra) */}
-        {/* 2026-09-30: min-h en desktop para dar espacio a la franja legal (incorporación SEP). */}
-        <footer
-          className={`relative overflow-hidden text-white ${isMobile ? 'min-h-[170px] pb-28' : 'min-h-[24vh]'}`}
-        >
-          <div className="absolute inset-0" style={{ backgroundColor: '#013BDF' }} />
-
-          {isMobile ? (
-            <div className="relative z-10 flex h-full flex-col justify-between px-4 py-2">
-              <div className="flex-1">
-                <div className="mb-3 flex items-center">
-                  {/* 2026-09-26: next/image lazy en logo del footer de oferta educativa. */}
-                  <Image src="/images/logos/logo_winston.png" alt="Winston" width={60} height={16} className="h-4 w-auto" sizes="60px" loading="lazy" />
-                </div>
-                <h2 className="mb-2 text-[9px] font-extrabold uppercase leading-tight tracking-wide">
-                  WORKING FOR BRIGHTER FUTURES
-                </h2>
-                <p className="mb-3 text-[7px] opacity-90">#soywinston</p>
-                <div className="space-y-1 text-[7px] leading-relaxed">
-                  <p>CALLE 3 #309</p>
-                  <p>COL. JARDÍN 20 DE NOVIEMBRE,</p>
-                  <p>CD. MADERO TAMPS.</p>
-                  <p className="mt-3 font-semibold">
-                    <a href="tel:8334378743" className="transition-colors hover:text-yellow-400">
-                      📞 833 437 8743
-                    </a>
-                  </p>
-                </div>
-              </div>
-              <div className="mt-2 flex flex-col items-center space-y-2">
-                {/* 2026-09-30: Enlace real al aviso de privacidad (antes href="#"). */}
-                <Link href={PRIVACY_NOTICE_PATH} className="block text-[6px] font-medium uppercase tracking-wide transition-colors hover:text-yellow-400">
-                  AVISO DE PRIVACIDAD
+          <section
+            ref={closeRef}
+            className={`oe-close${closeIn ? ' is-in' : ''}`}
+            aria-labelledby="oe-close-heading"
+          >
+            <div className="oe-close-glow" aria-hidden />
+            <div className="oe-close-inner">
+              <h2 id="oe-close-heading" className="oe-close-title">
+                {CLOSE_HEAD.split(' ').map((word) => (
+                  <span className="oe-mask" key={word}>
+                    <span className="oe-word">{word}&nbsp;</span>
+                  </span>
+                ))}
+              </h2>
+              <div className="oe-close-actions">
+                <Link href="/contacto" className="oe-btn oe-btn-solid">
+                  Agenda tu visita
+                  <span className="oe-arrow" aria-hidden />
                 </Link>
-                <div className="flex items-center gap-2">
-                  <a href="https://www.facebook.com/institutowinstonchurchill/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20 transition hover:bg-white/30">
-                    <span className="sr-only">Facebook</span>
-                    <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                  </a>
-                  <a href="https://wa.me/528334378743" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20 transition hover:bg-white/30">
-                    <span className="sr-only">WhatsApp</span>
-                    <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.87 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.87 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.815 0 0020.885 3.488"/></svg>
-                  </a>
-                  <a href="https://www.instagram.com/institutowinstonchurchill/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20 transition hover:bg-white/30">
-                    <span className="sr-only">Instagram</span>
-                    <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-                  </a>
-                </div>
+                <Link href="/admisiones" className="oe-btn oe-btn-ghost">
+                  Inicia tu inscripción
+                  <span className="oe-arrow" aria-hidden />
+                </Link>
               </div>
-
-              {/* 2026-09-30: Incorporación SEP + aviso + preferencias de cookies. */}
-              <div className="mt-3">
-                <FooterLegal compact />
-              </div>
-            </div>
-          ) : (
-            <div className="relative z-10 container mx-auto px-4 py-4 sm:px-6 md:px-10 md:py-6">
-              <div className="max-w-2xl">
-                <div className="mb-3 flex items-center md:mb-4">
-                  {/* 2026-09-26: next/image lazy en logo footer desktop de oferta educativa. */}
-                  <Image src="/images/logos/logo_winston.png" alt="Winston" width={70} height={19} className="h-5 w-auto md:h-6" sizes="70px" loading="lazy" />
-                </div>
-                <h2 className="mb-1 text-xs font-extrabold uppercase leading-snug tracking-wide sm:text-sm md:mb-2 md:text-base">
-                  WORKING FOR BRIGHTER FUTURES
-                </h2>
-                <p className="mb-3 text-[10px] opacity-90 sm:text-xs md:mb-4">#soywinston</p>
-                <div className="space-y-0.5 text-[10px] leading-relaxed sm:space-y-1 sm:text-xs md:text-sm">
-                  <p>CALLE 3 #309</p>
-                  <p>COL. JARDÍN 20 DE NOVIEMBRE,</p>
-                  <p>CD. MADERO TAMPS.</p>
-                  <p className="mt-2 font-semibold sm:mt-3">
-                    <a href="tel:8334378743" className="transition-colors hover:text-yellow-400">
-                      📞 833 437 8743
-                    </a>
-                  </p>
-                </div>
-              </div>
-
-              {/* 2026-09-30: Incorporación SEP + aviso + preferencias de cookies. */}
-              <div className="mt-4">
-                <FooterLegal compact />
-              </div>
-            </div>
-          )}
-
-          {!isMobile && (
-            <>
-              <div className="absolute bottom-20 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 md:bottom-24">
-                <a href="https://www.facebook.com/institutowinstonchurchill/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="flex h-7 w-7 items-center justify-center rounded-full bg-white/20 transition hover:bg-white/30">
-                  <span className="sr-only">Facebook</span>
-                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                </a>
-                <a href="https://wa.me/528334378743" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="flex h-7 w-7 items-center justify-center rounded-full bg-white/20 transition hover:bg-white/30">
-                  <span className="sr-only">WhatsApp</span>
-                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.87 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.87 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.815 0 0020.885 3.488"/></svg>
-                </a>
-                <a href="https://www.instagram.com/institutowinstonchurchill/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="flex h-7 w-7 items-center justify-center rounded-full bg-white/20 transition hover:bg-white/30">
-                  <span className="sr-only">Instagram</span>
-                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-                </a>
-              </div>
-              {/* 2026-09-30: Enlace real al aviso de privacidad (antes href="#"). */}
-              <Link
-                href={PRIVACY_NOTICE_PATH}
-                className="absolute bottom-24 right-4 z-20 text-[8px] font-semibold uppercase tracking-wide transition-colors hover:text-yellow-400 sm:text-[10px] md:bottom-28 md:right-10"
-              >
-                AVISO DE PRIVACIDAD
+              <Link href="/#winston-usa" className="oe-close-usa">
+                Conoce el Winston USA Program
+                <small>Doble titulación opcional</small>
               </Link>
-            </>
-          )}
-        </footer>
-      </div>
+            </div>
+          </section>
+
+          {/* Footer de sección (compacto) — se mantiene para no romper home / oferta */}
+          <div className="flex-shrink-0">
+            {/* 2026-09-22: pb-28 en móvil = espacio del sticky CTA, mismo azul (sin franja negra) */}
+            {/* 2026-09-30: min-h en desktop para dar espacio a la franja legal (incorporación SEP). */}
+            <footer
+              className={`relative overflow-hidden text-white ${isMobile ? 'min-h-[170px] pb-28' : 'min-h-[24vh]'}`}
+            >
+              <div className="absolute inset-0" style={{ backgroundColor: '#013BDF' }} />
+
+              {isMobile ? (
+                <div className="relative z-10 flex h-full flex-col justify-between px-4 py-2">
+                  <div className="flex-1">
+                    <div className="mb-3 flex items-center">
+                      <Image
+                        src="/images/logos/logo_winston.png"
+                        alt="Winston"
+                        width={60}
+                        height={16}
+                        className="h-4 w-auto"
+                        sizes="60px"
+                        loading="lazy"
+                      />
+                    </div>
+                    <h2 className="mb-2 text-[9px] font-extrabold uppercase leading-tight tracking-wide">
+                      WORKING FOR BRIGHTER FUTURES
+                    </h2>
+                    <p className="mb-3 text-[7px] opacity-90">#soywinston</p>
+                    <div className="space-y-1 text-[7px] leading-relaxed">
+                      <p>CALLE 3 #309</p>
+                      <p>COL. JARDÍN 20 DE NOVIEMBRE,</p>
+                      <p>CD. MADERO TAMPS.</p>
+                      <p className="mt-3 font-semibold">
+                        <a href="tel:8334378743" className="transition-colors hover:text-yellow-400">
+                          📞 833 437 8743
+                        </a>
+                      </p>
+                    </div>
+                  </div>
+                  <div className="mt-2 flex flex-col items-center space-y-2">
+                    <Link
+                      href={PRIVACY_NOTICE_PATH}
+                      className="block text-[6px] font-medium uppercase tracking-wide transition-colors hover:text-yellow-400"
+                    >
+                      AVISO DE PRIVACIDAD
+                    </Link>
+                    <div className="flex items-center gap-2">
+                      <a
+                        href="https://www.facebook.com/institutowinstonchurchill/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Facebook"
+                        className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20 transition hover:bg-white/30"
+                      >
+                        <span className="sr-only">Facebook</span>
+                        <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                        </svg>
+                      </a>
+                      <a
+                        href="https://wa.me/528334378743"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="WhatsApp"
+                        className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20 transition hover:bg-white/30"
+                      >
+                        <span className="sr-only">WhatsApp</span>
+                        <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.87 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.87 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.815 0 0020.885 3.488" />
+                        </svg>
+                      </a>
+                      <a
+                        href="https://www.instagram.com/institutowinstonchurchill/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Instagram"
+                        className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20 transition hover:bg-white/30"
+                      >
+                        <span className="sr-only">Instagram</span>
+                        <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                        </svg>
+                      </a>
+                    </div>
+                  </div>
+                  <div className="mt-3">
+                    <FooterLegal compact />
+                  </div>
+                </div>
+              ) : (
+                <div className="relative z-10 container mx-auto px-4 py-4 sm:px-6 md:px-10 md:py-6">
+                  <div className="max-w-2xl">
+                    <div className="mb-3 flex items-center md:mb-4">
+                      <Image
+                        src="/images/logos/logo_winston.png"
+                        alt="Winston"
+                        width={70}
+                        height={19}
+                        className="h-5 w-auto md:h-6"
+                        sizes="70px"
+                        loading="lazy"
+                      />
+                    </div>
+                    <h2 className="mb-1 text-xs font-extrabold uppercase leading-snug tracking-wide sm:text-sm md:mb-2 md:text-base">
+                      WORKING FOR BRIGHTER FUTURES
+                    </h2>
+                    <p className="mb-3 text-[10px] opacity-90 sm:text-xs md:mb-4">#soywinston</p>
+                    <div className="space-y-0.5 text-[10px] leading-relaxed sm:space-y-1 sm:text-xs md:text-sm">
+                      <p>CALLE 3 #309</p>
+                      <p>COL. JARDÍN 20 DE NOVIEMBRE,</p>
+                      <p>CD. MADERO TAMPS.</p>
+                      <p className="mt-2 font-semibold sm:mt-3">
+                        <a href="tel:8334378743" className="transition-colors hover:text-yellow-400">
+                          📞 833 437 8743
+                        </a>
+                      </p>
+                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <FooterLegal compact />
+                  </div>
+                </div>
+              )}
+
+              {!isMobile && (
+                <>
+                  <div className="absolute bottom-20 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 md:bottom-24">
+                    <a
+                      href="https://www.facebook.com/institutowinstonchurchill/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Facebook"
+                      className="flex h-7 w-7 items-center justify-center rounded-full bg-white/20 transition hover:bg-white/30"
+                    >
+                      <span className="sr-only">Facebook</span>
+                      <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                      </svg>
+                    </a>
+                    <a
+                      href="https://wa.me/528334378743"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="WhatsApp"
+                      className="flex h-7 w-7 items-center justify-center rounded-full bg-white/20 transition hover:bg-white/30"
+                    >
+                      <span className="sr-only">WhatsApp</span>
+                      <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.87 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.87 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.815 0 0020.885 3.488" />
+                      </svg>
+                    </a>
+                    <a
+                      href="https://www.instagram.com/institutowinstonchurchill/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Instagram"
+                      className="flex h-7 w-7 items-center justify-center rounded-full bg-white/20 transition hover:bg-white/30"
+                    >
+                      <span className="sr-only">Instagram</span>
+                      <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                      </svg>
+                    </a>
+                  </div>
+                  <Link
+                    href={PRIVACY_NOTICE_PATH}
+                    className="absolute bottom-24 right-4 z-20 text-[8px] font-semibold uppercase tracking-wide transition-colors hover:text-yellow-400 sm:text-[10px] md:bottom-28 md:right-10"
+                  >
+                    AVISO DE PRIVACIDAD
+                  </Link>
+                </>
+              )}
+            </footer>
+          </div>
         </>
       )}
     </div>

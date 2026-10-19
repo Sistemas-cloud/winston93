@@ -30,8 +30,8 @@ const USA_BENEFICIOS = [
 ] as const
 const USA_TITLE = 'Winston USA Program'
 const USA_CLOSE = new Date('2027-02-28T23:59:59')
-// 2026-10-19: póster 4:5 (960×1200) recortado de mindfulness — cabe en el arco sin repetir Fortalezas.
-const USA_POSTER = '/images/winston-usa/poster.webp'
+// 2026-10-19: bandera USA a pantalla completa en el arco (también póster del video).
+const USA_POSTER = '/images/winston-usa/flag.webp'
 
 function daysUntilClose(now = new Date()): number {
   return Math.ceil((USA_CLOSE.getTime() - now.getTime()) / 86_400_000)
@@ -439,7 +439,7 @@ export default function FortalezasSection() {
             >
               <Image
                 src={USA_POSTER}
-                alt="Vista previa del video Winston USA Program"
+                alt="Bandera de Estados Unidos — Winston USA Program"
                 fill
                 sizes="(max-width: 900px) 340px, 420px"
                 className="fw-usa-poster"
@@ -490,6 +490,58 @@ export default function FortalezasSection() {
                 ) : (
                   <>
                     <header className="fw-modal-hero">
+                      <span className="fw-modal-flag" aria-hidden title="Estados Unidos">
+                        <svg viewBox="0 0 57 30" width="120" height="64" role="img">
+                          <title>Bandera de Estados Unidos</title>
+                          <rect width="57" height="30" rx="3" fill="#B22234" />
+                          <path
+                            fill="#fff"
+                            d="M0 3.33h57v3.33H0zm0 6.67h57v3.33H0zm0 6.67h57v3.33H0zm0 6.67h57v3.33H0z"
+                          />
+                          <rect width="22.8" height="16.15" fill="#3C3B6E" />
+                          <g fill="#fff">
+                            <circle cx="2.3" cy="2" r=".7" />
+                            <circle cx="5.7" cy="2" r=".7" />
+                            <circle cx="9.1" cy="2" r=".7" />
+                            <circle cx="12.5" cy="2" r=".7" />
+                            <circle cx="15.9" cy="2" r=".7" />
+                            <circle cx="19.3" cy="2" r=".7" />
+                            <circle cx="4" cy="4" r=".7" />
+                            <circle cx="7.4" cy="4" r=".7" />
+                            <circle cx="10.8" cy="4" r=".7" />
+                            <circle cx="14.2" cy="4" r=".7" />
+                            <circle cx="17.6" cy="4" r=".7" />
+                            <circle cx="2.3" cy="6" r=".7" />
+                            <circle cx="5.7" cy="6" r=".7" />
+                            <circle cx="9.1" cy="6" r=".7" />
+                            <circle cx="12.5" cy="6" r=".7" />
+                            <circle cx="15.9" cy="6" r=".7" />
+                            <circle cx="19.3" cy="6" r=".7" />
+                            <circle cx="4" cy="8" r=".7" />
+                            <circle cx="7.4" cy="8" r=".7" />
+                            <circle cx="10.8" cy="8" r=".7" />
+                            <circle cx="14.2" cy="8" r=".7" />
+                            <circle cx="17.6" cy="8" r=".7" />
+                            <circle cx="2.3" cy="10" r=".7" />
+                            <circle cx="5.7" cy="10" r=".7" />
+                            <circle cx="9.1" cy="10" r=".7" />
+                            <circle cx="12.5" cy="10" r=".7" />
+                            <circle cx="15.9" cy="10" r=".7" />
+                            <circle cx="19.3" cy="10" r=".7" />
+                            <circle cx="4" cy="12" r=".7" />
+                            <circle cx="7.4" cy="12" r=".7" />
+                            <circle cx="10.8" cy="12" r=".7" />
+                            <circle cx="14.2" cy="12" r=".7" />
+                            <circle cx="17.6" cy="12" r=".7" />
+                            <circle cx="2.3" cy="14" r=".7" />
+                            <circle cx="5.7" cy="14" r=".7" />
+                            <circle cx="9.1" cy="14" r=".7" />
+                            <circle cx="12.5" cy="14" r=".7" />
+                            <circle cx="15.9" cy="14" r=".7" />
+                            <circle cx="19.3" cy="14" r=".7" />
+                          </g>
+                        </svg>
+                      </span>
                       <span className="fw-modal-emblem" aria-hidden>
                         <svg viewBox="0 0 40 40" width="34" height="34" fill="none">
                           <path
@@ -1035,11 +1087,11 @@ export default function FortalezasSection() {
         .fw-usa.is-on .fw-usa-card { clip-path: inset(0 round 220px 220px 28px 28px); }
         .fw-usa-poster {
           object-fit: cover;
-          object-position: center 30%;
-          transform: scale(1.15);
+          object-position: center center;
+          transform: scale(1.04);
           transition: transform 8s var(--fw-ease);
         }
-        .fw-usa.is-on .fw-usa-poster { transform: scale(1.02); }
+        .fw-usa.is-on .fw-usa-poster { transform: scale(1); }
         .fw-usa-shade {
           position: absolute;
           inset: 0;
@@ -1154,6 +1206,38 @@ export default function FortalezasSection() {
           filter: blur(50px);
           opacity: .35;
           pointer-events: none;
+        }
+        .fw-modal-flag {
+          position: absolute;
+          z-index: 1;
+          top: 52%;
+          right: 1.35rem;
+          transform: translateY(-50%) rotate(-6deg);
+          display: grid;
+          place-items: center;
+          width: 120px;
+          height: 64px;
+          border-radius: 8px;
+          box-shadow:
+            0 14px 28px -10px rgba(5, 11, 46, .45),
+            0 0 0 3px rgba(255, 255, 255, .22);
+          pointer-events: none;
+        }
+        .fw-modal-flag svg {
+          display: block;
+          width: 100%;
+          height: 100%;
+          border-radius: 6px;
+        }
+        @media (max-width: 520px) {
+          .fw-modal-flag {
+            width: 84px;
+            height: 44px;
+            right: 1rem;
+            top: 42%;
+            opacity: .95;
+          }
+          .fw-modal-hero h3 { max-width: 14ch; }
         }
         .fw-modal-emblem {
           position: relative;

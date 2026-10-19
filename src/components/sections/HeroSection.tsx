@@ -190,7 +190,7 @@ export default function HeroSection() {
           <div className="mx-auto grid max-w-6xl grid-cols-2 gap-px md:grid-cols-4">
             {[
               { label: '30+ años', sub: 'de experiencia' },
-              { label: 'Bilingüe', sub: 'formación integral' },
+              { label: 'Trilingüe', sub: 'formación integral' },
               { label: 'Cambridge', sub: 'University' },
               { label: 'Cd. Madero', sub: 'Tamaulipas' },
             ].map((item) => (
