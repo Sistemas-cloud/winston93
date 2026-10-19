@@ -92,7 +92,7 @@ export default function Home() {
       <section className="min-h-[85vh] w-full md:min-h-[90vh] lg:h-screen">
         <EducationalOfferSection />
       </section>
-      <section className="w-full lg:h-screen">
+      <section className="w-full">
         <ConveniosSection />
       </section>
       <section className="w-full">
@@ -120,14 +120,20 @@ export default function Home() {
       <Navigation currentSection={currentSection} />
 
       {useFullPage ? (
-        <FullPageScroll onSectionChange={handleSectionChange}>
+        <FullPageScroll
+          onSectionChange={handleSectionChange}
+          tail={
+            <>
+              <ConveniosSection />
+              <OfertaEducativaSection includeClosing={false} />
+              <HomeClosingSection />
+            </>
+          }
+        >
           <HeroSection />
           <FortalezasSection />
           <SliderSection />
           <EducationalOfferSection />
-          <ConveniosSection />
-          <OfertaEducativaSection includeClosing={false} />
-          <HomeClosingSection />
         </FullPageScroll>
       ) : (
         nativeSections

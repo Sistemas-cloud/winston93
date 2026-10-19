@@ -1,198 +1,669 @@
-// 2026-10-19: Banner original + info de convenios (beca / empresa / alianzas) + carrete.
-import { useEffect, useRef, useState } from 'react'
+// 2026-10-19: Red Winston — sección cinematográfica (beca / empresa / alianzas).
+// Motion con GSAP (transform/opacity). Lenis no entra aquí: en desktop el home
+// usa snap por pantallas y un smooth-scroll global se lo come.
+import { useEffect, useRef } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 const BECA = ['UNE', 'IEST Anáhuac', 'Tecmilenio'] as const
 const EMPRESA = ['Pemex', 'IMSS', 'CFE', 'Telmex'] as const
 const ALIANZAS = ['Cambridge', 'Narrative 4', 'COPARMEX', 'AMMJE'] as const
 
-const MARCAS = [
-  ...BECA,
-  ...EMPRESA,
-  ...ALIANZAS,
+const STATS = [
+  { value: 3, label: 'universidades con beca directa' },
+  { value: 4, label: 'empresas con convenio' },
+  { value: 4, label: 'alianzas académicas' },
+] as const
+
+const MARQUEE = [...BECA, ...EMPRESA, ...ALIANZAS] as const
+
+const CARDS = [
+  {
+    kicker: 'A nuestros egresados',
+    title: 'Convenios con beca directa',
+    items: BECA,
+    icon: 'beca',
+  },
+  {
+    kicker: 'Experiencia y proyección',
+    title: 'Convenios con empresas',
+    items: EMPRESA,
+    icon: 'empresa',
+  },
+  {
+    kicker: 'Del instituto',
+    title: 'Alianzas estratégicas',
+    items: ALIANZAS,
+    icon: 'alianza',
+  },
 ] as const
 
 export default function ConveniosSection() {
-  const [isVisible, setIsVisible] = useState(false)
-  const [isMobile, setIsMobile] = useState(true)
-  const sectionRef = useRef<HTMLDivElement>(null)
-  const loop = [...MARCAS, ...MARCAS]
+  const rootRef = useRef<HTMLElement>(null)
+  const cursorRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const updateDeviceType = () => setIsMobile(window.innerWidth < 768)
-    updateDeviceType()
-    window.addEventListener('resize', updateDeviceType)
-    return () => window.removeEventListener('resize', updateDeviceType)
-  }, [])
+    const root = rootRef.current
+    if (!root) return
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setIsVisible(true)
-      },
-      { threshold: 0.2 }
-    )
-    if (sectionRef.current) observer.observe(sectionRef.current)
-    return () => observer.disconnect()
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches
+
+    const onMoveCursor = (e: MouseEvent) => {
+      const dot = cursorRef.current
+      if (!dot) return
+      dot.classList.add('is-on')
+      dot.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`
+    }
+    const onLeave = () => cursorRef.current?.classList.remove('is-on', 'is-hot')
+    const onOver = (e: Event) => {
+      const t = e.target as HTMLElement | null
+      const hot = t?.closest('a, button, .rw-card')
+      cursorRef.current?.classList.toggle('is-hot', Boolean(hot))
+    }
+    if (fine && !reduced) {
+      root.addEventListener('mousemove', onMoveCursor)
+      root.addEventListener('mouseover', onOver)
+      root.addEventListener('mouseleave', onLeave)
+    }
+
+    if (reduced) {
+      root.querySelectorAll<HTMLElement>('[data-count]').forEach((el) => {
+        el.textContent = el.dataset.count || '0'
+      })
+      return () => {
+        root.removeEventListener('mousemove', onMoveCursor)
+        root.removeEventListener('mouseover', onOver)
+        root.removeEventListener('mouseleave', onLeave)
+      }
+    }
+
+    gsap.registerPlugin(ScrollTrigger)
+    const ctx = gsap.context(() => {
+      const words = root.querySelectorAll('.rw-word')
+      gsap.fromTo(
+        words,
+        { yPercent: 110 },
+        {
+          yPercent: 0,
+          duration: 1.15,
+          stagger: 0.06,
+          ease: 'expo.out',
+          scrollTrigger: { trigger: root.querySelector('.rw-hero'), start: 'top 75%', once: true },
+        }
+      )
+      gsap.fromTo(
+        root.querySelectorAll('.rw-hero-fade'),
+        { y: 16, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.9,
+          stagger: 0.08,
+          ease: 'expo.out',
+          delay: 0.35,
+          scrollTrigger: { trigger: root.querySelector('.rw-hero'), start: 'top 75%', once: true },
+        }
+      )
+
+      root.querySelectorAll<HTMLElement>('[data-count]').forEach((el) => {
+        const target = Number(el.dataset.count || 0)
+        const proxy = { n: 0 }
+        gsap.to(proxy, {
+          n: target,
+          duration: 1.5,
+          ease: 'expo.out',
+          scrollTrigger: { trigger: el, start: 'top 80%', once: true },
+          onUpdate: () => {
+            el.textContent = String(Math.round(proxy.n))
+          },
+        })
+      })
+
+      gsap.from(root.querySelectorAll('.rw-card'), {
+        y: 56,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.15,
+        ease: 'expo.out',
+        scrollTrigger: { trigger: root.querySelector('.rw-cards'), start: 'top 78%' },
+      })
+    }, root)
+
+    return () => {
+      ctx.revert()
+      root.removeEventListener('mousemove', onMoveCursor)
+      root.removeEventListener('mouseover', onOver)
+      root.removeEventListener('mouseleave', onLeave)
+    }
   }, [])
 
   return (
-    <div
-      ref={sectionRef}
+    <section
+      ref={rootRef}
       id="convenios-alianzas"
-      className="relative flex h-auto min-h-full w-full flex-col bg-white lg:h-full lg:overflow-hidden"
+      className="rw"
+      aria-labelledby="rw-title"
     >
-      {/* Banner + título */}
-      <div className="relative min-h-0 flex-[1.1] px-4 pt-6 md:px-8 md:pt-8">
-        <div
-          className={`mx-auto flex h-full max-w-6xl flex-col items-center justify-center transition-all duration-700 ease-out ${
-            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
-          }`}
-        >
-          <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#013BDF] md:text-xs">
-            Red Winston
-          </p>
-          <h2 className="mb-3 text-center text-lg font-extrabold uppercase tracking-tight text-gray-900 md:mb-4 md:text-2xl">
-            Convenios y alianzas estratégicas
-          </h2>
+      <div ref={cursorRef} className="rw-cursor" aria-hidden />
+
+      <div className="rw-hero">
+        <div className="rw-hero-bg">
           <Image
-            src="/images/logos/convenios.png"
-            alt="Convenios y Alianzas Académicas - Instituto Winston Churchill"
-            width={1200}
-            height={600}
-            sizes="(max-width: 768px) 100vw, 70vw"
-            loading="lazy"
-            decoding="async"
-            className={`h-auto w-full max-w-3xl object-contain ${
-              isMobile ? 'max-h-[28vh]' : 'max-h-[32vh] lg:max-h-[36vh]'
-            }`}
+            src="/images/logos/convenios-alumnas.jpg"
+            alt="Alumnas del Instituto Winston Churchill"
+            fill
+            sizes="100vw"
+            className="rw-hero-photo"
+            priority={false}
           />
+        </div>
+        <div className="rw-hero-overlay" aria-hidden />
+
+        <div className="rw-hero-copy">
+          <p className="rw-eyebrow rw-hero-fade">Red Winston</p>
+          <h2 id="rw-title" className="rw-title">
+            <span className="rw-line"><span className="rw-word">Convenios y alianzas que abren</span></span>{' '}
+            <span className="rw-line"><span className="rw-word rw-accent">puertas reales</span></span>
+          </h2>
+          <p className="rw-sub rw-hero-fade">
+            Becas directas para egresados, vínculos con empresas y alianzas académicas.
+          </p>
+          <div className="rw-hero-fade">
+            <Link href="#rw-becas" className="rw-btn rw-magnetic">
+              Conoce las becas
+              <span className="rw-arrow" aria-hidden>→</span>
+            </Link>
+          </div>
+        </div>
+
+        <div className="rw-scroll" aria-hidden>
+          <span>Scroll</span>
+          <i />
         </div>
       </div>
 
-      {/* Info: beca / empresa / alianzas */}
-      <div
-        className={`shrink-0 border-t border-[#013BDF]/10 px-4 py-5 md:px-8 md:py-6 transition-all duration-700 ease-out ${
-          isVisible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'
-        }`}
-        style={{ transitionDelay: '180ms' }}
-      >
-        <p className="mx-auto mb-5 max-w-3xl text-center text-xs leading-relaxed text-gray-600 md:mb-6 md:text-sm">
-          Becas directas para egresados, vínculos con empresas y alianzas académicas que
-          abren puertas reales a nuestros alumnos.
-        </p>
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-8">
-          <Group
-            title="Convenios con beca directa"
-            subtitle="A nuestros egresados"
-            items={BECA}
-            accent="#E3FB07"
-          />
-          <Group
-            title="Convenios con empresas"
-            subtitle="Experiencia y proyección"
-            items={EMPRESA}
-            accent="#013BDF"
-          />
-          <Group
-            title="Alianzas estratégicas"
-            subtitle="Del Instituto"
-            items={ALIANZAS}
-            accent="#E3FB07"
-            showCambridge
-          />
-        </div>
+      <div className="rw-stats">
+        {STATS.map((stat) => (
+          <div key={stat.label} className="rw-stat">
+            <p className="rw-stat-num">
+              <span data-count={stat.value}>0</span>
+            </p>
+            <p className="rw-stat-label">{stat.label}</p>
+          </div>
+        ))}
       </div>
 
-      {/* Carrete de marcas */}
-      <div
-        className="relative shrink-0 border-t border-[#013BDF]/10 py-3"
-        style={{ backgroundColor: '#F9F9F9' }}
-        aria-label="Marcas y socios"
-      >
-        <div
-          className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-[#F9F9F9] via-[#F9F9F9]/90 to-transparent md:w-24"
-          aria-hidden
-        />
-        <div
-          className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-[#F9F9F9] via-[#F9F9F9]/90 to-transparent md:w-24"
-          aria-hidden
-        />
-        <div className="wl-convenios-marquee flex w-max gap-10 px-6 md:gap-14">
-          {loop.map((name, i) => (
-            <span
-              key={`${name}-${i}`}
-              className="shrink-0 text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#013BDF]/75 md:text-xs"
+      <div className="rw-cards" id="rw-becas">
+        <div className="rw-cards-head">
+          <p className="rw-eyebrow">La red</p>
+          <h3 className="rw-h3">Tres puertas. Un mismo colegio.</h3>
+        </div>
+        <div className="rw-grid">
+          {CARDS.map((card) => (
+            <article
+              key={card.title}
+              className="rw-card"
+              onMouseMove={(e) => tilt(e.currentTarget, e.clientX, e.clientY)}
+              onMouseLeave={(e) => resetTilt(e.currentTarget)}
             >
-              {name}
-            </span>
+              <div className="rw-card-glow" aria-hidden />
+              <Icon name={card.icon} />
+              <p className="rw-card-kicker">{card.kicker}</p>
+              <h3 className="rw-card-title">{card.title}</h3>
+              <ul className="rw-logos">
+                {card.items.map((name) => (
+                  <li key={name}>
+                    <span className="rw-logo">{name}</span>
+                  </li>
+                ))}
+              </ul>
+            </article>
           ))}
         </div>
-        <style>{`
-          .wl-convenios-marquee {
-            animation: wlConveniosMarquee 38s linear infinite;
-          }
-          @keyframes wlConveniosMarquee {
-            from { transform: translateX(0); }
-            to { transform: translateX(-50%); }
-          }
-          @media (prefers-reduced-motion: reduce) {
-            .wl-convenios-marquee { animation: none; }
-          }
-        `}</style>
+      </div>
+
+      <div className="rw-marquees" aria-label="Socios de la red Winston">
+        <Marquee names={MARQUEE} reverse={false} />
+        <Marquee names={[...MARQUEE].reverse()} reverse />
+      </div>
+
+      <div className="rw-close">
+        <p className="rw-eyebrow">Siguiente paso</p>
+        <h3 className="rw-h3">Ven a conocer el campus.</h3>
+        <Link href="/contacto" className="rw-btn rw-btn-ghost">
+          Agenda tu visita
+          <span className="rw-arrow" aria-hidden>→</span>
+        </Link>
+      </div>
+
+      <style jsx global>{`
+        .rw {
+          --rw-bg: #f7f8fc;
+          --rw-blue: #1546e8;
+          --rw-brand: #013bdf;
+          --rw-lime: #e3fb07;
+          --rw-text: #10182f;
+          --rw-muted: #5c6b8a;
+          --rw-radius: 24px;
+          position: relative;
+          background: var(--rw-bg);
+          color: var(--rw-text);
+          overflow: hidden;
+          font-family: var(--font-poppins), Poppins, sans-serif;
+        }
+        @media (hover: hover) and (pointer: fine) {
+          .rw, .rw a, .rw button { cursor: none; }
+        }
+        .rw-cursor {
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          z-index: 80;
+          width: 14px;
+          height: 14px;
+          margin: -7px 0 0 -7px;
+          border-radius: 999px;
+          border: 1px solid var(--rw-lime);
+          pointer-events: none;
+          mix-blend-mode: difference;
+          opacity: 0;
+          transition: width .35s ease, height .35s ease, margin .35s ease, background .35s ease, opacity .2s ease;
+        }
+        .rw-cursor.is-on { opacity: 1; }
+        @media (hover: hover) and (pointer: fine) {
+          .rw-cursor { display: block; }
+        }
+        .rw-cursor.is-hot {
+          width: 46px;
+          height: 46px;
+          margin: -23px 0 0 -23px;
+          background: rgba(227, 251, 7, 0.16);
+        }
+        .rw-hero {
+          position: relative;
+          isolation: isolate;
+          overflow: hidden;
+          display: flex;
+          align-items: center;
+          width: 100%;
+          height: 100svh;
+          min-height: 100svh;
+          background: #050b2e;
+        }
+        .rw-hero-bg {
+          position: absolute;
+          inset: 0;
+          z-index: 0;
+        }
+        .rw-hero-photo {
+          object-fit: cover;
+          object-position: 70% 25%;
+          width: 100%;
+          height: 100%;
+        }
+        .rw-hero-overlay {
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+          pointer-events: none;
+          background: linear-gradient(90deg, rgba(5,11,46,0.95) 0%, rgba(5,11,46,0.75) 40%, rgba(5,11,46,0.15) 100%);
+        }
+        .rw-orb {
+          position: absolute;
+          border-radius: 999px;
+          filter: blur(40px);
+          pointer-events: none;
+          will-change: transform;
+        }
+        .rw-orb-a {
+          width: 280px; height: 280px;
+          left: -60px; bottom: 10%;
+          background: rgba(21,70,232,.16);
+          animation: rwFloat 14s ease-in-out infinite;
+        }
+        .rw-orb-b {
+          width: 180px; height: 180px;
+          right: 8%; top: 18%;
+          background: rgba(227,251,7,.16);
+          animation: rwFloat 18s ease-in-out infinite reverse;
+        }
+        @keyframes rwFloat {
+          0%, 100% { transform: translate3d(0,0,0); }
+          50% { transform: translate3d(24px,-28px,0); }
+        }
+        .rw-hero-copy {
+          position: relative;
+          z-index: 2;
+          width: 50%;
+          max-width: 50%;
+          margin-left: 1.25rem;
+          padding: 0;
+        }
+        .rw-hero .rw-eyebrow {
+          color: #DFFF00;
+          letter-spacing: 0.3em;
+          font-size: 0.8rem;
+        }
+        .rw-hero .rw-title {
+          color: #FFFFFF;
+          font-size: clamp(2.5rem, 5.5vw, 5.5rem);
+          line-height: 1.02;
+          max-width: 12ch;
+        }
+        .rw-hero .rw-line { display: inline; overflow: visible; }
+        .rw-hero .rw-word { display: inline; }
+        .rw-hero .rw-accent { color: #DFFF00; }
+        .rw-hero .rw-sub {
+          color: #C9D3F0;
+          font-size: 1.125rem;
+          max-width: 34ch;
+          margin-top: 1.5rem;
+          margin-bottom: 0;
+        }
+        .rw-hero .rw-btn {
+          margin-top: 2rem;
+          background: #DFFF00;
+          color: #071018;
+        }
+        .rw-eyebrow {
+          margin: 0 0 .9rem;
+          color: var(--rw-brand);
+          font-size: .72rem;
+          font-weight: 700;
+          letter-spacing: .28em;
+          text-transform: uppercase;
+        }
+        .rw-title {
+          margin: 0;
+          font-weight: 800;
+          letter-spacing: -0.045em;
+          line-height: .92;
+          font-size: clamp(1.85rem, 5.4vw, 5.4rem);
+          color: var(--rw-brand);
+        }
+        .rw-line { display: block; overflow: hidden; }
+        .rw-word { display: inline-block; }
+        .rw-sub {
+          margin: 1.25rem 0 1.75rem;
+          max-width: 36rem;
+          color: var(--rw-muted);
+          font-size: 1rem;
+          line-height: 1.55;
+          font-weight: 400;
+        }
+        .rw-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: .65rem;
+          border-radius: 999px;
+          background: var(--rw-lime);
+          color: #071018;
+          font-weight: 800;
+          font-size: .78rem;
+          letter-spacing: .12em;
+          text-transform: uppercase;
+          text-decoration: none;
+          padding: .95rem 1.35rem;
+          transition: transform .35s cubic-bezier(.22,1,.36,1);
+        }
+        .rw-btn:hover { transform: translate3d(4px,0,0); }
+        .rw-btn:focus-visible { outline: 2px solid var(--rw-brand); outline-offset: 3px; }
+        .rw-arrow { display: inline-block; transition: transform .35s cubic-bezier(.22,1,.36,1); }
+        .rw-btn:hover .rw-arrow { transform: translate3d(6px,0,0); }
+        .rw-btn-ghost {
+          background: transparent;
+          color: var(--rw-brand);
+          border: 1px solid var(--rw-brand);
+        }
+        .rw-scroll {
+          position: absolute;
+          z-index: 2;
+          left: 1.25rem;
+          bottom: 1.1rem;
+          display: flex;
+          align-items: center;
+          gap: .6rem;
+          color: var(--rw-muted);
+          font-size: .65rem;
+          letter-spacing: .22em;
+          text-transform: uppercase;
+        }
+        .rw-scroll i {
+          display: block;
+          width: 1px;
+          height: 42px;
+          background: linear-gradient(var(--rw-lime), transparent);
+          animation: rwPulse 1.8s ease-in-out infinite;
+          transform-origin: top;
+        }
+        @keyframes rwPulse {
+          0%, 100% { transform: scaleY(.4); opacity: .4; }
+          50% { transform: scaleY(1); opacity: 1; }
+        }
+        .rw-stats {
+          position: relative;
+          z-index: 4;
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+          padding: 3.5rem 1.25rem;
+          background: #fff;
+          border-top: 1px solid rgba(1,59,223,.18);
+          border-bottom: 1px solid rgba(1,59,223,.18);
+        }
+        .rw-stat-num {
+          margin: 0;
+          font-size: clamp(3.2rem, 8vw, 5.5rem);
+          font-weight: 800;
+          letter-spacing: -0.05em;
+          line-height: .9;
+          color: var(--rw-brand);
+        }
+        .rw-stat-label {
+          margin: .4rem 0 0;
+          color: var(--rw-muted);
+          font-size: .85rem;
+          max-width: 16ch;
+        }
+        .rw-cards { padding: 4.5rem 1.25rem 2rem; position: relative; }
+        .rw-cards-head {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: baseline;
+          gap: .35rem 1.25rem;
+          margin-bottom: 1.5rem;
+          max-width: none;
+        }
+        .rw-cards-head .rw-eyebrow { margin: 0; }
+        .rw-cards-head .rw-h3 {
+          flex: 1 1 auto;
+          margin: 0;
+          max-width: none;
+          white-space: normal;
+          font-size: clamp(1.35rem, 2.4vw, 2.4rem);
+          line-height: 1.1;
+        }
+        @media (min-width: 640px) {
+          .rw-cards-head .rw-h3 { white-space: nowrap; }
+        }
+        .rw-h3 {
+          margin: 0;
+          font-size: clamp(1.8rem, 4vw, 3.2rem);
+          font-weight: 800;
+          letter-spacing: -0.04em;
+          line-height: .95;
+        }
+        .rw-grid {
+          display: grid;
+          gap: 1rem;
+          perspective: 1200px;
+        }
+        .rw-card {
+          position: relative;
+          border-radius: var(--rw-radius);
+          padding: 1.5rem 1.35rem 1.4rem;
+          background: #fff;
+          border: 1px solid rgba(1,59,223,.1);
+          box-shadow: 0 18px 40px rgba(1,59,223,.06);
+          backdrop-filter: blur(16px);
+          transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+          transition: transform .2s ease-out;
+          overflow: hidden;
+        }
+        .rw-card-glow {
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(420px circle at var(--gx, 50%) var(--gy, 0%), rgba(227,251,7,.16), transparent 42%);
+          pointer-events: none;
+        }
+        .rw-icon { position: relative; width: 42px; height: 42px; color: var(--rw-brand); margin-bottom: 1.4rem; }
+        .rw-card-kicker {
+          position: relative;
+          margin: 0 0 .35rem;
+          color: var(--rw-brand);
+          font-size: .68rem;
+          font-weight: 700;
+          letter-spacing: .16em;
+          text-transform: uppercase;
+        }
+        .rw-card-title {
+          position: relative;
+          margin: 0 0 1.25rem;
+          font-size: 1.35rem;
+          font-weight: 800;
+          letter-spacing: -0.03em;
+          line-height: 1.05;
+          max-width: 16ch;
+        }
+        .rw-logos { position: relative; list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem; }
+        .rw-logo {
+          display: inline-flex;
+          align-items: center;
+          min-height: 36px;
+          padding: 0 .75rem;
+          border-radius: 999px;
+          border: 1px solid rgba(1,59,223,.16);
+          color: rgba(16,24,47,.62);
+          font-size: .78rem;
+          font-weight: 800;
+          letter-spacing: .04em;
+          text-transform: uppercase;
+          transition: color .3s ease, border-color .3s ease, background .3s ease;
+        }
+        .rw-logo:hover, .rw-card:hover .rw-logo {
+          color: #071018;
+          background: var(--rw-lime);
+          border-color: var(--rw-lime);
+        }
+        .rw-marquees { padding: 2.5rem 0 1rem; }
+        .rw-marquee-mask {
+          overflow: hidden;
+          -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+        }
+        .rw-marquee {
+          display: flex;
+          width: max-content;
+          gap: 3rem;
+          padding: .7rem 0;
+          animation: rwMarquee 42s linear infinite;
+        }
+        .rw-marquee.is-reverse { animation-direction: reverse; }
+        .rw-marquees:hover .rw-marquee { animation-play-state: paused; }
+        .rw-marquee span {
+          color: rgba(1,59,223,.45);
+          font-size: clamp(1.4rem, 3vw, 2.4rem);
+          font-weight: 800;
+          letter-spacing: -0.03em;
+          text-transform: uppercase;
+          filter: grayscale(1);
+        }
+        @keyframes rwMarquee {
+          from { transform: translate3d(0,0,0); }
+          to { transform: translate3d(-50%,0,0); }
+        }
+        .rw-close {
+          padding: 4.5rem 1.25rem 5rem;
+          text-align: left;
+        }
+        .rw-close .rw-h3 { margin-bottom: 1.5rem; max-width: 14ch; }
+        @media (min-width: 768px) {
+          .rw-hero-copy { margin-left: 4rem; }
+          .rw-scroll { left: 4rem; }
+          .rw-stats { grid-template-columns: repeat(3, 1fr); padding: 4rem; }
+          .rw-stat + .rw-stat { border-left: 1px solid rgba(1,59,223,.18); padding-left: 2rem; }
+          .rw-cards, .rw-close { padding-left: 4rem; padding-right: 4rem; }
+          .rw-cards-head .rw-h3 { white-space: nowrap; }
+          .rw-grid { grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+        }
+        @media (min-width: 1440px) {
+          .rw-hero, .rw-stats, .rw-cards, .rw-close { padding-left: 6rem; padding-right: 6rem; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .rw-orb-a, .rw-orb-b, .rw-scroll i, .rw-marquee { animation: none !important; }
+          .rw-word { transform: none !important; }
+        }
+      `}</style>
+    </section>
+  )
+}
+
+function tilt(el: HTMLElement, clientX: number, clientY: number) {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+  const r = el.getBoundingClientRect()
+  const x = (clientX - r.left) / r.width
+  const y = (clientY - r.top) / r.height
+  el.style.setProperty('--ry', `${(x - 0.5) * 8}deg`)
+  el.style.setProperty('--rx', `${(0.5 - y) * 8}deg`)
+  el.style.setProperty('--gx', `${x * 100}%`)
+  el.style.setProperty('--gy', `${y * 100}%`)
+}
+
+function resetTilt(el: HTMLElement) {
+  el.style.setProperty('--rx', '0deg')
+  el.style.setProperty('--ry', '0deg')
+}
+
+function Marquee({ names, reverse }: { names: readonly string[]; reverse: boolean }) {
+  const loop = [...names, ...names]
+  return (
+    <div className="rw-marquee-mask">
+      <div className={`rw-marquee${reverse ? ' is-reverse' : ''}`}>
+        {loop.map((name, i) => (
+          <span key={`${name}-${i}`}>{name}</span>
+        ))}
       </div>
     </div>
   )
 }
 
-function Group({
-  title,
-  subtitle,
-  items,
-  accent,
-  showCambridge,
-}: {
-  title: string
-  subtitle: string
-  items: readonly string[]
-  accent: string
-  showCambridge?: boolean
-}) {
+function Icon({ name }: { name: string }) {
+  const common = { className: 'rw-icon', viewBox: '0 0 48 48', fill: 'none', 'aria-hidden': true as const }
+  if (name === 'beca') {
+    return (
+      <svg {...common}>
+        <path d="M6 18 24 8l18 10-18 10L6 18Z" stroke="currentColor" strokeWidth="1.6" />
+        <path d="M14 22v8c4 4 16 4 20 0v-8" stroke="currentColor" strokeWidth="1.6" />
+      </svg>
+    )
+  }
+  if (name === 'empresa') {
+    return (
+      <svg {...common}>
+        <path d="M8 40V16l12-6v30M20 40V20h16v20" stroke="currentColor" strokeWidth="1.6" />
+        <path d="M26 26h4M26 32h4" stroke="currentColor" strokeWidth="1.6" />
+      </svg>
+    )
+  }
   return (
-    <div className="border-t-2 pt-3" style={{ borderColor: accent }}>
-      <h3 className="mb-0.5 text-[11px] font-extrabold uppercase tracking-wide text-gray-900 md:text-xs">
-        {title}
-      </h3>
-      <p className="mb-3 text-[9px] font-medium uppercase tracking-[0.14em] text-gray-500 md:text-[10px]">
-        {subtitle}
-      </p>
-      <ul className="space-y-1.5">
-        {items.map((name) => (
-          <li
-            key={name}
-            className="flex items-center gap-2 text-sm font-bold tracking-tight text-[#013BDF] md:text-base"
-          >
-            <span
-              className="h-1.5 w-1.5 shrink-0 rounded-full"
-              style={{ backgroundColor: accent === '#E3FB07' ? '#013BDF' : accent }}
-              aria-hidden
-            />
-            {name}
-          </li>
-        ))}
-      </ul>
-      {showCambridge && (
-        <div className="mt-3">
-          <Image
-            src="/images/logos/cambridge.png"
-            alt="University of Cambridge"
-            width={120}
-            height={40}
-            className="h-7 w-auto object-contain opacity-90 md:h-8"
-            loading="lazy"
-          />
-        </div>
-      )}
-    </div>
+    <svg {...common}>
+      <circle cx="16" cy="20" r="5" stroke="currentColor" strokeWidth="1.6" />
+      <circle cx="32" cy="20" r="5" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M8 36c1.5-5 5-7 8-7s6.5 2 8 7M24 36c1.5-5 5-7 8-7s6.5 2 8 7" stroke="currentColor" strokeWidth="1.6" />
+    </svg>
   )
 }

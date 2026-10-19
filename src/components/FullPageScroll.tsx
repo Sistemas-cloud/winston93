@@ -3,11 +3,14 @@ import { useEffect, useRef, useState } from 'react'
 interface FullPageScrollProps {
   children: React.ReactNode[]
   onSectionChange?: (sectionIndex: number) => void
+  // 2026-10-19: Contenido largo (convenios cinematográfico, oferta, footer) después del snap.
+  tail?: React.ReactNode
 }
 
-export default function FullPageScroll({ children, onSectionChange }: FullPageScrollProps) {
+export default function FullPageScroll({ children, onSectionChange, tail }: FullPageScrollProps) {
   const [currentSection, setCurrentSection] = useState(0)
   const [isScrolling, setIsScrolling] = useState(false)
+  const [tailOpen, setTailOpen] = useState(false)
   const [windowHeight, setWindowHeight] = useState(0)
   const [actualViewportHeight, setActualViewportHeight] = useState(0)
   const [isAndroid, setIsAndroid] = useState(false)
@@ -120,29 +123,59 @@ export default function FullPageScroll({ children, onSectionChange }: FullPageSc
 
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
+      const sensitivity = (isMobile || (isTablet && !isTabletLandscape)) ? 30 : 50
+
+      // Cola nativa: el documento scrollea; volver arriba reengancha el snap.
+      if (tail && tailOpen) {
+        if (window.scrollY <= 1 && e.deltaY < -sensitivity) {
+          e.preventDefault()
+          setTailOpen(false)
+          document.body.style.overflow = 'hidden'
+          window.scrollTo(0, 0)
+          scrollToSection(Math.max(0, currentSection - 1))
+        }
+        return
+      }
+
       e.preventDefault()
       
       if (isScrolling) return
       
-      // Ajustar sensibilidad según el dispositivo
-      const sensitivity = (isMobile || (isTablet && !isTabletLandscape)) ? 30 : 50
-      
       if (e.deltaY > sensitivity) {
-        // Scroll hacia abajo
+        if (tail && currentSection >= children.length - 1) {
+          setTailOpen(true)
+          document.body.style.overflow = 'auto'
+          requestAnimationFrame(() => window.scrollBy({ top: 140, behavior: 'auto' }))
+          return
+        }
         scrollToSection(currentSection + 1)
       } else if (e.deltaY < -sensitivity) {
-        // Scroll hacia arriba
         scrollToSection(currentSection - 1)
       }
     }
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (tail && tailOpen) {
+        if ((e.key === 'ArrowUp' || e.key === 'PageUp') && window.scrollY <= 1) {
+          e.preventDefault()
+          setTailOpen(false)
+          document.body.style.overflow = 'hidden'
+          scrollToSection(Math.max(0, currentSection - 1))
+        }
+        return
+      }
       if (isScrolling) return
       
       switch (e.key) {
         case 'ArrowDown':
         case 'PageDown':
           e.preventDefault()
+          if (tail && currentSection >= children.length - 1) {
+            setTailOpen(true)
+            document.body.style.overflow = 'auto'
+            requestAnimationFrame(() => window.scrollBy({ top: Math.round(window.innerHeight * 0.9), behavior: 'smooth' }))
+            break
+          }
           scrollToSection(currentSection + 1)
           break
         case 'ArrowUp':
@@ -166,6 +199,7 @@ export default function FullPageScroll({ children, onSectionChange }: FullPageSc
     }
 
     const handleTouchEnd = (e: TouchEvent) => {
+      if (tail && tailOpen) return
       if (isScrolling) return
       
       const touchEndY = e.changedTouches[0].clientY
@@ -176,10 +210,14 @@ export default function FullPageScroll({ children, onSectionChange }: FullPageSc
       
       if (Math.abs(diff) > touchSensitivity) {
         if (diff > 0) {
-          // Swipe hacia arriba (scroll hacia abajo)
+          if (tail && currentSection >= children.length - 1) {
+            setTailOpen(true)
+            document.body.style.overflow = 'auto'
+            requestAnimationFrame(() => window.scrollBy({ top: Math.round(window.innerHeight * 0.9), behavior: 'smooth' }))
+            return
+          }
           scrollToSection(currentSection + 1)
         } else {
-          // Swipe hacia abajo (scroll hacia arriba)
           scrollToSection(currentSection - 1)
         }
       }
@@ -189,7 +227,7 @@ export default function FullPageScroll({ children, onSectionChange }: FullPageSc
     if (typeof window !== 'undefined') {
       // En móviles y tablet vertical, mantener scroll nativo para mejor compatibilidad
       // En tablet horizontal, usar scroll personalizado como en desktop
-      if (isMobile || (isTablet && !isTabletLandscape)) {
+      if (isMobile || (isTablet && !isTabletLandscape) || tailOpen) {
         document.body.style.overflow = 'auto'
       } else {
         document.body.style.overflow = 'hidden'
@@ -211,7 +249,7 @@ export default function FullPageScroll({ children, onSectionChange }: FullPageSc
         document.body.style.overflow = 'auto'
       }
     }
-  }, [currentSection, isScrolling, children.length, actualViewportHeight, isMobile, isTablet, isTabletLandscape, scrollToSection])
+  }, [currentSection, isScrolling, children.length, actualViewportHeight, isMobile, isTablet, isTabletLandscape, scrollToSection, tail, tailOpen])
 
   // No renderizar hasta que tengamos la altura de la ventana
   if (windowHeight === 0 || actualViewportHeight === 0) {
@@ -219,7 +257,8 @@ export default function FullPageScroll({ children, onSectionChange }: FullPageSc
   }
 
   return (
-    <div className="relative overflow-hidden bg-transparent">
+    <>
+    <div className="relative h-screen overflow-hidden bg-transparent">
       {/* Contenedor de secciones */}
       <div
         ref={containerRef}
@@ -242,7 +281,7 @@ export default function FullPageScroll({ children, onSectionChange }: FullPageSc
 
       {/* Indicador de scroll - Responsivo */}
       <div className="absolute bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 z-50 text-white animate-bounce">
-        {currentSection < children.length - 1 && (
+        {(currentSection < children.length - 1 || (tail && !tailOpen)) && (
           <div className="flex flex-col items-center">
             <span className="text-xs md:text-sm mb-1 md:mb-2 opacity-75 hidden sm:block">Scroll para continuar</span>
             <svg className="w-4 h-4 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -252,5 +291,7 @@ export default function FullPageScroll({ children, onSectionChange }: FullPageSc
         )}
       </div>
     </div>
+    {tail}
+    </>
   )
 } 
