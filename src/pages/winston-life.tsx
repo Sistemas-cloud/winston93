@@ -2,9 +2,15 @@ import { useState, useRef, useEffect } from 'react'
 import Head from 'next/head'
 import Navigation from '../components/Navigation'
 import { motion } from 'framer-motion'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Seo from '@/components/Seo'
 import { SITE_ROUTES } from '@/lib/seo/routes'
 import WinstonLife from '@/components/WinstonLife'
+
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger)
+}
 
 // Componente Modal para la galería
 interface GalleryModalProps {
@@ -102,6 +108,50 @@ export default function WinstonLifePage() {
   
   const video1Ref = useRef<HTMLVideoElement>(null)
   const video2Ref = useRef<HTMLVideoElement>(null)
+  const heroSectionRef = useRef<HTMLElement>(null)
+  const heroTitleRef = useRef<HTMLDivElement>(null)
+
+  // 2026-10-19: Salida épica del título hero al scrollear (scale + blur + letter-spread)
+  useEffect(() => {
+    const section = heroSectionRef.current
+    const title = heroTitleRef.current
+    if (!section || !title) return
+
+    const letters = title.querySelectorAll<HTMLElement>('[data-hero-letter]')
+    const sub = title.querySelector<HTMLElement>('[data-hero-sub]')
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 1.1,
+        },
+      })
+      tl.to(
+        letters,
+        {
+          yPercent: -40,
+          opacity: 0,
+          filter: 'blur(14px)',
+          scale: 1.35,
+          letterSpacing: '0.22em',
+          stagger: { each: 0.03, from: 'center' },
+          ease: 'none',
+        },
+        0
+      )
+      if (sub) {
+        tl.to(
+          sub,
+          { opacity: 0, y: -48, filter: 'blur(10px)', scale: 1.08, ease: 'none' },
+          0.05
+        )
+      }
+    }, section)
+
+    return () => ctx.revert()
+  }, [])
 
   // Sincronizar el estado muted con los elementos de video
   useEffect(() => {
@@ -336,7 +386,10 @@ export default function WinstonLifePage() {
       {/* 2026-04-10: Sin pt superior; el hero arranca en y=0 y el nav fijo/transparente se superpone a la portada (igual que home en móvil/tablet). */}
       <div className="min-h-screen">
         {/* Banner Principal */}
-        <section className="relative h-[85vh] min-h-[520px] overflow-hidden md:h-screen">
+        <section
+          ref={heroSectionRef}
+          className="relative h-[85vh] min-h-[520px] overflow-hidden md:h-screen"
+        >
           <div className="absolute inset-0 bg-[#012A9E]">
             {/* 2026-09-22: LCP — WebP responsivo + fetchpriority; sin video en primer paint */}
             <img
@@ -356,12 +409,46 @@ export default function WinstonLifePage() {
           </div>
           
           <div className="relative z-10 flex h-full flex-col items-center justify-center">
-            <div className="mb-12 text-center text-white md:mb-16">
-              <h1 className="text-4xl font-bold leading-tight sm:text-6xl md:text-8xl">
-                <span className="block text-white">WINSTON</span>
-                <span className="block text-3xl text-[#E3FB07] sm:text-4xl md:text-6xl">LIFE</span>
+            {/* 2026-10-19: Título marca Winston (azul + lima) + salida épica al scroll */}
+            <div
+              ref={heroTitleRef}
+              className="mb-12 text-center md:mb-16"
+            >
+              <h1 className="text-4xl font-bold leading-[0.92] tracking-tight sm:text-6xl md:text-8xl">
+                <span className="block text-white">
+                  {'WINSTON'.split('').map((ch, i) => (
+                    <span
+                      key={`w-${i}`}
+                      data-hero-letter
+                      className="inline-block"
+                    >
+                      {ch}
+                    </span>
+                  ))}
+                </span>
+                <span
+                  className="mt-1 block text-3xl sm:text-4xl md:text-6xl"
+                  style={{
+                    color: '#E3FB07',
+                    WebkitTextStroke: '1.5px #013BDF',
+                    paintOrder: 'stroke fill',
+                  }}
+                >
+                  {'LIFE'.split('').map((ch, i) => (
+                    <span
+                      key={`l-${i}`}
+                      data-hero-letter
+                      className="inline-block"
+                    >
+                      {ch}
+                    </span>
+                  ))}
+                </span>
               </h1>
-              <p className="mx-auto mt-4 max-w-md px-4 text-sm text-white/90 md:text-base">
+              <p
+                data-hero-sub
+                className="mx-auto mt-4 max-w-md px-4 text-sm text-white/90 md:text-base"
+              >
                 Vida estudiantil, deporte y comunidad en el Instituto Winston Churchill.
               </p>
             </div>

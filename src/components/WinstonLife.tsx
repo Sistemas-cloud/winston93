@@ -64,29 +64,29 @@ const CONFIG = {
   ] as const,
   settle: { start: 0.88, end: 1 },
 
-  /** Videos más grandes; solape leve */
+  /** Cuadrícula 2×2 — caen a celdas, sin amontonarse */
   slots: {
-    campus: { x: 0, y: 2, w: 50, rot: -3.2, z: 20 },
-    comunidad: { x: 47, y: 0, w: 44, rot: 2.6, z: 10 },
-    deporte: { x: 8, y: 20, w: 48, rot: -2, z: 30 },
-    emprende: { x: 52, y: 24, w: 40, rot: 3.2, z: 25 },
+    campus: { x: 5, y: 3.2, w: 43, rot: 0, z: 10 },
+    comunidad: { x: 52, y: 3.2, w: 43, rot: 0, z: 10 },
+    deporte: { x: 5, y: 29.4, w: 43, rot: 0, z: 20 },
+    emprende: { x: 52, y: 29.4, w: 43, rot: 0, z: 20 },
   } as const,
 
-  /** Captions más arriba para no cortar el título al borde del canvas */
+  /** Captions anclados a cada celda */
   captions: {
-    campus: { x: 2, y: 30, w: 22 },
-    comunidad: { x: 48, y: 24, w: 18 },
-    deporte: { x: 10, y: 44, w: 26 },
-    emprende: { x: 54, y: 42, w: 24 },
-    closing: { x: 2, y: 48, w: 20 },
+    campus: { x: 6, y: 22, w: 20 },
+    comunidad: { x: 53, y: 22, w: 20 },
+    deporte: { x: 6, y: 48, w: 20 },
+    emprende: { x: 53, y: 48, w: 20 },
+    closing: { x: 5, y: 51.5, w: 22 },
   } as const,
 
-  /** Caída desde fuera — rotación exagerada */
+  /** Caída desde fuera → aterrizan en grid */
   from: {
-    campus: { x: -52, y: -8, rot: -18 },
-    comunidad: { x: 118, y: -36, rot: 16 },
-    deporte: { x: 8, y: 78, rot: -20 },
-    emprende: { x: 122, y: 82, rot: 18 },
+    campus: { x: -48, y: -18, rot: -12 },
+    comunidad: { x: 110, y: -22, rot: 12 },
+    deporte: { x: -40, y: 72, rot: -10 },
+    emprende: { x: 108, y: 70, rot: 10 },
   } as const,
 } as const
 
@@ -665,7 +665,7 @@ function setupDesktopTimeline(
     const span = tramo.end - tramo.start
     const travel = span * 0.8
     const settle = span * 0.2
-    const overshoot = from.rot >= 0 ? 3.2 : -3.2
+    const overshoot = from.rot >= 0 ? 1.4 : -1.4
 
     gsap.set(card, {
       left: u(from.x),
@@ -674,7 +674,7 @@ function setupDesktopTimeline(
       rotate: from.rot,
       scale: CONFIG.enterScale,
       opacity: 0,
-      clipPath: 'inset(40% round 36px)',
+      clipPath: 'inset(36% round 28px)',
       zIndex: slot.z,
       filter: 'brightness(1)',
       force3D: true,
@@ -690,14 +690,14 @@ function setupDesktopTimeline(
       })
     }
 
-    // Caída hacia el slot (pasa de escala y rotación)
+    // Caída hacia la celda de la cuadrícula
     tl.to(
       card,
       {
         left: u(slot.x),
         top: u(slot.y),
         rotate: slot.rot + overshoot,
-        scale: 1.08,
+        scale: 1.03,
         opacity: 1,
         clipPath: CONFIG.unpackTo,
         ease: 'none',
@@ -709,26 +709,16 @@ function setupDesktopTimeline(
       tl.to(media, { scale: 1, ease: 'none', duration: travel }, tramo.start)
     }
 
-    // Impacto / asentamiento
-    tl.to(
-      card,
-      {
-        rotate: slot.rot - overshoot * 0.35,
-        scale: 0.97,
-        ease: 'none',
-        duration: settle * 0.45,
-      },
-      tramo.start + travel
-    )
+    // Asienta plano en la celda (sin amontonar)
     tl.to(
       card,
       {
         rotate: slot.rot,
         scale: 1,
         ease: 'none',
-        duration: settle * 0.55,
+        duration: settle,
       },
-      tramo.start + travel + settle * 0.45
+      tramo.start + travel
     )
 
     // Contador + pop elástico
@@ -761,39 +751,22 @@ function setupDesktopTimeline(
     }
   })
 
-  // 0.88–1.00: collage vivo + cierre + decor derecha
+  // 0.88–1.00: grid estable + cierre + decor
   const settleStart = CONFIG.settle.start
   videos.forEach((_, i) => {
     const card = refs.cards[i]
     const cap = refs.captions[i]
-    const drift = i % 2 === 0 ? 14 : -12
     if (card) {
-      tl.to(card, { filter: 'brightness(1)', ease: 'none', duration: 0.04 }, settleStart)
-      tl.to(
-        card,
-        { y: drift, rotate: `+=${i % 2 === 0 ? 1.2 : -1.2}`, ease: 'none', duration: 0.05 },
-        settleStart
-      )
-      tl.to(
-        card,
-        { y: -drift * 0.7, rotate: `+=${i % 2 === 0 ? -2 : 2}`, ease: 'none', duration: 0.05 },
-        settleStart + 0.05
-      )
-      tl.to(
-        card,
-        { y: 0, rotate: CONFIG.slots[videos[i].id].rot, ease: 'none', duration: 0.05 },
-        settleStart + 0.1
-      )
+      tl.to(card, { filter: 'brightness(1)', y: 0, rotate: 0, ease: 'none', duration: 0.06 }, settleStart)
     }
-    // Captions siguen ocultos — se revelan al hover
     if (cap) gsap.set(cap, { opacity: 0, y: 10 })
   })
 
-  // Título: leve “latido” al cerrar
+  // Título watermark: pulso suave
   if (refs.fill && refs.stroke) {
     tl.to(
       [refs.fill, refs.stroke],
-      { scale: 1.02, ease: 'none', duration: 0.05 },
+      { scale: 1.015, ease: 'none', duration: 0.05 },
       settleStart + 0.02
     )
     tl.to(
@@ -983,10 +956,10 @@ function DesktopStage({
             height: u(CONFIG.canvasH),
           }}
         >
-          {/* Título watermark: WINSTON / LIFE enteros (sin wrap a mitad de palabra) */}
+          {/* Título watermark centrado — azul Winston + contorno lima */}
           <div
-            className="pointer-events-none absolute left-[1%] top-[1%] z-0"
-            style={{ width: u(96) }}
+            className="pointer-events-none absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2 text-center"
+            style={{ width: u(92) }}
           >
             <h2
               ref={(el) => {
@@ -994,9 +967,9 @@ function DesktopStage({
               }}
               className="font-[family-name:var(--wl-display)] uppercase leading-[0.82] tracking-[-0.04em]"
               style={{
-                color: CONFIG.brand,
-                fontSize: u(15.5),
-                opacity: 0.12,
+                color: CONFIG.bright,
+                fontSize: u(14.5),
+                opacity: 0.18,
               }}
               aria-hidden
             >
@@ -1006,12 +979,12 @@ function DesktopStage({
               ref={(el) => {
                 strokeTitleRef.current = el
               }}
-              className="pointer-events-none absolute left-0 top-0 z-[50] font-[family-name:var(--wl-display)] uppercase leading-[0.82] tracking-[-0.04em]"
+              className="pointer-events-none absolute left-0 top-0 z-[50] w-full font-[family-name:var(--wl-display)] uppercase leading-[0.82] tracking-[-0.04em]"
               style={{
                 color: 'transparent',
-                WebkitTextStroke: `calc(var(--wl-u) * 0.18) ${CONFIG.brand}`,
-                fontSize: u(15.5),
-                opacity: 0.4,
+                WebkitTextStroke: `calc(var(--wl-u) * 0.2) ${CONFIG.lime}`,
+                fontSize: u(14.5),
+                opacity: 0.55,
               }}
             >
               <span className="sr-only">Winston Life</span>
@@ -1179,20 +1152,6 @@ function DesktopStage({
                 opacity: 0,
               }}
             />
-            <p
-              data-decor
-              className="absolute font-[family-name:var(--wl-display)] uppercase leading-none"
-              style={{
-                right: u(8),
-                top: u(48),
-                color: CONFIG.accent,
-                fontSize: u(2.6),
-                WebkitTextStroke: `1px ${CONFIG.brand}`,
-                opacity: 0,
-              }}
-            >
-              Live
-            </p>
           </div>
 
           <p
