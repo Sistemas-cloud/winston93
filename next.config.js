@@ -41,6 +41,8 @@ const CSP_REPORT_ONLY = [
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  // 2026-10-19: el preview por LAN (172.16.8.81) si no, HMR se cae y la página se recarga sola.
+  allowedDevOrigins: ['172.16.8.81'],
   compress: true,
   images: {
     formats: ['image/avif', 'image/webp'],
@@ -55,7 +57,7 @@ const nextConfig = {
     ignoreBuildErrors: false,
   },
   async headers() {
-    return [
+    const security = [
       // ── Security headers ────────────────────────────────────────────────
       // Aplica a todas las rutas del sitio.
       {
@@ -74,33 +76,23 @@ const nextConfig = {
           { key: 'Content-Security-Policy-Report-Only', value: CSP_REPORT_ONLY },
         ],
       },
-      // ── Cache de assets estáticos ────────────────────────────────────────
+    ]
+    // 2026-10-19: en dev no cachear /_next/static. El immutable de un año dejaba el
+    // runtime viejo y Fast Refresh recargaba la página en bucle.
+    if (process.env.NODE_ENV !== 'production') return security
+    return [
+      ...security,
       {
         source: '/images/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
       },
       {
         source: '/videos/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
       },
       {
         source: '/_next/static/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
       },
     ]
   },

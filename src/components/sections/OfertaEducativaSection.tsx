@@ -48,7 +48,6 @@ export default function OfertaEducativaSection({
   const [active, setActive] = useState(0)
   const [inView, setInView] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
-  const cursorRef = useRef<HTMLDivElement>(null)
   const TitleTag = isPageTitle ? 'h1' : 'h2'
 
   useEffect(() => {
@@ -79,52 +78,6 @@ export default function OfertaEducativaSection({
     return () => observer.disconnect()
   }, [])
 
-  useEffect(() => {
-    const root = sectionRef.current
-    const dot = cursorRef.current
-    if (!root || !dot) return
-    const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (!fine || reduced) return
-
-    let x = 0
-    let y = 0
-    let tx = 0
-    let ty = 0
-    let frame = 0
-    let running = false
-
-    const loop = () => {
-      x += (tx - x) * 0.2
-      y += (ty - y) * 0.2
-      dot.style.transform = `translate3d(${x}px, ${y}px, 0)`
-      frame = requestAnimationFrame(loop)
-    }
-    const onMove = (event: MouseEvent) => {
-      tx = event.clientX
-      ty = event.clientY
-      dot.classList.add('is-on')
-      const card = (event.target as HTMLElement | null)?.closest('.oe-card')
-      dot.classList.toggle('is-hot', Boolean(card))
-      if (!running) {
-        running = true
-        frame = requestAnimationFrame(loop)
-      }
-    }
-    const onLeave = () => {
-      dot.classList.remove('is-on', 'is-hot')
-      running = false
-      cancelAnimationFrame(frame)
-    }
-    root.addEventListener('mousemove', onMove)
-    root.addEventListener('mouseleave', onLeave)
-    return () => {
-      root.removeEventListener('mousemove', onMove)
-      root.removeEventListener('mouseleave', onLeave)
-      cancelAnimationFrame(frame)
-    }
-  }, [])
-
   const moveCard = (event: ReactMouseEvent<HTMLElement>) => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     const card = event.currentTarget
@@ -152,7 +105,6 @@ export default function OfertaEducativaSection({
           includeClosing ? 'pb-16 pt-24 md:pb-20 md:pt-28' : 'pb-12 pt-20 md:pb-16 md:pt-24'
         }`}
       >
-        <div ref={cursorRef} className="oe-cursor" aria-hidden />
         <div className="oe-glow oe-glow-a" aria-hidden />
         <div className="oe-glow oe-glow-b" aria-hidden />
         <div className="oe-head">
@@ -228,29 +180,6 @@ export default function OfertaEducativaSection({
             background: #fff;
             color: var(--oe-ink);
             font-family: var(--font-poppins), Poppins, sans-serif;
-          }
-          .oe-cursor {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            z-index: 70;
-            width: 14px; height: 14px;
-            margin: -7px 0 0 -7px;
-            border-radius: 999px;
-            background: var(--oe-blue);
-            mix-blend-mode: multiply;
-            pointer-events: none;
-            opacity: 0;
-          }
-          .oe-cursor.is-on { opacity: 1; }
-          .oe-cursor.is-hot {
-            width: 70px; height: 70px;
-            margin: -35px 0 0 -35px;
-            background: var(--oe-lime);
-          }
-          @media (hover: hover) and (pointer: fine) {
-            .oe-cursor { display: block; }
-            .oe, .oe a { cursor: none; }
           }
           .oe-glow {
             position: absolute;

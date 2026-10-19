@@ -42,72 +42,14 @@ const CARDS = [
 
 export default function ConveniosSection() {
   const rootRef = useRef<HTMLElement>(null)
-  const cursorRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const root = rootRef.current
     if (!root) return
-
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches
-
-    const onMoveCursor = (e: MouseEvent) => {
-      const dot = cursorRef.current
-      if (!dot) return
-      dot.classList.add('is-on')
-      dot.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`
-    }
-    const onLeave = () => cursorRef.current?.classList.remove('is-on', 'is-hot')
-    const onOver = (e: Event) => {
-      const t = e.target as HTMLElement | null
-      const hot = t?.closest('a, button, .rw-card')
-      cursorRef.current?.classList.toggle('is-hot', Boolean(hot))
-    }
-    if (fine && !reduced) {
-      root.addEventListener('mousemove', onMoveCursor)
-      root.addEventListener('mouseover', onOver)
-      root.addEventListener('mouseleave', onLeave)
-    }
-
-    if (reduced) {
-      root.querySelectorAll<HTMLElement>('[data-count]').forEach((el) => {
-        el.textContent = el.dataset.count || '0'
-      })
-      return () => {
-        root.removeEventListener('mousemove', onMoveCursor)
-        root.removeEventListener('mouseover', onOver)
-        root.removeEventListener('mouseleave', onLeave)
-      }
-    }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
     gsap.registerPlugin(ScrollTrigger)
     const ctx = gsap.context(() => {
-      const words = root.querySelectorAll('.rw-word')
-      gsap.fromTo(
-        words,
-        { yPercent: 110 },
-        {
-          yPercent: 0,
-          duration: 1.15,
-          stagger: 0.06,
-          ease: 'expo.out',
-          scrollTrigger: { trigger: root.querySelector('.rw-hero'), start: 'top 75%', once: true },
-        }
-      )
-      gsap.fromTo(
-        root.querySelectorAll('.rw-hero-fade'),
-        { y: 16, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.9,
-          stagger: 0.08,
-          ease: 'expo.out',
-          delay: 0.35,
-          scrollTrigger: { trigger: root.querySelector('.rw-hero'), start: 'top 75%', once: true },
-        }
-      )
-
       root.querySelectorAll<HTMLElement>('[data-count]').forEach((el) => {
         const target = Number(el.dataset.count || 0)
         const proxy = { n: 0 }
@@ -122,22 +64,9 @@ export default function ConveniosSection() {
         })
       })
 
-      gsap.from(root.querySelectorAll('.rw-card'), {
-        y: 56,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.15,
-        ease: 'expo.out',
-        scrollTrigger: { trigger: root.querySelector('.rw-cards'), start: 'top 78%' },
-      })
     }, root)
 
-    return () => {
-      ctx.revert()
-      root.removeEventListener('mousemove', onMoveCursor)
-      root.removeEventListener('mouseover', onOver)
-      root.removeEventListener('mouseleave', onLeave)
-    }
+    return () => ctx.revert()
   }, [])
 
   return (
@@ -147,8 +76,6 @@ export default function ConveniosSection() {
       className="rw"
       aria-labelledby="rw-title"
     >
-      <div ref={cursorRef} className="rw-cursor" aria-hidden />
-
       <div className="rw-hero">
         <div className="rw-hero-bg">
           <Image
@@ -189,7 +116,7 @@ export default function ConveniosSection() {
         {STATS.map((stat) => (
           <div key={stat.label} className="rw-stat">
             <p className="rw-stat-num">
-              <span data-count={stat.value}>0</span>
+              <span data-count={stat.value}>{stat.value}</span>
             </p>
             <p className="rw-stat-label">{stat.label}</p>
           </div>
@@ -256,35 +183,6 @@ export default function ConveniosSection() {
           color: var(--rw-text);
           overflow: hidden;
           font-family: var(--font-poppins), Poppins, sans-serif;
-        }
-        @media (hover: hover) and (pointer: fine) {
-          .rw, .rw a, .rw button { cursor: none; }
-        }
-        .rw-cursor {
-          display: none;
-          position: fixed;
-          top: 0;
-          left: 0;
-          z-index: 80;
-          width: 14px;
-          height: 14px;
-          margin: -7px 0 0 -7px;
-          border-radius: 999px;
-          border: 1px solid var(--rw-lime);
-          pointer-events: none;
-          mix-blend-mode: difference;
-          opacity: 0;
-          transition: width .35s ease, height .35s ease, margin .35s ease, background .35s ease, opacity .2s ease;
-        }
-        .rw-cursor.is-on { opacity: 1; }
-        @media (hover: hover) and (pointer: fine) {
-          .rw-cursor { display: block; }
-        }
-        .rw-cursor.is-hot {
-          width: 46px;
-          height: 46px;
-          margin: -23px 0 0 -23px;
-          background: rgba(227, 251, 7, 0.16);
         }
         .rw-hero {
           position: relative;

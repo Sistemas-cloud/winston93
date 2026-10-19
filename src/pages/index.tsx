@@ -124,6 +124,16 @@ export default function Home() {
           onSectionChange={handleSectionChange}
           tail={
             <>
+              {/* 2026-10-19: Por qué Winston es más alta que una pantalla; va en flujo, no en el snap. */}
+              <FortalezasSection />
+              <section className="min-h-[70vh] w-full md:min-h-[75vh] lg:h-screen">
+                <div className="h-full">
+                  <SliderSection />
+                </div>
+              </section>
+              <section className="min-h-[85vh] w-full md:min-h-[90vh] lg:h-screen">
+                <EducationalOfferSection />
+              </section>
               <ConveniosSection />
               <OfertaEducativaSection includeClosing={false} />
               <HomeClosingSection />
@@ -131,9 +141,6 @@ export default function Home() {
           }
         >
           <HeroSection />
-          <FortalezasSection />
-          <SliderSection />
-          <EducationalOfferSection />
         </FullPageScroll>
       ) : (
         nativeSections

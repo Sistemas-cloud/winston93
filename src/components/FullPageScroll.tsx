@@ -1,13 +1,14 @@
-import { useEffect, useRef, useState } from 'react'
+import { Children, useEffect, useRef, useState } from 'react'
 
 interface FullPageScrollProps {
-  children: React.ReactNode[]
+  children: React.ReactNode
   onSectionChange?: (sectionIndex: number) => void
   // 2026-10-19: Contenido largo (convenios cinematográfico, oferta, footer) después del snap.
   tail?: React.ReactNode
 }
 
 export default function FullPageScroll({ children, onSectionChange, tail }: FullPageScrollProps) {
+  const panes = Children.toArray(children)
   const [currentSection, setCurrentSection] = useState(0)
   const [isScrolling, setIsScrolling] = useState(false)
   const [tailOpen, setTailOpen] = useState(false)
@@ -95,7 +96,7 @@ export default function FullPageScroll({ children, onSectionChange, tail }: Full
   }, [isMobile, isTabletLandscape])
 
   const scrollToSection = (index: number) => {
-    if (index < 0 || index >= children.length || isScrolling) return
+    if (index < 0 || index >= panes.length || isScrolling) return
     
     setIsScrolling(true)
     setCurrentSection(index)
@@ -142,7 +143,7 @@ export default function FullPageScroll({ children, onSectionChange, tail }: Full
       if (isScrolling) return
       
       if (e.deltaY > sensitivity) {
-        if (tail && currentSection >= children.length - 1) {
+        if (tail && currentSection >= panes.length - 1) {
           setTailOpen(true)
           document.body.style.overflow = 'auto'
           requestAnimationFrame(() => window.scrollBy({ top: 140, behavior: 'auto' }))
@@ -170,7 +171,7 @@ export default function FullPageScroll({ children, onSectionChange, tail }: Full
         case 'ArrowDown':
         case 'PageDown':
           e.preventDefault()
-          if (tail && currentSection >= children.length - 1) {
+          if (tail && currentSection >= panes.length - 1) {
             setTailOpen(true)
             document.body.style.overflow = 'auto'
             requestAnimationFrame(() => window.scrollBy({ top: Math.round(window.innerHeight * 0.9), behavior: 'smooth' }))
@@ -189,7 +190,7 @@ export default function FullPageScroll({ children, onSectionChange, tail }: Full
           break
         case 'End':
           e.preventDefault()
-          scrollToSection(children.length - 1)
+          scrollToSection(panes.length - 1)
           break
       }
     }
@@ -210,7 +211,7 @@ export default function FullPageScroll({ children, onSectionChange, tail }: Full
       
       if (Math.abs(diff) > touchSensitivity) {
         if (diff > 0) {
-          if (tail && currentSection >= children.length - 1) {
+          if (tail && currentSection >= panes.length - 1) {
             setTailOpen(true)
             document.body.style.overflow = 'auto'
             requestAnimationFrame(() => window.scrollBy({ top: Math.round(window.innerHeight * 0.9), behavior: 'smooth' }))
@@ -249,7 +250,7 @@ export default function FullPageScroll({ children, onSectionChange, tail }: Full
         document.body.style.overflow = 'auto'
       }
     }
-  }, [currentSection, isScrolling, children.length, actualViewportHeight, isMobile, isTablet, isTabletLandscape, scrollToSection, tail, tailOpen])
+  }, [currentSection, isScrolling, panes.length, actualViewportHeight, isMobile, isTablet, isTabletLandscape, scrollToSection, tail, tailOpen])
 
   // No renderizar hasta que tengamos la altura de la ventana
   if (windowHeight === 0 || actualViewportHeight === 0) {
@@ -264,7 +265,7 @@ export default function FullPageScroll({ children, onSectionChange, tail }: Full
         ref={containerRef}
         className="transition-transform duration-1000 ease-in-out"
       >
-        {children.map((child, index) => (
+        {panes.map((child, index) => (
           <div
             key={index}
             className="w-full flex-shrink-0 relative"
@@ -281,9 +282,8 @@ export default function FullPageScroll({ children, onSectionChange, tail }: Full
 
       {/* Indicador de scroll - Responsivo */}
       <div className="absolute bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 z-50 text-white animate-bounce">
-        {(currentSection < children.length - 1 || (tail && !tailOpen)) && (
+        {(currentSection < panes.length - 1 || (tail && !tailOpen)) && (
           <div className="flex flex-col items-center">
-            <span className="text-xs md:text-sm mb-1 md:mb-2 opacity-75 hidden sm:block">Scroll para continuar</span>
             <svg className="w-4 h-4 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
             </svg>
