@@ -9,6 +9,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Seo from '@/components/Seo'
 import { SITE_ROUTES } from '@/lib/seo/routes'
 import WinstonLife from '@/components/WinstonLife'
+import WinstonLifeComunidad from '@/components/sections/WinstonLifeComunidad'
 
 const heroAnton = Anton({
   weight: '400',
@@ -796,49 +797,8 @@ export default function WinstonLifePage() {
         {/* 2026-10-17: Collage orgánico + bento — scroll natural (sin pin) */}
         <WinstonLife id="winston-life-collage" />
 
-        {/* 2026-10-17: z-1 + mismo #F9F9F9 del collage — sin corte de blancos */}
-        <section
-          className="relative z-[1] px-4 py-14 md:py-16"
-          style={{ backgroundColor: '#F9F9F9' }}
-          aria-labelledby="wl-about-heading"
-        >
-          <div className="mx-auto max-w-3xl">
-            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#013BDF]">
-              Comunidad
-            </p>
-            <h2 id="wl-about-heading" className="mb-5 text-2xl font-extrabold text-gray-900 md:text-3xl">
-              ¿Qué es Winston Life?
-            </h2>
-            <p className="mb-4 text-sm leading-relaxed text-gray-700 md:text-base">
-              Winston Life es la vida fuera del salón en el Instituto Winston Churchill.
-              Aquí el alumno crece con deporte, proyectos y sentido de pertenencia.
-              Es la forma en que vivimos el día a día en Ciudad Madero.
-            </p>
-            <h3 className="mb-3 text-lg font-bold text-gray-900">Winston Olympics</h3>
-            <p className="mb-4 text-sm leading-relaxed text-gray-700 md:text-base">
-              En Winston Olympics practicamos deporte en equipo. Buscamos disciplina,
-              respeto y salud. Los juegos y competencias refuerzan hábitos sanos.
-              También fortalecen la amistad entre compañeros.
-            </p>
-            <h3 className="mb-3 text-lg font-bold text-gray-900">Entrepreneurs</h3>
-            <p className="mb-4 text-sm leading-relaxed text-gray-700 md:text-base">
-              En Entrepreneurs los alumnos presentan ideas. Aprenden a planear,
-              hablar en público y trabajar en equipo. No es solo un taller.
-              Es práctica real de liderazgo desde edades tempranas.
-            </p>
-            <h3 className="mb-3 text-lg font-bold text-gray-900">#SoyWinston</h3>
-            <p className="mb-4 text-sm leading-relaxed text-gray-700 md:text-base">
-              #SoyWinston es nuestra comunidad. Celebramos logros, eventos y
-              tradiciones del colegio. Familias y alumnos se reconocen en esa identidad.
-              Es pertenencia con valores claros.
-            </p>
-            <ul className="mb-2 list-disc space-y-2 pl-5 text-sm leading-relaxed text-gray-700 md:text-base">
-              <li>Deporte y actividad física con sentido de equipo.</li>
-              <li>Emprendimiento con proyectos concretos.</li>
-              <li>Eventos y vida escolar con la comunidad Winston.</li>
-            </ul>
-          </div>
-        </section>
+        {/* 2026-10-19: Comunidad rediseñada — sticky + tarjetas (textos intactos). */}
+        <WinstonLifeComunidad />
 
         {/* Video Principal - Pantalla completa */}
         <section id="winston-olympics" className="relative h-[70vh] min-h-[420px] overflow-hidden bg-black md:h-screen">
