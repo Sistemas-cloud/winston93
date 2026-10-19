@@ -1,9 +1,9 @@
-// 2026-08-25: Hannia — Oferta Educativa editorial 2026: frase por nivel, hover, CTA claro.
-// Mismas fotos y enlaces; menos “plantilla flat”, más jerarquía Winston.
-import { useEffect, useRef, useState } from 'react'
+// 2026-10-19: Oferta educativa en acordeón. Mismas fotos, textos y enlaces.
+// Pages Router: el componente ya corre en cliente; sin "use client" ni librerías nuevas.
+// Tipografía de marca (Poppins), no se cargan fuentes extra.
+import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
 import EnrollmentCTA from '@/components/EnrollmentCTA'
 import FooterLegal from '@/components/FooterLegal'
 import { PRIVACY_NOTICE_PATH } from '@/lib/legal'
@@ -13,7 +13,7 @@ const LEVELS = [
     name: 'Kínder',
     image: '/images/education/kinder.png',
     blurb: 'Primeros pasos en inglés. Un entorno seguro, con curiosidad y cuidado.',
-    accent: '#013BDF',
+    color: '#00D8FF',
     link: 'https://educativo-winston.vercel.app/',
     external: true,
   },
@@ -21,7 +21,7 @@ const LEVELS = [
     name: 'Primaria',
     image: '/images/education/primaria.png',
     blurb: 'Bases sólidas en lectura y matemáticas. Valores y pensamiento crítico.',
-    accent: '#E3FB07',
+    color: '#DFFF00',
     link: '/primaria',
     external: false,
   },
@@ -29,13 +29,11 @@ const LEVELS = [
     name: 'Secundaria',
     image: '/images/education/secundaria.png',
     blurb: 'Preparación integral para el siguiente paso. Disciplina y visión global.',
-    accent: '#012A9E',
+    color: '#1546E8',
     link: '/secundaria',
     external: false,
   },
-]
-
-const ease = [0.22, 1, 0.36, 1] as const
+] as const
 
 export default function OfertaEducativaSection({
   // 2026-08-15: En /oferta-educativa el título es H1; en home (sección) es H2.
@@ -47,7 +45,10 @@ export default function OfertaEducativaSection({
   includeClosing?: boolean
 }) {
   const [isMobile, setIsMobile] = useState(false)
-  const sectionRef = useRef<HTMLDivElement>(null)
+  const [active, setActive] = useState(0)
+  const [inView, setInView] = useState(false)
+  const sectionRef = useRef<HTMLElement>(null)
+  const cursorRef = useRef<HTMLDivElement>(null)
   const TitleTag = isPageTitle ? 'h1' : 'h2'
 
   useEffect(() => {
@@ -57,124 +58,433 @@ export default function OfertaEducativaSection({
     return () => window.removeEventListener('resize', update)
   }, [])
 
+  useEffect(() => {
+    const node = sectionRef.current
+    if (!node) return
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduced) {
+      setInView(true)
+      return
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.25 }
+    )
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    const root = sectionRef.current
+    const dot = cursorRef.current
+    if (!root || !dot) return
+    const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (!fine || reduced) return
+
+    let x = 0
+    let y = 0
+    let tx = 0
+    let ty = 0
+    let frame = 0
+    let running = false
+
+    const loop = () => {
+      x += (tx - x) * 0.2
+      y += (ty - y) * 0.2
+      dot.style.transform = `translate3d(${x}px, ${y}px, 0)`
+      frame = requestAnimationFrame(loop)
+    }
+    const onMove = (event: MouseEvent) => {
+      tx = event.clientX
+      ty = event.clientY
+      dot.classList.add('is-on')
+      const card = (event.target as HTMLElement | null)?.closest('.oe-card')
+      dot.classList.toggle('is-hot', Boolean(card))
+      if (!running) {
+        running = true
+        frame = requestAnimationFrame(loop)
+      }
+    }
+    const onLeave = () => {
+      dot.classList.remove('is-on', 'is-hot')
+      running = false
+      cancelAnimationFrame(frame)
+    }
+    root.addEventListener('mousemove', onMove)
+    root.addEventListener('mouseleave', onLeave)
+    return () => {
+      root.removeEventListener('mousemove', onMove)
+      root.removeEventListener('mouseleave', onLeave)
+      cancelAnimationFrame(frame)
+    }
+  }, [])
+
+  const moveCard = (event: ReactMouseEvent<HTMLElement>) => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const card = event.currentTarget
+    const rect = card.getBoundingClientRect()
+    const px = (event.clientX - rect.left) / rect.width
+    const py = (event.clientY - rect.top) / rect.height
+    card.style.setProperty('--mx', `${px * 100}%`)
+    card.style.setProperty('--my', `${py * 100}%`)
+    const arch = card.querySelector<HTMLElement>('.oe-arch')
+    if (arch) {
+      arch.style.transform = `translate3d(${(px - 0.5) * 14}px, ${(py - 0.5) * 10}px, 0)`
+    }
+  }
+
+  const leaveCard = (event: ReactMouseEvent<HTMLElement>) => {
+    const arch = event.currentTarget.querySelector<HTMLElement>('.oe-arch')
+    if (arch) arch.style.transform = 'translate3d(0, 0, 0)'
+  }
+
   return (
-    <div
-      ref={sectionRef}
-      className={`relative flex w-full flex-col bg-[#FAFBFF] ${
-        !includeClosing ? 'h-auto lg:h-full lg:overflow-hidden' : ''
-      }`}
-    >
-      {/* Bloque oferta */}
+    <div className="relative flex w-full flex-col overflow-x-hidden bg-white">
       <section
-        className={`relative flex-1 overflow-hidden px-4 md:px-8 ${
-          includeClosing ? 'pb-16 pt-24 md:pb-20 md:pt-28' : 'pb-8 pt-20 md:pb-10 md:pt-24'
+        ref={sectionRef}
+        className={`oe relative overflow-hidden px-4 md:px-8 ${inView ? 'is-in' : ''} ${
+          includeClosing ? 'pb-16 pt-24 md:pb-20 md:pt-28' : 'pb-12 pt-20 md:pb-16 md:pt-24'
         }`}
       >
-        {/* Atmósfera suave */}
-        <div
-          className="pointer-events-none absolute -left-24 top-20 h-72 w-72 rounded-full opacity-40 blur-3xl"
-          style={{ background: 'rgba(227,251,7,0.35)' }}
-        />
-        <div
-          className="pointer-events-none absolute -right-16 bottom-32 h-80 w-80 rounded-full opacity-30 blur-3xl"
-          style={{ background: 'rgba(1,59,223,0.18)' }}
-        />
+        <div ref={cursorRef} className="oe-cursor" aria-hidden />
+        <div className="oe-glow oe-glow-a" aria-hidden />
+        <div className="oe-glow oe-glow-b" aria-hidden />
+        <div className="oe-head">
+          <p className="oe-kicker">Instituto Winston Churchill</p>
+          <TitleTag className="oe-title">
+            <span className="oe-mask"><span className="oe-word">Oferta</span></span>{' '}
+            <span className="oe-mask"><span className="oe-word">educativa</span></span>
+          </TitleTag>
+          <div className="oe-bar" />
+          <p className="oe-lead">
+            Un camino bilingüe de kínder a secundaria. Conoce cada etapa. Da el
+            siguiente paso con la familia del Instituto Winston Churchill.
+          </p>
+        </div>
 
-        <div className="relative z-10 mx-auto max-w-6xl">
-          <motion.div
-            className="mb-12 text-center md:mb-16"
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-40px' }}
-            transition={{ duration: 0.65, ease }}
-          >
-            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.28em] text-[#013BDF]">
-              Instituto Winston Churchill
-            </p>
-            <TitleTag
-              className="text-3xl font-extrabold uppercase leading-[0.95] tracking-wide text-[#013BDF] md:text-5xl lg:text-6xl"
-            >
-              <span className="font-semibold">Oferta</span>{' '}
-              <span className="font-extrabold">educativa</span>
-            </TitleTag>
-            <div className="mx-auto my-5 h-1 w-14 rounded-full bg-[#E3FB07]" />
-            <p className="mx-auto max-w-xl text-sm leading-relaxed text-gray-500 md:text-base">
-              Un camino bilingüe de kínder a secundaria. Conoce cada etapa. Da el
-              siguiente paso con la familia del Instituto Winston Churchill.
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-7">
-            {LEVELS.map((level, index) => {
-              const cardClass =
-                'group flex h-full flex-col overflow-hidden rounded-[1.35rem] bg-white shadow-[0_18px_50px_rgba(1,59,223,0.08)] ring-1 ring-[#013BDF]/[0.06] transition duration-500 hover:-translate-y-1.5 hover:shadow-[0_28px_60px_rgba(1,59,223,0.14)]'
-              const inner = (
-                <>
-                  <div
-                    className="relative flex aspect-[4/5] items-end justify-center overflow-hidden px-4 pt-8"
-                    style={{
-                      background: `linear-gradient(180deg, ${level.accent}14 0%, #F7F8FC 55%, #FFFFFF 100%)`,
-                    }}
-                  >
+        <div className="oe-row">
+          {LEVELS.map((level, index) => {
+            const explore = level.external ? (
+              <a href={level.link} target="_blank" rel="noopener noreferrer" className="oe-link">
+                Explorar nivel
+                <span className="oe-arrow" aria-hidden />
+              </a>
+            ) : (
+              <Link href={level.link} className="oe-link">
+                Explorar nivel
+                <span className="oe-arrow" aria-hidden />
+              </Link>
+            )
+            return (
+              <article
+                key={level.name}
+                className={`oe-card${active === index ? ' is-active' : ''}`}
+                style={{ ['--c' as string]: level.color }}
+                tabIndex={0}
+                onMouseEnter={() => setActive(index)}
+                onFocus={() => setActive(index)}
+                onClick={() => setActive(index)}
+                onMouseMove={moveCard}
+                onMouseLeave={leaveCard}
+              >
+                <div className="oe-stage">
+                  <div className="oe-halo" aria-hidden />
+                  <div className="oe-arch">
                     <Image
                       src={level.image}
-                      alt={`Estudiantes de ${level.name} — Instituto Winston Churchill`}
-                      width={420}
-                      height={520}
-                      className="relative z-10 h-auto max-h-[92%] w-auto max-w-full object-contain transition duration-700 ease-out group-hover:scale-[1.04]"
-                      sizes="(max-width: 768px) 90vw, 33vw"
-                      priority={false}
-                    />
-                    {/* Franja inferior de color marca */}
-                    <div
-                      className="absolute inset-x-0 bottom-0 h-1.5 transition-all duration-500 group-hover:h-2"
-                      style={{ backgroundColor: level.accent === '#E3FB07' ? '#013BDF' : level.accent }}
+                      alt={`Estudiante de ${level.name} — Instituto Winston Churchill`}
+                      fill
+                      sizes="230px"
+                      className="oe-img"
                     />
                   </div>
-
-                  <div className="flex flex-1 flex-col px-5 pb-6 pt-5 md:px-6">
-                    <h3 className="text-xl font-extrabold uppercase tracking-wide text-gray-900 md:text-2xl">
-                      {level.name}
-                    </h3>
-                    <div
-                      className="my-3 h-1 w-12 rounded-full"
-                      style={{
-                        backgroundColor: level.accent === '#E3FB07' ? '#E3FB07' : level.accent,
-                      }}
-                    />
-                    <p className="mb-5 flex-1 text-sm leading-relaxed text-gray-500">{level.blurb}</p>
-                    <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.14em] text-[#013BDF] transition group-hover:gap-2.5">
-                      Explorar nivel
-                      <span className="text-[#E3FB07]">→</span>
-                    </span>
+                </div>
+                <div className="oe-body">
+                  <h3 className="oe-name">{level.name}</h3>
+                  <span className="oe-rule" aria-hidden />
+                  <div className="oe-reveal">
+                    <p>{level.blurb}</p>
+                    {explore}
                   </div>
-                </>
-              )
-
-              return (
-                <motion.div
-                  key={level.name}
-                  initial={{ opacity: 0, y: 32 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-60px' }}
-                  transition={{ duration: 0.6, delay: index * 0.1, ease }}
-                >
-                  {level.external ? (
-                    <a href={level.link} target="_blank" rel="noopener noreferrer" className={cardClass}>
-                      {inner}
-                    </a>
-                  ) : (
-                    <Link href={level.link} className={cardClass}>
-                      {inner}
-                    </Link>
-                  )}
-                </motion.div>
-              )
-            })}
-          </div>
-
-          {/* 2026-08-25: Sin CTAs aquí — evita duplicar EnrollmentCTA (footer azul). */}
+                </div>
+              </article>
+            )
+          })}
         </div>
+        <style jsx global>{`
+          .oe {
+            --oe-blue: #1546e8;
+            --oe-ink: #0a1240;
+            --oe-lime: #dfff00;
+            --oe-cyan: #00d8ff;
+            --oe-muted: #5b6490;
+            --oe-ease: cubic-bezier(.16,1,.3,1);
+            background: #fff;
+            color: var(--oe-ink);
+            font-family: var(--font-poppins), Poppins, sans-serif;
+          }
+          .oe-cursor {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            z-index: 70;
+            width: 14px; height: 14px;
+            margin: -7px 0 0 -7px;
+            border-radius: 999px;
+            background: var(--oe-blue);
+            mix-blend-mode: multiply;
+            pointer-events: none;
+            opacity: 0;
+          }
+          .oe-cursor.is-on { opacity: 1; }
+          .oe-cursor.is-hot {
+            width: 70px; height: 70px;
+            margin: -35px 0 0 -35px;
+            background: var(--oe-lime);
+          }
+          @media (hover: hover) and (pointer: fine) {
+            .oe-cursor { display: block; }
+            .oe, .oe a { cursor: none; }
+          }
+          .oe-glow {
+            position: absolute;
+            z-index: 0;
+            width: 340px; height: 340px;
+            border-radius: 999px;
+            filter: blur(90px);
+            opacity: .35;
+            pointer-events: none;
+            animation: oeFloat 18s ease-in-out infinite alternate;
+          }
+          .oe-glow-a { left: -120px; top: 40px; background: var(--oe-lime); }
+          .oe-glow-b { right: -120px; top: 180px; background: #9db4ff; animation-delay: -6s; }
+          @keyframes oeFloat {
+            from { transform: translate3d(0,0,0); }
+            to { transform: translate3d(28px,-36px,0); }
+          }
+          .oe-head, .oe-row { position: relative; z-index: 1; }
+          .oe-head { text-align: center; margin-bottom: 2.5rem; }
+          .oe-kicker {
+            margin: 0 0 .8rem;
+            color: var(--oe-blue);
+            font-size: .8rem;
+            font-weight: 700;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+          }
+          .oe-title {
+            margin: 0;
+            color: var(--oe-blue);
+            font-weight: 800;
+            font-size: clamp(2.4rem, 6vw, 4.6rem);
+            letter-spacing: -0.03em;
+            line-height: .95;
+          }
+          .oe-mask { display: inline-block; overflow: hidden; vertical-align: bottom; }
+          .oe-word {
+            display: inline-block;
+            transform: translateY(105%);
+            transition: transform 1s var(--oe-ease);
+          }
+          .oe.is-in .oe-word { transform: translateY(0); }
+          .oe.is-in .oe-mask + .oe-mask .oe-word { transition-delay: .12s; }
+          .oe-bar {
+            width: 0; height: 5px;
+            margin: 1rem auto 0;
+            border-radius: 999px;
+            background: var(--oe-lime);
+            transition: width 1s var(--oe-ease) .5s;
+          }
+          .oe.is-in .oe-bar { width: 56px; }
+          .oe-lead {
+            max-width: 46ch;
+            margin: 1rem auto 0;
+            color: var(--oe-muted);
+            font-size: 1rem;
+            line-height: 1.55;
+            opacity: 0;
+            transition: opacity 1s var(--oe-ease) .7s;
+          }
+          .oe.is-in .oe-lead { opacity: 1; }
+          .oe-row {
+            display: flex;
+            max-width: 1180px;
+            height: 600px;
+            margin: 0 auto;
+            gap: 20px;
+          }
+          .oe-card {
+            position: relative;
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            min-width: 0;
+            overflow: hidden;
+            border: 1px solid #e3e8fb;
+            border-radius: 28px;
+            background: #f6f8ff;
+            cursor: pointer;
+            transition: flex 1s var(--oe-ease), background 1s var(--oe-ease), box-shadow 1s var(--oe-ease);
+          }
+          .oe-card.is-active {
+            flex: 1.7;
+            background: #fff;
+            box-shadow: 0 40px 80px -30px rgba(21,70,232,.35);
+          }
+          .oe-card:focus-visible { outline: 3px solid var(--oe-blue); outline-offset: 3px; }
+          .oe-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            opacity: 0;
+            background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 20%), rgba(21,70,232,.10), transparent 60%);
+            transition: opacity .4s var(--oe-ease);
+          }
+          .oe-card.is-active::before { opacity: 1; }
+          .oe-stage {
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            height: 320px;
+            margin-top: 18px;
+          }
+          .oe-halo, .oe-arch {
+            width: 230px;
+            height: 264px;
+            border-radius: 115px 115px 18px 18px;
+          }
+          .oe-halo {
+            position: absolute;
+            z-index: 0;
+            background: var(--c);
+            opacity: .55;
+            transform: translateY(30px) scale(.86);
+            transition: transform 1s var(--oe-ease), opacity 1s var(--oe-ease);
+          }
+          .oe-card.is-active .oe-halo { opacity: 1; transform: translateY(0) scale(1.12); }
+          .oe-arch {
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+            clip-path: inset(100% 0 0 0 round 115px 115px 18px 18px);
+            transition: clip-path 1.2s var(--oe-ease), transform .2s linear;
+          }
+          .oe.is-in .oe-card:nth-child(1) .oe-arch { clip-path: inset(0 round 115px 115px 18px 18px); }
+          .oe.is-in .oe-card:nth-child(2) .oe-arch { clip-path: inset(0 round 115px 115px 18px 18px); transition: clip-path 1.2s var(--oe-ease) .15s, transform .2s linear; }
+          .oe.is-in .oe-card:nth-child(3) .oe-arch { clip-path: inset(0 round 115px 115px 18px 18px); transition: clip-path 1.2s var(--oe-ease) .3s, transform .2s linear; }
+          .oe-img {
+            object-fit: cover;
+            object-position: center 16%;
+            transform: scale(1.15);
+            transition: transform 6s ease-out;
+          }
+          .oe-card.is-active .oe-img { transform: scale(1.02); }
+          .oe-body { position: relative; z-index: 3; padding: 8px 22px 26px; }
+          .oe-name {
+            margin: 0;
+            color: var(--oe-ink);
+            font-weight: 800;
+            font-size: clamp(1.4rem, 2.4vw, 2rem);
+            letter-spacing: -0.03em;
+          }
+          .oe-rule {
+            display: block;
+            width: 30px; height: 4px;
+            margin: 10px 0 0;
+            border-radius: 999px;
+            background: var(--c);
+            transition: width 1s var(--oe-ease);
+          }
+          .oe-card.is-active .oe-rule { width: 90px; }
+          .oe-reveal {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 1s var(--oe-ease), opacity .6s var(--oe-ease);
+          }
+          .oe-card.is-active .oe-reveal {
+            max-height: 160px;
+            opacity: 1;
+            transition-delay: .15s;
+          }
+          .oe-reveal p {
+            margin: 12px 0 0;
+            color: var(--oe-muted);
+            font-size: .92rem;
+            line-height: 1.45;
+          }
+          .oe-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 14px;
+            color: var(--oe-blue);
+            font-size: .78rem;
+            font-weight: 800;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            text-decoration: none;
+          }
+          .oe-link:focus-visible { outline: 3px solid var(--oe-blue); outline-offset: 3px; }
+          .oe-arrow {
+            position: relative;
+            display: inline-block;
+            width: 22px; height: 2px;
+            background: currentColor;
+            transition: width .4s var(--oe-ease);
+          }
+          .oe-arrow::after {
+            content: '';
+            position: absolute;
+            right: -1px; top: -4px;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 7px solid currentColor;
+          }
+          .oe-link:hover .oe-arrow, .oe-link:focus-visible .oe-arrow { width: 40px; }
+          @media (max-width: 860px) {
+            .oe-row { flex-direction: column; height: auto; }
+            .oe-card, .oe-card.is-active {
+              flex: none;
+              flex-direction: row;
+              align-items: center;
+              gap: 14px;
+              width: 100%;
+              padding: 14px;
+              box-shadow: none;
+            }
+            .oe-stage { width: 130px; height: 150px; margin: 0; flex: none; }
+            .oe-halo { display: none; }
+            .oe-arch, .oe.is-in .oe-arch {
+              width: 130px; height: 150px;
+              border-radius: 65px 65px 12px 12px;
+              clip-path: none;
+              transform: none !important;
+            }
+            .oe-body { padding: 0; }
+            .oe-reveal, .oe-card.is-active .oe-reveal {
+              max-height: none;
+              opacity: 1;
+            }
+          }
+          @media (prefers-reduced-motion: reduce) {
+            .oe-word { transform: none !important; }
+            .oe-bar { width: 56px !important; transition: none !important; }
+            .oe-lead { opacity: 1 !important; }
+            .oe-arch { clip-path: none !important; transition: none !important; }
+            .oe-glow { animation: none !important; }
+            .oe-card, .oe-halo, .oe-img, .oe-reveal, .oe-rule, .oe-arrow { transition: none !important; }
+          }
+        `}</style>
       </section>
 
       {includeClosing && (

@@ -172,8 +172,8 @@ export default function ConveniosSection() {
             Becas directas para egresados, vínculos con empresas y alianzas académicas.
           </p>
           <div className="rw-hero-fade">
-            <Link href="#rw-becas" className="rw-btn rw-magnetic">
-              Conoce las becas
+            <Link href="/admisiones#examen-admision" className="rw-btn rw-magnetic">
+              Conoce los beneficios
               <span className="rw-arrow" aria-hidden>→</span>
             </Link>
           </div>
@@ -231,17 +231,20 @@ export default function ConveniosSection() {
       </div>
 
       <div className="rw-close">
-        <p className="rw-eyebrow">Siguiente paso</p>
-        <h3 className="rw-h3">Ven a conocer el campus.</h3>
-        <Link href="/contacto" className="rw-btn rw-btn-ghost">
-          Agenda tu visita
-          <span className="rw-arrow" aria-hidden>→</span>
-        </Link>
+        <div className="rw-close-glow" aria-hidden />
+        <div className="rw-close-inner">
+          <p className="rw-eyebrow">Siguiente paso</p>
+          <h3 className="rw-h3">Ven a conocer el campus.</h3>
+          <Link href="/contacto" className="rw-btn">
+            Agenda tu visita
+            <span className="rw-arrow" aria-hidden>→</span>
+          </Link>
+        </div>
       </div>
 
       <style jsx global>{`
         .rw {
-          --rw-bg: #f7f8fc;
+          --rw-bg: #ffffff;
           --rw-blue: #1546e8;
           --rw-brand: #013bdf;
           --rw-lime: #e3fb07;
@@ -587,24 +590,59 @@ export default function ConveniosSection() {
           to { transform: translate3d(-50%,0,0); }
         }
         .rw-close {
-          padding: 4.5rem 1.25rem 5rem;
-          text-align: left;
+          position: relative;
+          margin: 0;
+          padding: 3.2rem 1.5rem 4rem;
+          text-align: center;
+          color: var(--rw-text);
+          background: transparent;
         }
-        .rw-close .rw-h3 { margin-bottom: 1.5rem; max-width: 14ch; }
+        .rw-close-glow {
+          position: absolute;
+          left: 50%;
+          top: 55%;
+          width: 460px;
+          height: 140px;
+          border-radius: 999px;
+          background: rgba(227,251,7,.28);
+          filter: blur(70px);
+          transform: translate(-50%, -50%);
+          animation: rwClosePulse 7s ease-in-out infinite;
+          pointer-events: none;
+        }
+        @keyframes rwClosePulse {
+          0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: .55; }
+          50% { transform: translate(-40%, -60%) scale(1.25); opacity: .9; }
+        }
+        .rw-close-inner { position: relative; z-index: 1; }
+        .rw-close .rw-eyebrow { color: var(--rw-brand); }
+        .rw-close .rw-h3 {
+          margin: 0 auto 1.4rem;
+          max-width: none;
+          color: var(--rw-brand);
+          font-size: clamp(2rem, 4vw, 3.4rem);
+        }
+        .rw-close .rw-btn {
+          background: #e3fb07;
+          color: #071018;
+          box-shadow: 0 12px 30px rgba(227,251,7,.28);
+        }
         @media (min-width: 768px) {
           .rw-hero-copy { margin-left: 4rem; }
           .rw-scroll { left: 4rem; }
           .rw-stats { grid-template-columns: repeat(3, 1fr); padding: 4rem; }
           .rw-stat + .rw-stat { border-left: 1px solid rgba(1,59,223,.18); padding-left: 2rem; }
-          .rw-cards, .rw-close { padding-left: 4rem; padding-right: 4rem; }
+          .rw-cards { padding-left: 4rem; padding-right: 4rem; }
+          .rw-close { padding: 4.5rem 2rem 5rem; }
           .rw-cards-head .rw-h3 { white-space: nowrap; }
           .rw-grid { grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
         }
         @media (min-width: 1440px) {
-          .rw-hero, .rw-stats, .rw-cards, .rw-close { padding-left: 6rem; padding-right: 6rem; }
+          .rw-hero, .rw-stats, .rw-cards { padding-left: 6rem; padding-right: 6rem; }
+          .rw-close { padding-top: 5rem; padding-bottom: 5.5rem; }
         }
         @media (prefers-reduced-motion: reduce) {
-          .rw-orb-a, .rw-orb-b, .rw-scroll i, .rw-marquee { animation: none !important; }
+          .rw-orb-a, .rw-orb-b, .rw-scroll i, .rw-marquee, .rw-close-glow { animation: none !important; }
           .rw-word { transform: none !important; }
         }
       `}</style>
