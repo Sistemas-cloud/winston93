@@ -2,7 +2,7 @@
 
 /**
  * 2026-10-17: WinstonLife — sticky collage único (16:9 en u).
- * Captions cortos (label + título). Micro-motion: stickers, settle, title breath.
+ * Captions al hover. Videos limpios (sin stickers). Título watermark + caída.
  */
 
 import { useEffect, useRef, useState } from 'react'
@@ -44,10 +44,10 @@ const CONFIG = {
 
   scrubMobile: 1,
   parallaxMobilePx: 32,
-  unpackFrom: 'inset(18% 18% 18% 18% round 24px)',
-  unpackTo: 'inset(0% 0% 0% 0% round 16px)',
-  enterScale: 0.85,
-  innerScaleFrom: 1.25,
+  unpackFrom: 'inset(22% 22% 22% 22% round 28px)',
+  unpackTo: 'inset(0% 0% 0% 0% round 18px)',
+  enterScale: 0.55,
+  innerScaleFrom: 1.5,
 
   stickerDesktop: 56,
   stickerMobile: 52,
@@ -64,27 +64,28 @@ const CONFIG = {
   ] as const,
   settle: { start: 0.88, end: 1 },
 
+  /** Videos más grandes; solape leve */
   slots: {
-    campus: { x: 5, y: 9, w: 34, rot: -3, z: 20 },
-    comunidad: { x: 58, y: 5, w: 26, rot: 2.5, z: 10 },
-    deporte: { x: 24, y: 26, w: 30, rot: -1.5, z: 30 },
-    emprende: { x: 74, y: 35, w: 18, rot: 4, z: 25 },
+    campus: { x: 1, y: 4, w: 46, rot: -3.5, z: 20 },
+    comunidad: { x: 49, y: 1, w: 40, rot: 2.8, z: 10 },
+    deporte: { x: 12, y: 23, w: 44, rot: -2, z: 30 },
+    emprende: { x: 56, y: 28, w: 36, rot: 3.5, z: 25 },
   } as const,
 
   captions: {
-    campus: { x: 4, y: 31, w: 18 },
-    comunidad: { x: 56, y: 21, w: 12 },
-    deporte: { x: 24, y: 45, w: 28 },
-    emprende: { x: 74, y: 48, w: 16 },
-    closing: { x: 4, y: 50, w: 16 },
+    campus: { x: 3, y: 32, w: 20 },
+    comunidad: { x: 50, y: 26, w: 16 },
+    deporte: { x: 14, y: 50, w: 24 },
+    emprende: { x: 60, y: 51, w: 20 },
+    closing: { x: 3, y: 50, w: 18 },
   } as const,
 
-  /** Origen fuera de cuadro (u) + rot inicial */
+  /** Caída desde fuera — rotación exagerada */
   from: {
-    campus: { x: -40, y: 9, rot: -12 },
-    comunidad: { x: 110, y: -28, rot: 12 },
-    deporte: { x: 24, y: 70, rot: -12 },
-    emprende: { x: 118, y: 74, rot: 12 },
+    campus: { x: -52, y: -8, rot: -18 },
+    comunidad: { x: 118, y: -36, rot: 16 },
+    deporte: { x: 8, y: 78, rot: -20 },
+    emprende: { x: 122, y: 82, rot: 18 },
   } as const,
 } as const
 
@@ -421,7 +422,6 @@ export default function WinstonLife({ className = '', videos = VIDEOS }: Props) 
             const card = cardRefs.current[i]
             const media = mediaRefs.current[i]
             const caption = captionRefs.current[i]
-            const stickers = stickerLayerRefs.current[i]
             if (!card || !media) return
 
             const rot = cfg.mobileRot ?? 0
@@ -477,35 +477,6 @@ export default function WinstonLife({ className = '', videos = VIDEOS }: Props) 
                 }
               )
             }
-
-            stickers?.querySelectorAll<HTMLElement>('[data-sticker]').forEach((icon, si) => {
-              const bob = icon.querySelector<HTMLElement>('[data-sticker-bob]') || icon
-              gsap.to(bob, {
-                y: `+=${6 + si * 4}`,
-                duration: 3.4 + si * 0.6,
-                yoyo: true,
-                repeat: -1,
-                ease: 'sine.inOut',
-              })
-              icon.addEventListener(
-                'pointerdown',
-                () => {
-                  gsap.fromTo(
-                    icon,
-                    { scale: 1 },
-                    {
-                      scale: 1.25,
-                      rotate: '+=8',
-                      duration: 0.35,
-                      yoyo: true,
-                      repeat: 1,
-                      ease: 'elastic.out(1, 0.5)',
-                    }
-                  )
-                },
-                { passive: true }
-              )
-            })
 
             if (caption) {
               const parts = caption.querySelectorAll('[data-copy-part]')
@@ -685,30 +656,29 @@ function setupDesktopTimeline(
     const card = refs.cards[i]
     const media = refs.medias[i]
     const caption = refs.captions[i]
-    const stickerLayer = refs.stickers[i]
     if (!card) return
 
     const slot = CONFIG.slots[cfg.id]
     const from = CONFIG.from[cfg.id]
     const tramo = CONFIG.tramos[i]
     const span = tramo.end - tramo.start
-    const travel = span * 0.88
-    const settle = span * 0.12
-    const overshoot = from.rot >= 0 ? 1.5 : -1.5
+    const travel = span * 0.8
+    const settle = span * 0.2
+    const overshoot = from.rot >= 0 ? 3.2 : -3.2
 
     gsap.set(card, {
       left: u(from.x),
       top: u(from.y),
       width: u(slot.w),
       rotate: from.rot,
-      scale: 0.8,
+      scale: CONFIG.enterScale,
       opacity: 0,
-      clipPath: 'inset(18% round 24px)',
+      clipPath: 'inset(40% round 36px)',
       zIndex: slot.z,
       filter: 'brightness(1)',
       force3D: true,
     })
-    if (media) gsap.set(media, { scale: 1.25 })
+    if (media) gsap.set(media, { scale: CONFIG.innerScaleFrom })
     // Caption: oculto; solo aparece al hover del video
     if (caption) {
       gsap.set(caption, { opacity: 0, y: 10 })
@@ -718,23 +688,17 @@ function setupDesktopTimeline(
         filter: 'blur(0px)',
       })
     }
-    if (stickerLayer) {
-      gsap.set(stickerLayer.querySelectorAll('[data-sticker]'), {
-        scale: 0,
-        opacity: 0,
-      })
-    }
 
-    // Viaje
+    // Caída hacia el slot (pasa de escala y rotación)
     tl.to(
       card,
       {
         left: u(slot.x),
         top: u(slot.y),
-        rotate: slot.rot,
-        scale: 1,
+        rotate: slot.rot + overshoot,
+        scale: 1.08,
         opacity: 1,
-        clipPath: 'inset(0% round 16px)',
+        clipPath: CONFIG.unpackTo,
         ease: 'none',
         duration: travel,
       },
@@ -744,64 +708,27 @@ function setupDesktopTimeline(
       tl.to(media, { scale: 1, ease: 'none', duration: travel }, tramo.start)
     }
 
-    // Asentamiento
+    // Impacto / asentamiento
     tl.to(
       card,
-      { rotate: slot.rot + overshoot, ease: 'none', duration: settle * 0.5 },
+      {
+        rotate: slot.rot - overshoot * 0.35,
+        scale: 0.97,
+        ease: 'none',
+        duration: settle * 0.45,
+      },
       tramo.start + travel
     )
     tl.to(
       card,
-      { rotate: slot.rot, ease: 'none', duration: settle * 0.5 },
-      tramo.start + travel + settle * 0.5
+      {
+        rotate: slot.rot,
+        scale: 1,
+        ease: 'none',
+        duration: settle * 0.55,
+      },
+      tramo.start + travel + settle * 0.45
     )
-
-    // Stickers: overshoot + idle flotante
-    if (stickerLayer) {
-      const icons = stickerLayer.querySelectorAll<HTMLElement>('[data-sticker]')
-      const stStart = tramo.start + span * 0.55
-      tl.to(
-        icons,
-        {
-          scale: 1.2,
-          opacity: 1,
-          ease: 'none',
-          duration: span * 0.12,
-          stagger: 0.03,
-        },
-        stStart
-      )
-      tl.to(
-        icons,
-        { scale: 1, ease: 'none', duration: span * 0.08, stagger: 0.03 },
-        stStart + span * 0.12
-      )
-      icons.forEach((icon, si) => {
-        const bob = icon.querySelector<HTMLElement>('[data-sticker-bob]') || icon
-        gsap.to(bob, {
-          y: `+=${6 + si * 3}`,
-          rotate: `+=${5 + si * 2}`,
-          duration: 2.6 + si * 0.45,
-          yoyo: true,
-          repeat: -1,
-          ease: 'sine.inOut',
-          delay: 0.4 + si * 0.15,
-        })
-      })
-    }
-
-    // Cinta washi: micro-tilt idle
-    const tape = card.querySelector<HTMLElement>('[data-tape]')
-    if (tape) {
-      gsap.to(tape, {
-        rotate: '+=3',
-        duration: 2.4 + i * 0.2,
-        yoyo: true,
-        repeat: -1,
-        ease: 'sine.inOut',
-        delay: 0.5,
-      })
-    }
 
     // Contador + pop elástico
     tl.call(
@@ -934,23 +861,6 @@ function setupDesktopTimeline(
     })
   }
 
-  // Pop final stickers (más vivo)
-  const allStickers: HTMLElement[] = []
-  refs.stickers.forEach((layer) => {
-    layer?.querySelectorAll<HTMLElement>('[data-sticker]').forEach((el) => allStickers.push(el))
-  })
-  if (allStickers.length) {
-    tl.to(
-      allStickers,
-      { scale: 1.22, rotate: '+=6', ease: 'none', duration: 0.05, stagger: 0.012 },
-      settleStart + 0.04
-    )
-    tl.to(
-      allStickers,
-      { scale: 1, rotate: '-=6', ease: 'none', duration: 0.07, stagger: 0.012 },
-      settleStart + 0.09
-    )
-  }
 }
 
 function setDesktopComposed(
@@ -1072,14 +982,21 @@ function DesktopStage({
             height: u(CONFIG.canvasH),
           }}
         >
-          {/* Título dual — fill z-0, stroke z-50 */}
-          <div className="pointer-events-none absolute left-0 top-0 z-0" style={{ width: u(48) }}>
+          {/* Título watermark: fill suave + contorno delante (los videos lo cruzan) */}
+          <div
+            className="pointer-events-none absolute left-0 top-[2%] z-0"
+            style={{ width: u(52) }}
+          >
             <h2
               ref={(el) => {
                 fillTitleRef.current = el
               }}
-              className="font-[family-name:var(--wl-display)] uppercase leading-[0.82] tracking-[-0.04em]"
-              style={{ color: CONFIG.brand, fontSize: u(22) }}
+              className="font-[family-name:var(--wl-display)] uppercase leading-[0.8] tracking-[-0.045em]"
+              style={{
+                color: CONFIG.brand,
+                fontSize: u(23),
+                opacity: 0.12,
+              }}
               aria-hidden
             >
               <TitleLetters lines={titleLines} />
@@ -1088,11 +1005,12 @@ function DesktopStage({
               ref={(el) => {
                 strokeTitleRef.current = el
               }}
-              className="pointer-events-none absolute left-0 top-0 z-[50] font-[family-name:var(--wl-display)] uppercase leading-[0.82] tracking-[-0.04em]"
+              className="pointer-events-none absolute left-0 top-0 z-[50] font-[family-name:var(--wl-display)] uppercase leading-[0.8] tracking-[-0.045em]"
               style={{
                 color: 'transparent',
-                WebkitTextStroke: `calc(var(--wl-u) * 0.18) ${CONFIG.brand}`,
-                fontSize: u(22),
+                WebkitTextStroke: `calc(var(--wl-u) * 0.2) ${CONFIG.brand}`,
+                fontSize: u(23),
+                opacity: 0.42,
               }}
             >
               <span className="sr-only">Winston Life</span>
@@ -1119,48 +1037,11 @@ function DesktopStage({
                     opacity: 0,
                   }}
                 >
-                  <div
-                    ref={(el) => {
-                      stickerLayerRefs.current[i] = el
-                    }}
-                    className="pointer-events-none absolute inset-0 z-20 lg:pointer-events-auto"
-                    aria-hidden
-                  >
-                    {cfg.stickers.map((s, si) => (
-                      <GlassSticker
-                        key={s}
-                        kind={s}
-                        index={si}
-                        size={CONFIG.stickerDesktop}
-                      />
-                    ))}
-                  </div>
-
+                  {/* Sin stickers / cinta / dogear sobre el video */}
                   <div
                     className="relative cursor-pointer overflow-hidden rounded-2xl bg-slate-200"
                     style={{ boxShadow: PHOTO_SHADOW }}
                   >
-                    {cfg.tape && (
-                      <span
-                        data-tape
-                        className="pointer-events-none absolute -top-2 left-1/2 z-10 h-4 w-14 -translate-x-1/2 rotate-[-6deg] rounded-[1px] opacity-70"
-                        style={{
-                          background:
-                            'linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,214,10,.28))',
-                        }}
-                        aria-hidden
-                      />
-                    )}
-                    {cfg.dogear && (
-                      <span
-                        className="pointer-events-none absolute right-0 top-0 z-10 h-7 w-7"
-                        style={{
-                          background:
-                            'linear-gradient(135deg, transparent 50%, rgba(255,255,255,.55) 50%)',
-                        }}
-                        aria-hidden
-                      />
-                    )}
                     <div
                       ref={(el) => {
                         mediaRefs.current[i] = el
@@ -1296,28 +1177,14 @@ function DesktopStage({
                 opacity: 0,
               }}
             />
-            <div
-              data-decor
-              className="absolute"
-              style={{ right: u(6), top: u(20), width: u(5.5), height: u(5.5), opacity: 0 }}
-            >
-              <GlassSticker kind="grad" index={0} size={CONFIG.stickerDesktop} />
-            </div>
-            <div
-              data-decor
-              className="absolute"
-              style={{ right: u(2), top: u(48), width: u(5), height: u(5), opacity: 0 }}
-            >
-              <GlassSticker kind="rocket" index={1} size={CONFIG.stickerDesktop - 8} />
-            </div>
             <p
               data-decor
               className="absolute font-[family-name:var(--wl-display)] uppercase leading-none"
               style={{
-                right: u(10),
-                top: u(52),
+                right: u(8),
+                top: u(48),
                 color: CONFIG.accent,
-                fontSize: u(2.4),
+                fontSize: u(2.6),
                 WebkitTextStroke: `1px ${CONFIG.brand}`,
                 opacity: 0,
               }}
@@ -1399,47 +1266,9 @@ function MobileStack({
             >
               <div className="relative">
                 <div
-                  ref={(el) => {
-                    stickerLayerRefs.current[i] = el
-                  }}
-                  className="pointer-events-none absolute inset-0 z-20"
-                  aria-hidden
-                >
-                  {cfg.stickers.slice(0, 2).map((s, si) => (
-                    <GlassSticker
-                      key={s}
-                      kind={s}
-                      index={si}
-                      size={CONFIG.stickerMobile}
-                    />
-                  ))}
-                </div>
-
-                <div
                   className="relative cursor-pointer overflow-hidden rounded-2xl bg-slate-200"
                   style={{ boxShadow: PHOTO_SHADOW }}
                 >
-                  {cfg.tape && (
-                    <span
-                      data-tape
-                      className="pointer-events-none absolute -top-2 left-1/2 z-10 h-5 w-16 -translate-x-1/2 rotate-[-6deg] rounded-[1px] opacity-70"
-                      style={{
-                        background:
-                          'linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,214,10,.28))',
-                      }}
-                      aria-hidden
-                    />
-                  )}
-                  {cfg.dogear && (
-                    <span
-                      className="pointer-events-none absolute right-0 top-0 z-10 h-8 w-8"
-                      style={{
-                        background:
-                          'linear-gradient(135deg, transparent 50%, rgba(255,255,255,.55) 50%)',
-                      }}
-                      aria-hidden
-                    />
-                  )}
                   <div
                     ref={(el) => {
                       mediaRefs.current[i] = el
