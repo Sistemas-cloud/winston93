@@ -19,11 +19,15 @@ const SliderSection = dynamic(() => import('@/components/sections/ProjectsSectio
 })
 const ConveniosSection = dynamic(() => import('@/components/sections/ConveniosSection'), {
   ssr: false,
-  loading: () => <div className="min-h-[360px] w-full bg-white" aria-hidden />,
+  loading: () => <div className="min-h-[70vh] w-full bg-white lg:min-h-screen" aria-hidden />,
 })
 const OfertaEducativaSection = dynamic(
   () => import('@/components/sections/OfertaEducativaSection'),
   { loading: () => <div className="min-h-[50vh] w-full bg-white" aria-hidden /> }
+)
+const HomeClosingSection = dynamic(
+  () => import('@/components/sections/HomeClosingSection'),
+  { loading: () => <div className="min-h-[50vh] w-full bg-[#012A9E]" aria-hidden /> }
 )
 
 export default function Home() {
@@ -88,11 +92,14 @@ export default function Home() {
       <section className="min-h-[85vh] w-full md:min-h-[90vh] lg:h-screen">
         <EducationalOfferSection />
       </section>
-      <section className="min-h-[360px] w-full md:min-h-[450px] lg:h-screen">
+      <section className="w-full lg:h-screen">
         <ConveniosSection />
       </section>
       <section className="w-full">
-        <OfertaEducativaSection />
+        <OfertaEducativaSection includeClosing={false} />
+      </section>
+      <section className="w-full">
+        <HomeClosingSection />
       </section>
     </div>
   )
@@ -119,7 +126,8 @@ export default function Home() {
           <SliderSection />
           <EducationalOfferSection />
           <ConveniosSection />
-          <OfertaEducativaSection />
+          <OfertaEducativaSection includeClosing={false} />
+          <HomeClosingSection />
         </FullPageScroll>
       ) : (
         nativeSections

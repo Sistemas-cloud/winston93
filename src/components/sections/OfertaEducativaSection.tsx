@@ -40,8 +40,11 @@ const ease = [0.22, 1, 0.36, 1] as const
 export default function OfertaEducativaSection({
   // 2026-08-15: En /oferta-educativa el título es H1; en home (sección) es H2.
   isPageTitle = false,
+  // 2026-10-19: En FullPage el cierre (CTA+footer) va en HomeClosingSection — evita corte.
+  includeClosing = true,
 }: {
   isPageTitle?: boolean
+  includeClosing?: boolean
 }) {
   const [isMobile, setIsMobile] = useState(false)
   const sectionRef = useRef<HTMLDivElement>(null)
@@ -55,9 +58,18 @@ export default function OfertaEducativaSection({
   }, [])
 
   return (
-    <div ref={sectionRef} className="relative flex w-full flex-col bg-[#FAFBFF]">
+    <div
+      ref={sectionRef}
+      className={`relative flex w-full flex-col bg-[#FAFBFF] ${
+        !includeClosing ? 'h-auto lg:h-full lg:overflow-hidden' : ''
+      }`}
+    >
       {/* Bloque oferta */}
-      <section className="relative flex-1 overflow-hidden px-4 pb-16 pt-24 md:px-8 md:pb-20 md:pt-28">
+      <section
+        className={`relative flex-1 overflow-hidden px-4 md:px-8 ${
+          includeClosing ? 'pb-16 pt-24 md:pb-20 md:pt-28' : 'pb-8 pt-20 md:pb-10 md:pt-24'
+        }`}
+      >
         {/* Atmósfera suave */}
         <div
           className="pointer-events-none absolute -left-24 top-20 h-72 w-72 rounded-full opacity-40 blur-3xl"
@@ -165,6 +177,8 @@ export default function OfertaEducativaSection({
         </div>
       </section>
 
+      {includeClosing && (
+        <>
       <EnrollmentCTA />
 
       {/* Footer de sección (compacto) — se mantiene para no romper home / oferta */}
@@ -281,6 +295,8 @@ export default function OfertaEducativaSection({
           )}
         </footer>
       </div>
+        </>
+      )}
     </div>
   )
 }
