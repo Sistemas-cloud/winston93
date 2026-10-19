@@ -191,7 +191,7 @@ const MOBILE_WIDTHS = ['w-full', 'w-[86%] ml-auto', 'w-[92%]', 'w-[78%] mx-auto'
 const PHOTO_SHADOW =
   '0 2px 4px rgba(0,0,0,.06), 0 24px 48px -16px rgba(10,42,107,.28), inset 0 0 0 1px rgba(255,255,255,.4)'
 
-type Props = { className?: string; videos?: WinstonVideoConfig[] }
+type Props = { className?: string; videos?: WinstonVideoConfig[]; id?: string }
 
 function refreshTriggers() {
   ScrollTrigger.refresh()
@@ -201,7 +201,7 @@ function u(n: number) {
   return `calc(var(--wl-u) * ${n})`
 }
 
-export default function WinstonLife({ className = '', videos = VIDEOS }: Props) {
+export default function WinstonLife({ className = '', videos = VIDEOS, id }: Props) {
   const [isDesktop, setIsDesktop] = useState<boolean | null>(null)
   const rootRef = useRef<HTMLElement>(null)
   const stageWrapRef = useRef<HTMLDivElement>(null)
@@ -276,6 +276,8 @@ export default function WinstonLife({ className = '', videos = VIDEOS }: Props) 
             stroke: strokeTitleRef.current,
             counter: counterRef.current,
           })
+          const wm = document.getElementById('wl-watermark')
+          if (wm) gsap.set(wm, { opacity: 1 })
           if (closingRef.current) {
             gsap.fromTo(closingRef.current, { opacity: 0 }, { opacity: 1, duration: 0.35 })
           }
@@ -541,6 +543,7 @@ export default function WinstonLife({ className = '', videos = VIDEOS }: Props) 
   return (
     <section
       ref={rootRef}
+      id={id}
       aria-label="Winston Life"
       className={`relative isolate ${anton.variable} ${inter.variable} ${mono.variable} ${className}`}
       style={
@@ -636,20 +639,14 @@ function setupDesktopTimeline(
     },
   })
 
-  // Título reveal 0–0.08
+  // Título: visible (entrada viene del morph del hero); leve latido
   ;[refs.fill, refs.stroke].forEach((el) => {
     if (!el) return
-    const letters = el.querySelectorAll('[data-letter]')
-    gsap.set(letters, { yPercent: 110 })
-    tl.to(
-      letters,
-      { yPercent: 0, ease: 'none', duration: CONFIG.titleReveal.end - CONFIG.titleReveal.start, stagger: 0.012 },
-      CONFIG.titleReveal.start
-    )
+    gsap.set(el.querySelectorAll('[data-letter]'), { yPercent: 0 })
   })
   tl.to(
     [refs.fill, refs.stroke].filter(Boolean),
-    { y: -6, ease: 'none', duration: 0.92 },
+    { y: -4, ease: 'none', duration: 0.92 },
     0.08
   )
 
@@ -956,10 +953,11 @@ function DesktopStage({
             height: u(CONFIG.canvasH),
           }}
         >
-          {/* Título watermark centrado — azul sólido Winston + contorno lima */}
+          {/* Título watermark — destino del morph del hero (opacity la controla la página) */}
           <div
+            id="wl-watermark"
             className="pointer-events-none absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2 text-center"
-            style={{ width: u(92) }}
+            style={{ width: u(92), opacity: 0 }}
           >
             <h2
               ref={(el) => {
@@ -969,7 +967,7 @@ function DesktopStage({
               style={{
                 color: CONFIG.brand,
                 fontSize: u(14.5),
-                opacity: 0.88,
+                opacity: 0.92,
               }}
               aria-hidden
             >
@@ -984,7 +982,7 @@ function DesktopStage({
                 color: 'transparent',
                 WebkitTextStroke: `calc(var(--wl-u) * 0.16) ${CONFIG.lime}`,
                 fontSize: u(14.5),
-                opacity: 0.95,
+                opacity: 1,
               }}
             >
               <span className="sr-only">Winston Life</span>

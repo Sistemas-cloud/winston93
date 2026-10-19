@@ -2,11 +2,19 @@ import { useState, useRef, useEffect } from 'react'
 import Head from 'next/head'
 import Navigation from '../components/Navigation'
 import { motion } from 'framer-motion'
+import { Anton } from 'next/font/google'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Seo from '@/components/Seo'
 import { SITE_ROUTES } from '@/lib/seo/routes'
 import WinstonLife from '@/components/WinstonLife'
+
+const heroAnton = Anton({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--wl-hero-display',
+})
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger)
@@ -109,27 +117,230 @@ export default function WinstonLifePage() {
   const video1Ref = useRef<HTMLVideoElement>(null)
   const video2Ref = useRef<HTMLVideoElement>(null)
   const heroSectionRef = useRef<HTMLElement>(null)
+  const heroBgRef = useRef<HTMLDivElement>(null)
+  const heroTitleRef = useRef<HTMLHeadingElement>(null)
+  const heroSubRef = useRef<HTMLParagraphElement>(null)
+  const heroRibbonRef = useRef<HTMLDivElement>(null)
+  const flyTitleRef = useRef<HTMLDivElement>(null)
 
-  // 2026-10-19: Todo el hero se desvanece y baja al scrollear
+  // 2026-10-19: Hero → collage: letras viajan y se convierten en el watermark
   useEffect(() => {
-    const section = heroSectionRef.current
-    if (!section) return
+    const hero = heroSectionRef.current
+    const bg = heroBgRef.current
+    const title = heroTitleRef.current
+    const sub = heroSubRef.current
+    const ribbon = heroRibbonRef.current
+    const fly = flyTitleRef.current
+    if (!hero || !bg || !title || !sub || !ribbon || !fly) return
 
-    const ctx = gsap.context(() => {
-      gsap.to(section, {
-        opacity: 0,
-        y: 80,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: section,
+    let st: ScrollTrigger | null = null
+    let cancelled = false
+    let lockedFrom: { left: number; top: number; width: number; height: number } | null =
+      null
+    let tries = 0
+
+    const applyHeroExit = (p: number) => {
+      const exit = Math.min(1, p * 1.35)
+      gsap.set(bg, {
+        scale: 1 + exit * 0.18,
+        opacity: 1 - exit,
+        filter: `blur(${exit * 22}px)`,
+      })
+      gsap.set(sub, {
+        y: exit * 70,
+        opacity: 1 - exit,
+        filter: `blur(${exit * 14}px)`,
+      })
+      gsap.set(ribbon, {
+        y: exit * 120,
+        opacity: 1 - Math.min(1, exit * 1.15),
+      })
+    }
+
+    const boot = () => {
+      if (cancelled) return
+
+      // Móvil: solo salida del hero (sin watermark desktop)
+      if (window.matchMedia('(max-width: 1023px)').matches) {
+        st = ScrollTrigger.create({
+          trigger: hero,
           start: 'top top',
           end: 'bottom top',
           scrub: 1.15,
+          onUpdate: (self) => {
+            applyHeroExit(self.progress)
+            gsap.set(title, {
+              y: self.progress * 90,
+              opacity: 1 - self.progress,
+              filter: `blur(${self.progress * 10}px)`,
+            })
+          },
+        })
+        return
+      }
+
+      const collage = document.getElementById('winston-life-collage')
+      const watermark = document.getElementById('wl-watermark')
+      if (!collage || !watermark) {
+        tries += 1
+        if (tries < 90) requestAnimationFrame(boot)
+        return
+      }
+
+      const winLine = fly.querySelector<HTMLElement>('[data-fly-winston]')
+      const lifeLine = fly.querySelector<HTMLElement>('[data-fly-life]')
+      if (!winLine || !lifeLine) return
+
+      const placeFlyAt = (rect: {
+        left: number
+        top: number
+        width: number
+        height: number
+      }) => {
+        gsap.set(fly, {
+          position: 'fixed',
+          left: rect.left,
+          top: rect.top,
+          width: rect.width,
+          height: rect.height,
+          x: 0,
+          y: 0,
+          scale: 1,
+          opacity: 1,
+          zIndex: 70,
+          margin: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          pointerEvents: 'none',
+          transformOrigin: 'center center',
+        })
+      }
+
+      const styleHeroLook = () => {
+        gsap.set(winLine, {
+          color: '#FFFFFF',
+          WebkitTextStroke: '0px transparent',
+          opacity: 1,
+        })
+        gsap.set(lifeLine, {
+          color: '#E3FB07',
+          WebkitTextStroke: '1.5px #013BDF',
+          opacity: 1,
+        })
+      }
+
+      gsap.set(watermark, { opacity: 0 })
+      gsap.set(fly, { opacity: 0, visibility: 'hidden' })
+
+      const lerp = (a: number, b: number, t: number) => a + (b - a) * t
+      const mixHex = (c1: string, c2: string, t: number) => {
+        const p1 = c1.replace('#', '')
+        const p2 = c2.replace('#', '')
+        const n = (h: string, i: number) => parseInt(h.slice(i, i + 2), 16)
+        const r = Math.round(lerp(n(p1, 0), n(p2, 0), t))
+        const g = Math.round(lerp(n(p1, 2), n(p2, 2), t))
+        const b = Math.round(lerp(n(p1, 4), n(p2, 4), t))
+        return `rgb(${r},${g},${b})`
+      }
+
+      st = ScrollTrigger.create({
+        trigger: hero,
+        start: 'top top',
+        endTrigger: collage,
+        end: 'top 42%',
+        scrub: 1.25,
+        invalidateOnRefresh: true,
+        onRefresh: () => {
+          lockedFrom = null
+          if (st && st.progress === 0) {
+            gsap.set(fly, { opacity: 0, visibility: 'hidden' })
+            gsap.set(title, { opacity: 1, y: 0, filter: 'none' })
+            gsap.set(watermark, { opacity: 0 })
+            styleHeroLook()
+            applyHeroExit(0)
+          }
+        },
+        onUpdate: (self) => {
+          const p = self.progress
+          applyHeroExit(p)
+
+          const to = watermark.getBoundingClientRect()
+
+          if (p <= 0.03) {
+            lockedFrom = null
+            gsap.set(title, { opacity: 1 })
+            gsap.set(fly, { opacity: 0, visibility: 'hidden' })
+            gsap.set(watermark, { opacity: 0 })
+            styleHeroLook()
+            return
+          }
+
+          if (!lockedFrom) {
+            const r = title.getBoundingClientRect()
+            lockedFrom = {
+              left: r.left,
+              top: r.top,
+              width: r.width,
+              height: r.height,
+            }
+          }
+
+          gsap.set(title, { opacity: 0 })
+          gsap.set(fly, { visibility: 'visible' })
+          placeFlyAt(lockedFrom)
+
+          const t = Math.min(1, Math.max(0, (p - 0.03) / 0.97))
+          const eased = t * t * (3 - 2 * t)
+
+          const fromCx = lockedFrom.left + lockedFrom.width / 2
+          const fromCy = lockedFrom.top + lockedFrom.height / 2
+          const toCx = to.left + to.width / 2
+          const toCy = to.top + to.height / 2
+          const scale = to.width / Math.max(lockedFrom.width, 1)
+
+          gsap.set(fly, {
+            x: (toCx - fromCx) * eased,
+            y: (toCy - fromCy) * eased,
+            scale: 1 + (scale - 1) * eased,
+            opacity: t < 0.9 ? 1 : 1 - (t - 0.9) / 0.1,
+          })
+
+          gsap.set(winLine, {
+            color: mixHex('#FFFFFF', '#0A2A6B', eased),
+            WebkitTextStroke:
+              eased < 0.3 ? '0px transparent' : `${(eased - 0.3) * 2.6}px #E3FB07`,
+          })
+          gsap.set(lifeLine, {
+            color: mixHex('#E3FB07', '#0A2A6B', eased),
+            WebkitTextStroke: `${lerp(1.5, 2, eased)}px ${mixHex('#013BDF', '#E3FB07', eased)}`,
+          })
+
+          if (t >= 0.9) {
+            gsap.set(watermark, { opacity: (t - 0.9) / 0.1 })
+          } else {
+            gsap.set(watermark, { opacity: 0 })
+          }
+
+          if (t >= 0.99) {
+            gsap.set(fly, { opacity: 0, visibility: 'hidden' })
+            gsap.set(watermark, { opacity: 1 })
+          }
         },
       })
-    }, section)
 
-    return () => ctx.revert()
+      ScrollTrigger.refresh()
+    }
+
+    void document.fonts.ready.then(() => {
+      requestAnimationFrame(boot)
+    })
+
+    return () => {
+      cancelled = true
+      st?.kill()
+    }
   }, [])
 
   // Sincronizar el estado muted con los elementos de video
@@ -363,13 +574,35 @@ export default function WinstonLifePage() {
       <Navigation currentSection={0} />
 
       {/* 2026-04-10: Sin pt superior; el hero arranca en y=0 y el nav fijo/transparente se superpone a la portada (igual que home en móvil/tablet). */}
-      <div className="min-h-screen">
+      <div className={`min-h-screen ${heroAnton.variable}`}>
+        {/* Título volador: morph hero → watermark collage */}
+        <div
+          ref={flyTitleRef}
+          aria-hidden
+          className="pointer-events-none fixed left-0 top-0 z-[70] opacity-0"
+          style={{ visibility: 'hidden' }}
+        >
+          <p
+            data-fly-winston
+            className="font-[family-name:var(--wl-hero-display)] text-center text-4xl uppercase leading-[0.82] tracking-[-0.04em] sm:text-6xl md:text-8xl"
+          >
+            WINSTON
+          </p>
+          <p
+            data-fly-life
+            className="font-[family-name:var(--wl-hero-display)] mt-1 text-center text-3xl uppercase leading-[0.82] tracking-[-0.04em] sm:text-4xl md:text-6xl"
+            style={{ paintOrder: 'stroke fill' }}
+          >
+            LIFE
+          </p>
+        </div>
+
         {/* Banner Principal */}
         <section
           ref={heroSectionRef}
           className="relative h-[85vh] min-h-[520px] overflow-hidden md:h-screen"
         >
-          <div className="absolute inset-0 bg-[#012A9E]">
+          <div ref={heroBgRef} className="absolute inset-0 origin-center bg-[#012A9E] will-change-transform">
             {/* 2026-09-22: LCP — WebP responsivo + fetchpriority; sin video en primer paint */}
             <img
               src="/images/Winston Life/portada-750.webp"
@@ -388,9 +621,12 @@ export default function WinstonLifePage() {
           </div>
           
           <div className="relative z-10 flex h-full flex-col items-center justify-center">
-            {/* 2026-10-19: Título marca Winston (azul + lima); el hero entero se desvanece al scroll */}
+            {/* 2026-10-19: Título que se convierte en el watermark del collage */}
             <div className="mb-12 text-center md:mb-16">
-              <h1 className="text-4xl font-bold leading-[0.92] tracking-tight sm:text-6xl md:text-8xl">
+              <h1
+                ref={heroTitleRef}
+                className="font-[family-name:var(--wl-hero-display)] text-4xl font-normal uppercase leading-[0.92] tracking-[-0.04em] sm:text-6xl md:text-8xl"
+              >
                 <span className="block text-white">WINSTON</span>
                 <span
                   className="mt-1 block text-3xl sm:text-4xl md:text-6xl"
@@ -403,17 +639,21 @@ export default function WinstonLifePage() {
                   LIFE
                 </span>
               </h1>
-              <p className="mx-auto mt-4 max-w-md px-4 text-sm text-white/90 md:text-base">
+              <p
+                ref={heroSubRef}
+                className="mx-auto mt-4 max-w-md px-4 text-sm text-white/90 md:text-base"
+              >
                 Vida estudiantil, deporte y comunidad en el Instituto Winston Churchill.
               </p>
             </div>
 
             {/* Cintilla con iconos - Completamente unida con colores sólidos */}
             <motion.div
+              ref={heroRibbonRef}
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="absolute bottom-0 left-0 right-0 flex h-28 sm:h-32"
+              className="absolute bottom-0 left-0 right-0 flex h-28 will-change-transform sm:h-32"
             >
               {/* Winston Olympics - Azul sólido */}
               <div
@@ -545,7 +785,7 @@ export default function WinstonLifePage() {
         </section>
 
         {/* 2026-10-17: Collage orgánico + bento — scroll natural (sin pin) */}
-        <WinstonLife />
+        <WinstonLife id="winston-life-collage" />
 
         {/* 2026-10-17: z-1 + fondo sólido — nunca bajo el sticky de WinstonLife */}
         <section
