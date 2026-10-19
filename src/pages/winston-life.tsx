@@ -111,7 +111,7 @@ export default function WinstonLifePage() {
   const heroSectionRef = useRef<HTMLElement>(null)
   const heroTitleRef = useRef<HTMLDivElement>(null)
 
-  // 2026-10-19: Salida épica del título hero al scrollear (scale + blur + letter-spread)
+  // 2026-10-19: Título hero baja y se desvanece al scrollear
   useEffect(() => {
     const section = heroSectionRef.current
     const title = heroTitleRef.current
@@ -131,22 +131,16 @@ export default function WinstonLifePage() {
       tl.to(
         letters,
         {
-          yPercent: -40,
+          y: 120,
           opacity: 0,
-          filter: 'blur(14px)',
-          scale: 1.35,
-          letterSpacing: '0.22em',
-          stagger: { each: 0.03, from: 'center' },
+          filter: 'blur(8px)',
+          stagger: { each: 0.02, from: 'center' },
           ease: 'none',
         },
         0
       )
       if (sub) {
-        tl.to(
-          sub,
-          { opacity: 0, y: -48, filter: 'blur(10px)', scale: 1.08, ease: 'none' },
-          0.05
-        )
+        tl.to(sub, { opacity: 0, y: 90, filter: 'blur(6px)', ease: 'none' }, 0.04)
       }
     }, section)
 
