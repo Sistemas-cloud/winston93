@@ -109,39 +109,24 @@ export default function WinstonLifePage() {
   const video1Ref = useRef<HTMLVideoElement>(null)
   const video2Ref = useRef<HTMLVideoElement>(null)
   const heroSectionRef = useRef<HTMLElement>(null)
-  const heroTitleRef = useRef<HTMLDivElement>(null)
 
-  // 2026-10-19: Título hero baja y se desvanece al scrollear
+  // 2026-10-19: Todo el hero se desvanece y baja al scrollear
   useEffect(() => {
     const section = heroSectionRef.current
-    const title = heroTitleRef.current
-    if (!section || !title) return
+    if (!section) return
 
-    const letters = title.querySelectorAll<HTMLElement>('[data-hero-letter]')
-    const sub = title.querySelector<HTMLElement>('[data-hero-sub]')
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
+      gsap.to(section, {
+        opacity: 0,
+        y: 80,
+        ease: 'none',
         scrollTrigger: {
           trigger: section,
           start: 'top top',
           end: 'bottom top',
-          scrub: 1.1,
+          scrub: 1.15,
         },
       })
-      tl.to(
-        letters,
-        {
-          y: 120,
-          opacity: 0,
-          filter: 'blur(8px)',
-          stagger: { each: 0.02, from: 'center' },
-          ease: 'none',
-        },
-        0
-      )
-      if (sub) {
-        tl.to(sub, { opacity: 0, y: 90, filter: 'blur(6px)', ease: 'none' }, 0.04)
-      }
     }, section)
 
     return () => ctx.revert()
@@ -403,23 +388,10 @@ export default function WinstonLifePage() {
           </div>
           
           <div className="relative z-10 flex h-full flex-col items-center justify-center">
-            {/* 2026-10-19: Título marca Winston (azul + lima) + salida épica al scroll */}
-            <div
-              ref={heroTitleRef}
-              className="mb-12 text-center md:mb-16"
-            >
+            {/* 2026-10-19: Título marca Winston (azul + lima); el hero entero se desvanece al scroll */}
+            <div className="mb-12 text-center md:mb-16">
               <h1 className="text-4xl font-bold leading-[0.92] tracking-tight sm:text-6xl md:text-8xl">
-                <span className="block text-white">
-                  {'WINSTON'.split('').map((ch, i) => (
-                    <span
-                      key={`w-${i}`}
-                      data-hero-letter
-                      className="inline-block"
-                    >
-                      {ch}
-                    </span>
-                  ))}
-                </span>
+                <span className="block text-white">WINSTON</span>
                 <span
                   className="mt-1 block text-3xl sm:text-4xl md:text-6xl"
                   style={{
@@ -428,21 +400,10 @@ export default function WinstonLifePage() {
                     paintOrder: 'stroke fill',
                   }}
                 >
-                  {'LIFE'.split('').map((ch, i) => (
-                    <span
-                      key={`l-${i}`}
-                      data-hero-letter
-                      className="inline-block"
-                    >
-                      {ch}
-                    </span>
-                  ))}
+                  LIFE
                 </span>
               </h1>
-              <p
-                data-hero-sub
-                className="mx-auto mt-4 max-w-md px-4 text-sm text-white/90 md:text-base"
-              >
+              <p className="mx-auto mt-4 max-w-md px-4 text-sm text-white/90 md:text-base">
                 Vida estudiantil, deporte y comunidad en el Instituto Winston Churchill.
               </p>
             </div>

@@ -956,7 +956,7 @@ function DesktopStage({
             height: u(CONFIG.canvasH),
           }}
         >
-          {/* Título watermark centrado — azul Winston + contorno lima */}
+          {/* Título watermark centrado — azul sólido Winston + contorno lima */}
           <div
             className="pointer-events-none absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2 text-center"
             style={{ width: u(92) }}
@@ -967,9 +967,9 @@ function DesktopStage({
               }}
               className="font-[family-name:var(--wl-display)] uppercase leading-[0.82] tracking-[-0.04em]"
               style={{
-                color: CONFIG.bright,
+                color: CONFIG.brand,
                 fontSize: u(14.5),
-                opacity: 0.18,
+                opacity: 0.88,
               }}
               aria-hidden
             >
@@ -982,9 +982,9 @@ function DesktopStage({
               className="pointer-events-none absolute left-0 top-0 z-[50] w-full font-[family-name:var(--wl-display)] uppercase leading-[0.82] tracking-[-0.04em]"
               style={{
                 color: 'transparent',
-                WebkitTextStroke: `calc(var(--wl-u) * 0.2) ${CONFIG.lime}`,
+                WebkitTextStroke: `calc(var(--wl-u) * 0.16) ${CONFIG.lime}`,
                 fontSize: u(14.5),
-                opacity: 0.55,
+                opacity: 0.95,
               }}
             >
               <span className="sr-only">Winston Life</span>
