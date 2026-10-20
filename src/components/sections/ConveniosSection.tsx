@@ -1,3 +1,4 @@
+// 2026-10-20: Logos de socios en tarjetas y marquee (beca / empresa / alianzas).
 // 2026-10-19: Red Winston — sección cinematográfica (beca / empresa / alianzas).
 // Motion con GSAP (transform/opacity). Lenis no entra aquí: en desktop el home
 // usa snap por pantallas y un smooth-scroll global se lo come.
@@ -7,9 +8,31 @@ import Link from 'next/link'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
-const BECA = ['UNE', 'IEST Anáhuac', 'Tecmilenio'] as const
-const EMPRESA = ['Pemex', 'IMSS', 'CFE', 'Telmex'] as const
-const ALIANZAS = ['Cambridge', 'Narrative 4', 'COPARMEX', 'AMMJE'] as const
+type Partner = {
+  name: string
+  src: string
+  alt: string
+}
+
+const BECA: readonly Partner[] = [
+  { name: 'UNE', src: '/images/logos/partners/une.webp', alt: 'Universidad del Noreste' },
+  { name: 'IEST Anáhuac', src: '/images/logos/partners/iest.webp', alt: 'IEST Anáhuac' },
+  { name: 'Tecmilenio', src: '/images/logos/partners/tecmilenio.webp', alt: 'Tecmilenio' },
+]
+
+const EMPRESA: readonly Partner[] = [
+  { name: 'Pemex', src: '/images/logos/partners/pemex.svg', alt: 'Pemex' },
+  { name: 'IMSS', src: '/images/logos/partners/imss.svg', alt: 'IMSS' },
+  { name: 'CFE', src: '/images/logos/partners/cfe.svg', alt: 'CFE' },
+  { name: 'Telmex', src: '/images/logos/partners/telmex.svg', alt: 'Telmex' },
+]
+
+const ALIANZAS: readonly Partner[] = [
+  { name: 'Cambridge', src: '/images/logos/partners/cambridge.webp', alt: 'University of Cambridge' },
+  { name: 'Narrative 4', src: '/images/logos/partners/narrative4.svg', alt: 'Narrative 4' },
+  { name: 'COPARMEX', src: '/images/logos/partners/coparmex.webp', alt: 'COPARMEX' },
+  { name: 'AMMJE', src: '/images/logos/partners/ammje.svg', alt: 'AMMJE' },
+]
 
 const STATS = [
   { value: 3, label: 'universidades con beca directa' },
@@ -92,8 +115,8 @@ export default function ConveniosSection() {
         <div className="rw-hero-copy">
           <p className="rw-eyebrow rw-hero-fade">Red Winston</p>
           <h2 id="rw-title" className="rw-title">
-            <span className="rw-line"><span className="rw-word">Convenios y alianzas que abren</span></span>{' '}
-            <span className="rw-line"><span className="rw-word rw-accent">puertas reales</span></span>
+            <span className="rw-line"><span className="rw-word">Convenios que abren</span></span>{' '}
+            <span className="rw-line"><span className="rw-word rw-accent">puertas</span></span>
           </h2>
           <p className="rw-sub rw-hero-fade">
             Becas directas para egresados, vínculos con empresas y alianzas académicas.
@@ -140,10 +163,10 @@ export default function ConveniosSection() {
               <Icon name={card.icon} />
               <p className="rw-card-kicker">{card.kicker}</p>
               <h3 className="rw-card-title">{card.title}</h3>
-              <ul className="rw-logos">
-                {card.items.map((name) => (
-                  <li key={name}>
-                    <span className="rw-logo">{name}</span>
+              <ul className="rw-partners">
+                {card.items.map((partner) => (
+                  <li key={partner.name} className="rw-partner">
+                    <PartnerMark partner={partner} />
                   </li>
                 ))}
               </ul>
@@ -433,32 +456,62 @@ export default function ConveniosSection() {
         }
         .rw-card-title {
           position: relative;
-          margin: 0 0 1.25rem;
+          margin: 0 0 1.1rem;
           font-size: 1.35rem;
           font-weight: 800;
           letter-spacing: -0.03em;
           line-height: 1.05;
           max-width: 16ch;
         }
-        .rw-logos { position: relative; list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem; }
-        .rw-logo {
-          display: inline-flex;
-          align-items: center;
-          min-height: 36px;
-          padding: 0 .75rem;
-          border-radius: 999px;
-          border: 1px solid rgba(1,59,223,.16);
-          color: rgba(16,24,47,.62);
-          font-size: .78rem;
-          font-weight: 800;
-          letter-spacing: .04em;
-          text-transform: uppercase;
-          transition: color .3s ease, border-color .3s ease, background .3s ease;
+        .rw-partners {
+          position: relative;
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: .55rem;
         }
-        .rw-logo:hover, .rw-card:hover .rw-logo {
-          color: #071018;
-          background: var(--rw-lime);
-          border-color: var(--rw-lime);
+        .rw-partner {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 68px;
+          padding: .7rem .8rem;
+          border-radius: 16px;
+          background: #f4f7ff;
+          border: 1px solid rgba(1,59,223,.1);
+          transition: background .35s ease, border-color .35s ease, transform .35s cubic-bezier(.16,1,.3,1);
+        }
+        .rw-partner-frame {
+          position: relative;
+          width: 100%;
+          height: 40px;
+        }
+        .rw-partner-img {
+          object-fit: contain;
+          object-position: center;
+          filter: grayscale(.15);
+          transition: filter .35s ease, transform .35s cubic-bezier(.16,1,.3,1);
+        }
+        .rw-partner-frame img.rw-partner-img {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+        }
+        .rw-card:hover .rw-partner {
+          background: #fff;
+          border-color: rgba(1,59,223,.18);
+        }
+        .rw-partner:hover {
+          transform: translateY(-2px);
+          border-color: #013bdf;
+          background: #fff;
+        }
+        .rw-partner:hover .rw-partner-img {
+          filter: grayscale(0);
+          transform: scale(1.04);
         }
         .rw-marquees { padding: 2.5rem 0 1rem; }
         .rw-marquee-mask {
@@ -475,13 +528,28 @@ export default function ConveniosSection() {
         }
         .rw-marquee.is-reverse { animation-direction: reverse; }
         .rw-marquees:hover .rw-marquee { animation-play-state: paused; }
-        .rw-marquee span {
-          color: rgba(1,59,223,.45);
-          font-size: clamp(1.4rem, 3vw, 2.4rem);
-          font-weight: 800;
-          letter-spacing: -0.03em;
-          text-transform: uppercase;
-          filter: grayscale(1);
+        .rw-marquee-logo {
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 160px;
+          height: 48px;
+          padding: .4rem .75rem;
+          border-radius: 14px;
+          background: #f4f7ff;
+          border: 1px solid rgba(1,59,223,.08);
+          flex: none;
+        }
+        .rw-marquee-logo img,
+        .rw-marquee-logo .rw-partner-img {
+          max-width: 100%;
+          max-height: 32px;
+          width: auto;
+          height: auto;
+          object-fit: contain;
+          filter: grayscale(.35);
+          opacity: .85;
         }
         @keyframes rwMarquee {
           from { transform: translate3d(0,0,0); }
@@ -564,13 +632,36 @@ function resetTilt(el: HTMLElement) {
   el.style.setProperty('--ry', '0deg')
 }
 
-function Marquee({ names, reverse }: { names: readonly string[]; reverse: boolean }) {
+function PartnerMark({ partner }: { partner: Partner }) {
+  const isSvg = partner.src.endsWith('.svg')
+  return (
+    <span className="rw-partner-frame">
+      {isSvg ? (
+        // 2026-10-20: SVG de socios públicos; next/image no los procesa.
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={partner.src} alt={partner.alt} className="rw-partner-img" />
+      ) : (
+        <Image
+          src={partner.src}
+          alt={partner.alt}
+          fill
+          sizes="160px"
+          className="rw-partner-img"
+        />
+      )}
+    </span>
+  )
+}
+
+function Marquee({ names, reverse }: { names: readonly Partner[]; reverse: boolean }) {
   const loop = [...names, ...names]
   return (
     <div className="rw-marquee-mask">
       <div className={`rw-marquee${reverse ? ' is-reverse' : ''}`}>
-        {loop.map((name, i) => (
-          <span key={`${name}-${i}`}>{name}</span>
+        {loop.map((partner, i) => (
+          <span key={`${partner.name}-${i}`} className="rw-marquee-logo">
+            <PartnerMark partner={partner} />
+          </span>
         ))}
       </div>
     </div>
