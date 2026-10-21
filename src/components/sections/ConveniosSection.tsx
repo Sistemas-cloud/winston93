@@ -491,8 +491,7 @@ export default function ConveniosSection() {
         .rw-partner-img {
           object-fit: contain;
           object-position: center;
-          filter: grayscale(.15);
-          transition: filter .35s ease, transform .35s cubic-bezier(.16,1,.3,1);
+          transition: transform .35s cubic-bezier(.16,1,.3,1);
         }
         .rw-partner-frame img.rw-partner-img {
           position: absolute;
@@ -510,7 +509,6 @@ export default function ConveniosSection() {
           background: #fff;
         }
         .rw-partner:hover .rw-partner-img {
-          filter: grayscale(0);
           transform: scale(1.04);
         }
         .rw-marquees { padding: 2.5rem 0 1rem; }
@@ -548,8 +546,6 @@ export default function ConveniosSection() {
           width: auto;
           height: auto;
           object-fit: contain;
-          filter: grayscale(.35);
-          opacity: .85;
         }
         @keyframes rwMarquee {
           from { transform: translate3d(0,0,0); }
