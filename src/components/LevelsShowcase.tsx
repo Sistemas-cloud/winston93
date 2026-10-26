@@ -18,7 +18,7 @@ const LEVELS = [
   {
     title: 'Secundaria',
     href: '/secundaria',
-    image: '/images/education/secundaria.png',
+    image: '/images/education/secundaria-2026.png',
     blurb: 'Preparación integral para el futuro con visión global.',
   },
 ]

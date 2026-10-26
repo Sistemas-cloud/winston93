@@ -30,7 +30,8 @@ const LEVELS = [
   },
   {
     name: 'Secundaria',
-    image: '/images/education/secundaria.png',
+    // 2026-10-26: archivo nuevo. /_next/image deja cacheada la URL anterior un año.
+    image: '/images/education/secundaria-2026.png',
     blurb: 'Preparación integral para el siguiente paso. Disciplina y visión global.',
     color: '#1546E8',
     link: '/secundaria',
