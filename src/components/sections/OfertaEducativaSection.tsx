@@ -280,18 +280,45 @@ export default function OfertaEducativaSection({
                   <h3 className="oe-name">{level.name}</h3>
                   <span className="oe-rule" aria-hidden />
                   <p className="oe-blurb">{level.blurb}</p>
-                  <div
-                    className="oe-cta"
-                    aria-hidden={!ctaOpen}
-                    {...(!ctaOpen ? { inert: true } : {})}
-                  >
-                    {explore}
-                  </div>
+                  {showPath ? (
+                    <div
+                      className="oe-cta"
+                      aria-hidden={!ctaOpen}
+                      {...(!ctaOpen ? { inert: true } : {})}
+                    >
+                      {explore}
+                    </div>
+                  ) : null}
                 </div>
               </article>
             )
           })}
         </div>
+
+        {/* 2026-10-28: en home, el camino se sustituye por el carrete de campeones. */}
+        {!showPath ? (
+          <section className="oe-champs" aria-labelledby="oe-champs-heading">
+            <h2 id="oe-champs-heading">Formamos campeones</h2>
+            <p>
+              En Winston celebramos con orgullo el talento, la dedicación y los logros de nuestros
+              alumnos de primaria y secundaria, quienes destacan en competencias estatales, regionales
+              y nacionales. Con su esfuerzo y preparación, nuestros estudiantes dejan en alto el nombre
+              de nuestra institución y demuestran que en Winston formamos campeones.
+            </p>
+            <div className="oe-reel">
+              {[
+                { src: '/images/logos/convenios-alumnas.jpg', alt: 'Alumnas del Instituto Winston Churchill con medallas' },
+                { src: '/images/slider/SLIDE_INICIO_2.jpg', alt: 'Alumna con medalla frente al campus Winston' },
+                { src: '/images/Winston%20Life/portada-1280.webp', alt: 'Equipo de alumnos en Winston Olympics' },
+                { src: '/images/slider/SLIDE_INICIO_1-1280.webp', alt: 'Alumnos del Instituto Winston Churchill' },
+              ].map((shot) => (
+                <figure key={shot.src}>
+                  <Image src={shot.src} alt={shot.alt} fill sizes="280px" className="oe-reel-img" />
+                </figure>
+              ))}
+            </div>
+          </section>
+        ) : null}
 
         {/* 2026-10-28: estancia extendida, ancla desde las fortalezas de home. */}
         {showPath ? (
@@ -430,6 +457,44 @@ export default function OfertaEducativaSection({
             transition: width 1s var(--oe-ease) .5s;
           }
           .oe.is-in .oe-bar { width: 56px; }
+          .oe-champs {
+            position: relative;
+            z-index: 1;
+            max-width: 1100px;
+            margin: 3.5rem auto 0;
+          }
+          .oe-champs h2 {
+            margin: 0 0 .8rem;
+            color: #0a1240;
+            font-size: clamp(1.8rem, 3vw, 2.4rem);
+            font-weight: 800;
+            text-align: center;
+          }
+          .oe-champs p {
+            max-width: 68ch;
+            margin: 0 auto 1.4rem;
+            color: #3d466e;
+            text-align: center;
+            line-height: 1.6;
+          }
+          .oe-reel {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            padding: 4px 2px 12px;
+            scroll-snap-type: x mandatory;
+          }
+          .oe-reel figure {
+            position: relative;
+            flex: 0 0 min(78vw, 320px);
+            height: 220px;
+            margin: 0;
+            overflow: hidden;
+            border-radius: 22px;
+            scroll-snap-align: start;
+            background: #0a1240;
+          }
+          .oe-reel-img { object-fit: cover; }
           .oe-estancia {
             position: relative;
             z-index: 1;

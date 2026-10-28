@@ -2,7 +2,7 @@
 // 2026-08-21: Se mantiene solo Cambridge y campus local.
 const ITEMS = [
   { label: '30+ años', sub: 'de experiencia' },
-  { label: 'Bilingüe', sub: 'formación integral' },
+  { label: 'Trilingüe', sub: 'formación inmersiva' },
   { label: 'Cambridge', sub: 'University' },
   { label: 'Cd. Madero', sub: 'Tamaulipas' },
 ]

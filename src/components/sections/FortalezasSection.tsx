@@ -235,32 +235,6 @@ export default function FortalezasSection() {
               emprendedor — en Ciudad Madero, con visión internacional.
             </p>
           </div>
-          {/* 2026-10-22: collage de fotos (no un solo arco). */}
-          <div className="fw-photo">
-            <div className="fw-slab" aria-hidden />
-            <span className="fw-orbit fw-orbit-a" aria-hidden />
-            <span className="fw-orbit fw-orbit-b" aria-hidden />
-            <figure className="fw-shot fw-shot-tech">
-              <Image
-                src="/images/tecnologia/tec1.png"
-                alt="Alumno del Instituto Winston Churchill en el aula de tecnología"
-                fill
-                sizes="(max-width: 900px) 70vw, 280px"
-                className="fw-shot-img"
-              />
-            </figure>
-            <figure className="fw-shot fw-shot-group">
-              <Image
-                src="/images/slider/SLIDE_INICIO_1-1280.webp"
-                alt="Alumnos del Instituto Winston Churchill en el campus"
-                fill
-                sizes="(max-width: 900px) 80vw, 340px"
-                className="fw-shot-img"
-              />
-            </figure>
-            <span className="fw-chip fw-chip-a">IA en el aula</span>
-            <span className="fw-chip fw-chip-b">Trilingüe</span>
-          </div>
         </div>
 
         {/* 2026-10-28: cinco fortalezas con icono azul; cada una abre su sección. */}
@@ -576,11 +550,8 @@ export default function FortalezasSection() {
         }
         .fw-wrap { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 0 1.25rem 4rem; }
         .fw-head {
-          display: grid;
-          grid-template-columns: 1.1fr .9fr;
-          gap: 2.5rem;
-          align-items: center;
-          margin-bottom: 3rem;
+          max-width: 46rem;
+          margin-bottom: 2.5rem;
         }
         .fw-eyebrow {
           margin: 0 0 .8rem;
@@ -591,7 +562,7 @@ export default function FortalezasSection() {
         }
         .fw-title {
           margin: 0;
-          max-width: 16ch;
+          max-width: 22ch;
           color: var(--fw-ink);
           font-weight: 800;
           font-size: clamp(2.2rem, 4.6vw, 3.8rem);

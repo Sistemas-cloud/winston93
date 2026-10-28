@@ -838,6 +838,20 @@ export default function WinstonLifePage() {
           </button>
         </section>
 
+        {/* 2026-10-28: tomas de festividades junto al video de Winston Olympics. */}
+        <section className="bg-white px-4 py-10 md:px-8" aria-label="Festividades Winston">
+          <div className="mx-auto grid max-w-6xl grid-cols-2 gap-3 md:grid-cols-4">
+            {[
+              ['/images/Winston Life/galeria soy winston/navidad.png', 'Posada navideña de alumnos Winston'],
+              ['/images/Winston Life/galeria soy winston/navidad_primaria.png', 'Navidad en primaria'],
+              ['/images/Winston Life/galeria soy winston/xantolo.png', 'Celebración de Xantolo'],
+              ['/images/Winston Life/galeria soy winston/xantolo1.png', 'Alumnos en Xantolo'],
+            ].map(([src, alt]) => (
+              <img key={src} src={src} alt={alt} className="h-40 w-full rounded-2xl object-cover md:h-52" />
+            ))}
+          </div>
+        </section>
+
         {/* Sección ENTREPRENEURS — 2026-10-19: imágenes conectan a /programas#finanzas-emprendimiento */}
         <section id="entrepreneurs" className="py-14 md:py-20 bg-white overflow-hidden">
           <div className="mb-10 text-center md:mb-16">

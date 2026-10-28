@@ -5,7 +5,6 @@ import Navigation from '@/components/Navigation'
 import FullPageScroll from '@/components/FullPageScroll'
 import HeroSection from '@/components/sections/HeroSection'
 import HomeAboutSection from '@/components/HomeAboutSection'
-import CommunityVoices from '@/components/CommunityVoices'
 import EducationalOfferSection from '@/components/sections/ServicesSection'
 import FortalezasSection from '@/components/sections/FortalezasSection'
 import Seo from '@/components/Seo'
@@ -95,7 +94,6 @@ export default function Home() {
       <section className="w-full">
         <OfertaEducativaSection includeClosing={false} showPath={false} />
       </section>
-      <CommunityVoices />
       <section className="w-full">
         <HomeClosingSection />
       </section>
@@ -134,7 +132,6 @@ export default function Home() {
               </section>
               <ConveniosSection />
               <OfertaEducativaSection includeClosing={false} showPath={false} />
-              <CommunityVoices />
               <HomeClosingSection />
             </>
           }

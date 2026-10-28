@@ -1,6 +1,7 @@
 // 2026-10-19: Cierre del home en FullPage — CTA + footer en un viewport (no se corta).
 import Link from 'next/link'
 import Footer from '@/components/Footer'
+import CommunityVoices from '@/components/CommunityVoices'
 
 export default function HomeClosingSection() {
   return (
@@ -47,6 +48,9 @@ export default function HomeClosingSection() {
           </div>
         </div>
       </section>
+
+      {/* 2026-10-28: esta sección cierra la página, justo antes del footer. */}
+      <CommunityVoices />
 
       <div className="min-h-0 flex-1 lg:overflow-hidden">
         <Footer />

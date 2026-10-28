@@ -533,7 +533,7 @@ export default function ConveniosSection() {
           height: 48px;
           padding: .4rem .75rem;
           border-radius: 14px;
-          background: #f4f7ff;
+          background: #fff;
           border: 1px solid rgba(1,59,223,.08);
           flex: none;
         }
