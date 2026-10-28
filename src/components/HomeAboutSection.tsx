@@ -31,17 +31,7 @@ export default function HomeAboutSection() {
           cuidamos valores, hábitos de estudio y el desarrollo emocional de cada alumno.
         </p>
 
-        <h3 className="mb-3 text-lg font-bold text-gray-900">
-          ¿Qué nos distingue?
-        </h3>
-        <ul className="mb-6 list-disc space-y-2 pl-5 text-sm leading-relaxed text-gray-700 md:text-base">
-          <li>Trayectoria de más de tres décadas en la región.</li>
-          <li>Formación trilingüe: inglés diario y francés en secundaria.</li>
-          <li>Programa académico cimentado en tecnología, innovación y emprendimiento.</li>
-          <li>Respaldo académico de University of Cambridge.</li>
-          <li>Comunidad #soywinston con acompañamiento cercano a las familias.</li>
-        </ul>
-
+        {/* 2026-10-28: "Qué nos distingue" pasó a los iconos de Fortalezas. */}
         {/* 2026-09-25: Texto SEO local (Cambridge/estancia); fusionado con oferta previa. 2026-09-26: solo Cambridge. */}
         <h2 className="mb-4 text-xl font-extrabold leading-tight text-gray-900 md:text-2xl">
           Educación bilingüe en Ciudad Madero

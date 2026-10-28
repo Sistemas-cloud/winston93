@@ -10,7 +10,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 type Partner = {
   name: string
-  src: string
+  src?: string
   alt: string
 }
 
@@ -29,15 +29,16 @@ const EMPRESA: readonly Partner[] = [
 
 const ALIANZAS: readonly Partner[] = [
   { name: 'Cambridge', src: '/images/logos/partners/cambridge.webp', alt: 'University of Cambridge' },
-  { name: 'Narrative 4', src: '/images/logos/partners/narrative4.svg', alt: 'Narrative 4' },
+  { name: 'Oxford', alt: 'University of Oxford' },
+  { name: 'Santillana', alt: 'Editorial Santillana' },
   { name: 'COPARMEX', src: '/images/logos/partners/coparmex.webp', alt: 'COPARMEX' },
-  { name: 'AMMJE', src: '/images/logos/partners/ammje.svg', alt: 'AMMJE' },
+  { name: 'Narrative 4', src: '/images/logos/partners/narrative4.svg', alt: 'Narrative 4' },
 ]
 
 const STATS = [
   { value: 3, label: 'universidades con beca directa' },
   { value: 4, label: 'empresas con convenio' },
-  { value: 4, label: 'alianzas académicas' },
+  { value: 5, label: 'alianzas académicas' },
 ] as const
 
 const MARQUEE = [...BECA, ...EMPRESA, ...ALIANZAS] as const
@@ -50,7 +51,7 @@ const CARDS = [
     icon: 'beca',
   },
   {
-    kicker: 'Experiencia y proyección',
+    kicker: 'Becas y beneficios',
     title: 'Convenios con empresas',
     items: EMPRESA,
     icon: 'empresa',
@@ -119,19 +120,9 @@ export default function ConveniosSection() {
             <span className="rw-line"><span className="rw-word rw-accent">puertas</span></span>
           </h2>
           <p className="rw-sub rw-hero-fade">
-            Becas directas para egresados, vínculos con empresas y alianzas académicas.
+            Becas directas para nuestros egresados en las mejores instituciones de la zona y
+            alianzas estratégicas con grandes beneficios para nuestra comunidad estudiantil.
           </p>
-          <div className="rw-hero-fade">
-            <Link href="/admisiones#examen-admision" className="rw-btn rw-magnetic">
-              Conoce los beneficios
-              <span className="rw-arrow" aria-hidden>→</span>
-            </Link>
-          </div>
-        </div>
-
-        <div className="rw-scroll" aria-hidden>
-          <span>Scroll</span>
-          <i />
         </div>
       </div>
 
@@ -479,7 +470,7 @@ export default function ConveniosSection() {
           min-height: 68px;
           padding: .7rem .8rem;
           border-radius: 16px;
-          background: #f4f7ff;
+          background: #fff;
           border: 1px solid rgba(1,59,223,.1);
           transition: background .35s ease, border-color .35s ease, transform .35s cubic-bezier(.16,1,.3,1);
         }
@@ -487,6 +478,13 @@ export default function ConveniosSection() {
           position: relative;
           width: 100%;
           height: 40px;
+        }
+        .rw-partner-name {
+          color: #0a1240;
+          font-size: .82rem;
+          font-weight: 800;
+          letter-spacing: .02em;
+          text-align: center;
         }
         .rw-partner-img {
           object-fit: contain;
@@ -629,6 +627,9 @@ function resetTilt(el: HTMLElement) {
 }
 
 function PartnerMark({ partner }: { partner: Partner }) {
+  if (!partner.src) {
+    return <span className="rw-partner-name">{partner.name}</span>
+  }
   const isSvg = partner.src.endsWith('.svg')
   return (
     <span className="rw-partner-frame">

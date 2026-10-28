@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Navigation from '@/components/Navigation'
 import Seo from '@/components/Seo'
+import VisitCampusSection from '@/components/VisitCampusSection'
 import { SITE_ROUTES } from '@/lib/seo/routes'
 
 export default function ConocenosPage() {
@@ -176,6 +177,32 @@ export default function ConocenosPage() {
 
           </div>
         </div>
+      </section>
+
+      {/* 2026-10-28: instalaciones y recorrido, pedido de CAMBIOS WEB. */}
+      <section className="bg-white px-6 pb-4 pt-4 sm:px-10 md:px-12 lg:px-20" aria-label="Fotos de las instalaciones">
+        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-4 md:grid-cols-3">
+          <img src="/images/facilities/fondo_escuela-1280.webp" alt="Fachada del campus Winston" className="h-56 w-full rounded-2xl object-cover" />
+          <img src="/images/facilities/artes.jpg" alt="Taller de artes en el Instituto Winston Churchill" className="h-56 w-full rounded-2xl object-cover" />
+          <img src="/images/facilities/mindfulness.jpg" alt="Espacio de bienestar en el campus Winston" className="h-56 w-full rounded-2xl object-cover" />
+        </div>
+      </section>
+      <VisitCampusSection scheduleOnWhatsApp />
+      <section className="bg-[#012A9E] px-6 py-16 text-center" aria-labelledby="recorrido-heading">
+        <h2 id="recorrido-heading" className="mb-4 text-2xl font-extrabold text-white md:text-3xl">
+          ¿Quieres agendar un recorrido?
+        </h2>
+        <p className="mx-auto mb-6 max-w-xl text-sm text-white/85 md:text-base">
+          Escríbenos por WhatsApp y te recibimos en el campus de Ciudad Madero.
+        </p>
+        <a
+          href="https://wa.me/528334378743?text=Hola%2C%20quiero%20agendar%20un%20recorrido%20por%20el%20Instituto%20Winston%20Churchill."
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex rounded-full bg-[#E3FB07] px-7 py-3 text-sm font-bold uppercase tracking-wide text-black"
+        >
+          Agendar recorrido
+        </a>
       </section>
     </>
   )

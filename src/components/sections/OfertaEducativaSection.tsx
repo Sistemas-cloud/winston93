@@ -51,9 +51,12 @@ export default function OfertaEducativaSection({
   isPageTitle = false,
   // 2026-10-19: En FullPage el cierre (CTA+footer) va en HomeClosingSection — evita corte.
   includeClosing = true,
+  // 2026-10-28: en home solo los tres niveles; el camino queda en /oferta-educativa.
+  showPath = true,
 }: {
   isPageTitle?: boolean
   includeClosing?: boolean
+  showPath?: boolean
 }) {
   const [isMobile, setIsMobile] = useState(false)
   const [isStacked, setIsStacked] = useState(false)
@@ -223,8 +226,9 @@ export default function OfertaEducativaSection({
           </TitleTag>
           <div className="oe-bar" />
           <p className="oe-lead">
-            Un camino bilingüe de kínder a secundaria. Conoce cada etapa. Da el siguiente paso con
-            la familia del Instituto Winston Churchill.
+            {showPath
+              ? 'Un camino bilingüe de kínder a secundaria. Conoce cada etapa. Da el siguiente paso con la familia del Instituto Winston Churchill.'
+              : 'Impulsamos y acompañamos su potencial en cada etapa.'}
           </p>
         </div>
 
@@ -289,7 +293,19 @@ export default function OfertaEducativaSection({
           })}
         </div>
 
+        {/* 2026-10-28: estancia extendida, ancla desde las fortalezas de home. */}
+        {showPath ? (
+          <section id="estancia" className="oe-estancia">
+            <h2>Estancia extendida</h2>
+            <p>
+              Después de clases acompañamos a los alumnos hasta las 7:00 p.m., con cuidado y apoyo
+              en tareas. Cada familia elige el horario que necesita.
+            </p>
+          </section>
+        ) : null}
+
         {/* 2026-10-19: Línea de continuidad Kínder → Primaria → Secundaria. */}
+        {showPath ? (
         <section
           ref={pathRef}
           className={`oe-path${pathIn ? ' is-in' : ''}${reduced ? ' is-reduced' : ''}`}
@@ -322,6 +338,7 @@ export default function OfertaEducativaSection({
             </ol>
           </div>
         </section>
+        ) : null}
 
         <style jsx global>{`
           .oe {
@@ -413,6 +430,22 @@ export default function OfertaEducativaSection({
             transition: width 1s var(--oe-ease) .5s;
           }
           .oe.is-in .oe-bar { width: 56px; }
+          .oe-estancia {
+            position: relative;
+            z-index: 1;
+            max-width: 720px;
+            margin: 3rem auto 0;
+            padding: 1.5rem 1.6rem;
+            border-radius: 24px;
+            background: #f4f7ff;
+          }
+          .oe-estancia h2 {
+            margin: 0 0 .5rem;
+            color: #1546e8;
+            font-size: 1.35rem;
+            font-weight: 800;
+          }
+          .oe-estancia p { margin: 0; color: #3d466e; line-height: 1.6; }
           .oe-lead {
             max-width: 46ch;
             margin: 1rem auto 0;

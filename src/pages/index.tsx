@@ -6,7 +6,6 @@ import FullPageScroll from '@/components/FullPageScroll'
 import HeroSection from '@/components/sections/HeroSection'
 import HomeAboutSection from '@/components/HomeAboutSection'
 import CommunityVoices from '@/components/CommunityVoices'
-import VisitCampusSection from '@/components/VisitCampusSection'
 import EducationalOfferSection from '@/components/sections/ServicesSection'
 import FortalezasSection from '@/components/sections/FortalezasSection'
 import Seo from '@/components/Seo'
@@ -81,8 +80,6 @@ export default function Home() {
       <HomeAboutSection />
       {/* 2026-10-19: Fortalezas + Winston USA (pedido marketing CAMBIOS WEB) */}
       <FortalezasSection />
-      <CommunityVoices />
-      <VisitCampusSection />
       {/* 2026-10-13: El banner Open House pasó a ser la primera diapositiva del slider. */}
       <section className="min-h-[70vh] w-full md:min-h-[75vh] lg:h-screen">
         <div className="h-full">
@@ -96,8 +93,9 @@ export default function Home() {
         <ConveniosSection />
       </section>
       <section className="w-full">
-        <OfertaEducativaSection includeClosing={false} />
+        <OfertaEducativaSection includeClosing={false} showPath={false} />
       </section>
+      <CommunityVoices />
       <section className="w-full">
         <HomeClosingSection />
       </section>
@@ -135,7 +133,8 @@ export default function Home() {
                 <EducationalOfferSection />
               </section>
               <ConveniosSection />
-              <OfertaEducativaSection includeClosing={false} />
+              <OfertaEducativaSection includeClosing={false} showPath={false} />
+              <CommunityVoices />
               <HomeClosingSection />
             </>
           }

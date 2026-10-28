@@ -6,7 +6,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 const TITLE = 'Programa académico, cimentado en tecnología, innovación y emprendimiento'
-const LANGS = ['Español', 'English', 'Français'] as const
 const LEVELS = ['Maternal', 'Kínder', 'Primaria', 'Secundaria'] as const
 // 2026-10-19: video público de servicios (usa_programa_config, ciclo 23). Sin montos.
 const USA_VIDEO =
@@ -29,13 +28,8 @@ const USA_BENEFICIOS = [
   },
 ] as const
 const USA_TITLE = 'Winston USA Program'
-const USA_CLOSE = new Date('2027-02-28T23:59:59')
-// 2026-10-19: bandera USA a pantalla completa en el arco (también póster del video).
+// 2026-10-23: bandera USA horizontal (proporción 19:10). También póster del video.
 const USA_POSTER = '/images/winston-usa/flag.webp'
-
-function daysUntilClose(now = new Date()): number {
-  return Math.ceil((USA_CLOSE.getTime() - now.getTime()) / 86_400_000)
-}
 
 export default function FortalezasSection() {
   const rootRef = useRef<HTMLElement>(null)
@@ -46,10 +40,7 @@ export default function FortalezasSection() {
   const [cardsIn, setCardsIn] = useState(false)
   const [usaIn, setUsaIn] = useState(false)
   const [reduced, setReduced] = useState(false)
-  const [lang, setLang] = useState(0)
-  const [langOut, setLangOut] = useState(false)
   const [usaModal, setUsaModal] = useState<null | 'info' | 'video'>(null)
-  const [daysLeft, setDaysLeft] = useState<number | null | undefined>(undefined)
   const videoRef = useRef<HTMLVideoElement>(null)
   const openerRef = useRef<HTMLElement | null>(null)
 
@@ -93,18 +84,6 @@ export default function FortalezasSection() {
   }, [])
 
   useEffect(() => {
-    if (reduced) return
-    const id = window.setInterval(() => {
-      setLangOut(true)
-      window.setTimeout(() => {
-        setLang((current) => (current + 1) % LANGS.length)
-        setLangOut(false)
-      }, 380)
-    }, 2200)
-    return () => window.clearInterval(id)
-  }, [reduced])
-
-  useEffect(() => {
     const usa = usaRef.current
     if (!usa) return
     if (reduced) {
@@ -122,16 +101,6 @@ export default function FortalezasSection() {
     io.observe(usa)
     return () => io.disconnect()
   }, [reduced])
-
-  useEffect(() => {
-    const tick = () => {
-      const days = daysUntilClose()
-      setDaysLeft(days < 0 ? null : days)
-    }
-    tick()
-    const id = window.setInterval(tick, 60_000)
-    return () => window.clearInterval(id)
-  }, [])
 
   useEffect(() => {
     if (!usaModal) return
@@ -242,12 +211,6 @@ export default function FortalezasSection() {
     }
   }, [reduced])
 
-  const onCardMove = (event: ReactMouseEvent<HTMLElement>) => {
-    const rect = event.currentTarget.getBoundingClientRect()
-    event.currentTarget.style.setProperty('--mx', `${((event.clientX - rect.left) / rect.width) * 100}%`)
-    event.currentTarget.style.setProperty('--my', `${((event.clientY - rect.top) / rect.height) * 100}%`)
-  }
-
   return (
     <section
       ref={rootRef}
@@ -272,79 +235,61 @@ export default function FortalezasSection() {
               emprendedor — en Ciudad Madero, con visión internacional.
             </p>
           </div>
+          {/* 2026-10-22: collage de fotos (no un solo arco). */}
           <div className="fw-photo">
-            <div className="fw-halo" aria-hidden />
-            <div className="fw-arch">
+            <div className="fw-slab" aria-hidden />
+            <span className="fw-orbit fw-orbit-a" aria-hidden />
+            <span className="fw-orbit fw-orbit-b" aria-hidden />
+            <figure className="fw-shot fw-shot-tech">
+              <Image
+                src="/images/tecnologia/tec1.png"
+                alt="Alumno del Instituto Winston Churchill en el aula de tecnología"
+                fill
+                sizes="(max-width: 900px) 70vw, 280px"
+                className="fw-shot-img"
+              />
+            </figure>
+            <figure className="fw-shot fw-shot-group">
               <Image
                 src="/images/slider/SLIDE_INICIO_1-1280.webp"
                 alt="Alumnos del Instituto Winston Churchill en el campus"
                 fill
-                sizes="(max-width: 900px) 100vw, 420px"
-                className="fw-arch-img"
+                sizes="(max-width: 900px) 80vw, 340px"
+                className="fw-shot-img"
               />
-            </div>
+            </figure>
             <span className="fw-chip fw-chip-a">IA en el aula</span>
             <span className="fw-chip fw-chip-b">Trilingüe</span>
           </div>
         </div>
 
-        <div ref={bentoRef} className="fw-bento">
-          <article className="fw-card fw-ia" onMouseMove={onCardMove}>
-            <canvas ref={canvasRef} className="fw-net" aria-hidden />
+        {/* 2026-10-28: cinco fortalezas con icono azul; cada una abre su sección. */}
+        <div ref={bentoRef} className="fw-links">
+          <Link href="/conocenos#instalaciones" className="fw-link">
+            <Icon name="home" />
+            <h3>Instalaciones climatizadas</h3>
+            <p>Circuito cerrado y cámaras de vigilancia. Agenda una visita y recorre el campus.</p>
+          </Link>
+          <Link href="/oferta-educativa#estancia" className="fw-link">
+            <Icon name="home" />
+            <h3>Estancia extendida</h3>
+            <p>Acompañamiento después de clases, dentro de la oferta educativa.</p>
+          </Link>
+          <Link href="/programas#tecnologia-innovacion" className="fw-link">
             <Icon name="ia" />
             <h3>Modelo avanzado con IA</h3>
-            <p>
-              Enseñanza potenciada con inteligencia artificial: pensamiento crítico, creatividad y
-              herramientas del futuro desde edades tempranas.
-            </p>
-          </article>
-
-          <article className="fw-card fw-tri" onMouseMove={onCardMove}>
-            <Icon name="lang" />
-            <h3>Formación trilingüe</h3>
-            {reduced ? (
-              <p className="fw-lang-static">Español, English, Français</p>
-            ) : (
-              <p className={`fw-lang${langOut ? ' is-out' : ' is-in'}`} aria-hidden>
-                <span>{LANGS[lang]}</span>
-              </p>
-            )}
-            <p>
-              Inmersión en español e inglés, con francés en secundaria. Comunicación real para un
-              mundo global.
-            </p>
-          </article>
-
-          <article className="fw-card fw-inst" onMouseMove={onCardMove}>
-            <Image
-              src="/images/facilities/fondo_escuela-1280.webp"
-              alt="Campus del Instituto Winston Churchill"
-              fill
-              sizes="(max-width: 900px) 100vw, 50vw"
-              className="fw-inst-img"
-            />
-            <div className="fw-inst-shade" aria-hidden />
-            <Icon name="home" />
-            <h3>Instalaciones que cuidan</h3>
-            <p>
-              Campus climatizado, circuito cerrado y estancias extendidas para que las familias
-              confíen el día completo.
-            </p>
-            <ul>
-              <li>Campus climatizado</li>
-              <li>Circuito cerrado</li>
-              <li>Estancias extendidas</li>
-            </ul>
-          </article>
-
-          <article className="fw-card fw-comp" onMouseMove={onCardMove}>
+            <p>Enseñanza potenciada con inteligencia artificial, de preescolar a secundaria.</p>
+          </Link>
+          <a href="#winston-usa" className="fw-link">
             <Icon name="trophy" />
-            <h3>Competencias que inspiran</h3>
-            <p>
-              Participación en competencias nacionales, estatales y regionales que fortalecen
-              carácter y excelencia.
-            </p>
-          </article>
+            <h3>Doble titulación</h3>
+            <p>Winston USA: validación académica en el extranjero.</p>
+          </a>
+          <Link href="/programas" className="fw-link">
+            <Icon name="lang" />
+            <h3>Tecnología, innovación y emprendimiento</h3>
+            <p>El programa académico que sostiene el día a día en Winston.</p>
+          </Link>
         </div>
       </div>
 
@@ -370,27 +315,11 @@ export default function FortalezasSection() {
               ))}
             </h3>
             <p className="fw-usa-lead">
-              Documentación académica estadounidense respaldada por una institución acreditada, para
-              fortalecer el expediente de tu hijo con proyección internacional.
+              Les ofrece documentación académica estadounidense respaldada por Cognia, que permite a
+              nuestros alumnos acreditar su trayectoria académica tanto en México como en Estados
+              Unidos.
             </p>
-            <div className="fw-usa-glass">
-              {daysLeft === null ? (
-                <p className="fw-usa-glass-text">Inscripciones cerradas</p>
-              ) : (
-                <>
-                  <p className="fw-usa-glass-text">Inscripciones hasta el 28 de febrero de 2027</p>
-                  {typeof daysLeft === 'number' ? (
-                    <p className="fw-usa-count" aria-live="polite">
-                      <span className="fw-usa-days">{daysLeft}</span>
-                      <span className="fw-usa-days-label">días</span>
-                    </p>
-                  ) : null}
-                </>
-              )}
-            </div>
-            <p className="fw-usa-meta">
-              Maternal, kínder, primaria y secundaria. No es obligatorio.
-            </p>
+            <p className="fw-usa-meta">Maternal, kínder, primaria y secundaria.</p>
             <ol className="fw-track" aria-label="Niveles del programa">
               <span className="fw-track-line" aria-hidden>
                 <i />
@@ -411,20 +340,23 @@ export default function FortalezasSection() {
                 Conoce el programa
                 <span className="fw-arrow" aria-hidden />
               </button>
-              <button
-                type="button"
-                className="fw-btn fw-btn-ghost"
-                onClick={(e) => openUsa('video', e.currentTarget)}
-              >
-                Ver video
-                <span className="fw-arrow" aria-hidden />
-              </button>
             </div>
           </div>
 
+          {/* 2026-10-23: collage USA — bandera horizontal + alumnas, sin arco. */}
           <div className="fw-usa-media">
-            <div className="fw-usa-halo" aria-hidden />
-            {/* TODO(2026-10-19): reemplazar por imagen real de diploma/transcript USA. */}
+            <div className="fw-usa-slab" aria-hidden />
+            <span className="fw-usa-orbit fw-usa-orbit-a" aria-hidden />
+            <span className="fw-usa-orbit fw-usa-orbit-b" aria-hidden />
+            <figure className="fw-usa-shot">
+              <Image
+                src="/images/logos/convenios-alumnas.jpg"
+                alt="Alumnas del Instituto Winston Churchill con medallas"
+                fill
+                sizes="(max-width: 900px) 55vw, 240px"
+                className="fw-usa-shot-img"
+              />
+            </figure>
             <div className="fw-usa-doc" aria-hidden>
               <span />
               <span />
@@ -441,7 +373,7 @@ export default function FortalezasSection() {
                 src={USA_POSTER}
                 alt="Bandera de Estados Unidos — Winston USA Program"
                 fill
-                sizes="(max-width: 900px) 340px, 420px"
+                sizes="(max-width: 900px) 90vw, 480px"
                 className="fw-usa-poster"
               />
               <span className="fw-usa-shade" aria-hidden />
@@ -582,9 +514,8 @@ export default function FortalezasSection() {
                         ))}
                       </ul>
                       <p className="fw-modal-note">
-                        <strong>No es obligatorio.</strong> La familia participa solo si lo desea. Cubre
-                        maternal, kínder, primaria y secundaria. Inscripciones abiertas hasta el 28 de
-                        febrero de 2027.
+                        Cubre maternal, kínder, primaria y secundaria. Inscripciones abiertas hasta el
+                        28 de febrero de 2027.
                       </p>
                     </div>
                     <footer className="fw-modal-foot">
@@ -688,42 +619,146 @@ export default function FortalezasSection() {
           font-size: 1.05rem;
           line-height: 1.6;
         }
-        .fw-photo { position: relative; }
-        .fw-halo, .fw-arch { border-radius: 200px 200px 24px 24px; aspect-ratio: 4/5; }
-        .fw-halo {
-          position: absolute;
-          inset: 0;
-          background: var(--fw-lime);
-          transform: translate(18px, 18px);
-        }
-        .fw-arch {
+        .fw-photo {
           position: relative;
-          overflow: hidden;
-          clip-path: inset(100% 0 0 0 round 200px 200px 24px 24px);
-          transition: clip-path 1.2s var(--fw-ease);
+          min-height: 520px;
+          margin-right: .4rem;
         }
-        .fw.is-in .fw-arch { clip-path: inset(0 round 200px 200px 24px 24px); }
-        .fw-arch-img { object-fit: cover; object-position: center 30%; }
+        .fw-slab {
+          position: absolute;
+          z-index: 0;
+          right: 4%;
+          top: 8%;
+          width: 62%;
+          height: 74%;
+          background: var(--fw-lime);
+          clip-path: polygon(22% 0, 100% 0, 100% 100%, 0 100%, 0 18%, 22% 18%);
+          transform: rotate(4deg) scale(.92);
+          opacity: 0;
+          transition: transform 1.1s var(--fw-ease), opacity 1.1s var(--fw-ease);
+        }
+        .fw.is-in .fw-slab {
+          transform: rotate(4deg) scale(1);
+          opacity: 1;
+        }
+        .fw-orbit {
+          position: absolute;
+          z-index: 1;
+          border: 2px solid var(--fw-ink);
+          border-radius: 999px;
+          pointer-events: none;
+        }
+        .fw-orbit::before,
+        .fw-orbit::after {
+          content: '';
+          position: absolute;
+          border-radius: 999px;
+          background: var(--fw-ink);
+        }
+        .fw-orbit::before { width: 18px; height: 18px; }
+        .fw-orbit::after { width: 8px; height: 8px; }
+        .fw-orbit-a {
+          width: 88px;
+          height: 88px;
+          top: 2%;
+          left: 8%;
+        }
+        .fw-orbit-a::before { top: -6px; right: 14px; }
+        .fw-orbit-a::after { bottom: 10px; left: -2px; }
+        .fw-orbit-b {
+          width: 72px;
+          height: 72px;
+          right: 0;
+          bottom: 8%;
+        }
+        .fw-orbit-b::before { right: -4px; bottom: 16px; }
+        .fw-orbit-b::after { top: 8px; left: 6px; }
+        .fw-shot {
+          position: absolute;
+          overflow: hidden;
+          margin: 0;
+          background: #0a1240;
+          box-shadow: 0 28px 50px -24px rgba(10, 18, 64, .45);
+          opacity: 0;
+          transform: translateY(36px);
+          transition: opacity 1s var(--fw-ease), transform 1s var(--fw-ease);
+        }
+        .fw.is-in .fw-shot {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        .fw-shot-tech {
+          z-index: 2;
+          top: 0;
+          right: 0;
+          width: 58%;
+          aspect-ratio: 1;
+          border-radius: 22px;
+          transform: translateY(36px) rotate(3deg);
+        }
+        .fw.is-in .fw-shot-tech {
+          transform: translateY(0) rotate(3deg);
+          transition-delay: .12s;
+        }
+        .fw-shot-group {
+          z-index: 3;
+          left: 0;
+          bottom: 2%;
+          width: 68%;
+          aspect-ratio: 4 / 5;
+          border-radius: 24px;
+          transform: translateY(36px) rotate(-4deg);
+        }
+        .fw.is-in .fw-shot-group {
+          transform: translateY(0) rotate(-4deg);
+          transition-delay: .24s;
+        }
+        .fw-shot-img { object-fit: cover; }
+        .fw-shot-tech .fw-shot-img { object-position: center 40%; }
+        .fw-shot-group .fw-shot-img { object-position: center 22%; }
         .fw-chip {
           position: absolute;
-          z-index: 2;
+          z-index: 4;
           padding: .45rem .8rem;
           border: 1px solid #e3e8fb;
           border-radius: 999px;
-          background: rgba(255,255,255,.82);
+          background: rgba(255,255,255,.9);
           color: var(--fw-ink);
           font-size: .82rem;
           font-weight: 700;
           backdrop-filter: blur(8px);
           animation: fwChip 6s ease-in-out infinite alternate;
         }
-        .fw-chip-a { left: -8px; top: 18%; }
-        .fw-chip-b { right: 8%; bottom: 16%; animation-delay: -2.4s; }
+        .fw-chip-a { left: 4%; top: 28%; }
+        .fw-chip-b { right: 6%; bottom: 18%; animation-delay: -2.4s; }
         @keyframes fwChip {
           from { transform: translateY(-8px); }
           to { transform: translateY(8px); }
         }
         .fw-bento { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; }
+        .fw-links {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+          gap: 16px;
+        }
+        .fw-link {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          min-height: 190px;
+          padding: 1.4rem 1.25rem 1.3rem;
+          border: 1px solid #d5def8;
+          border-radius: 24px;
+          background: #fff;
+          color: var(--fw-ink);
+          text-decoration: none;
+        }
+        .fw-link .fw-icon { position: static; width: 36px; height: 36px; }
+        .fw-link svg { stroke: #1546e8; }
+        .fw-link h3 { margin: .85rem 0 .35rem; color: #1546e8; font-size: 1.05rem; line-height: 1.25; }
+        .fw-link p { margin: 0; color: #3d466e; font-size: .92rem; line-height: 1.45; }
+        .fw-link:hover { border-color: #1546e8; }
+        .fw-link:focus-visible { outline: 3px solid #1546e8; outline-offset: 3px; }
         .fw-card {
           position: relative;
           overflow: hidden;
@@ -1022,80 +1057,147 @@ export default function FortalezasSection() {
         .fw-usa-media {
           position: relative;
           justify-self: end;
-          width: min(100%, 420px);
+          width: min(100%, 520px);
+          min-height: 480px;
           --px: 0px;
           --py: 0px;
         }
-        .fw-usa-halo {
-          position: absolute;
-          inset: 0;
-          border-radius: 220px 220px 28px 28px;
-          background: #dfff00;
-          transform: translate(18px, 18px);
-          pointer-events: none;
-        }
-        .fw-usa-doc {
+        .fw-usa-shot {
           position: absolute;
           z-index: 2;
-          right: -8%;
-          top: 12%;
-          width: 88px;
-          height: 112px;
-          padding: 12px 10px;
-          border-radius: 10px;
+          top: 0;
+          right: 0;
+          width: 46%;
+          aspect-ratio: 4 / 5;
+          margin: 0;
+          overflow: hidden;
+          border-radius: 22px;
+          background: #0a1240;
+          box-shadow: 0 28px 50px -22px rgba(5, 11, 46, .55);
+          opacity: 0;
+          transform: translateY(28px) rotate(5deg);
+          transition: opacity 1s var(--fw-ease), transform 1s var(--fw-ease);
+        }
+        .fw-usa.is-on .fw-usa-shot {
+          opacity: 1;
+          transform: translateY(0) rotate(5deg);
+        }
+        .fw-usa-shot-img { object-fit: cover; object-position: center 20%; }
+        .fw-usa-slab {
+          position: absolute;
+          z-index: 0;
+          left: 10%;
+          top: 8%;
+          width: 72%;
+          height: 78%;
+          background: #dfff00;
+          clip-path: polygon(18% 0, 100% 0, 100% 100%, 0 100%, 0 20%, 18% 20%);
+          transform: rotate(-6deg) scale(.9);
+          opacity: 0;
+          pointer-events: none;
+          transition: transform 1.1s var(--fw-ease), opacity 1.1s var(--fw-ease);
+        }
+        .fw-usa.is-on .fw-usa-slab {
+          transform: rotate(-6deg) scale(1);
+          opacity: 1;
+        }
+        .fw-usa-orbit {
+          position: absolute;
+          z-index: 1;
+          border: 2px solid #fff;
+          border-radius: 999px;
+          pointer-events: none;
+        }
+        .fw-usa-orbit::before,
+        .fw-usa-orbit::after {
+          content: '';
+          position: absolute;
+          border-radius: 999px;
           background: #fff;
-          box-shadow: 0 18px 40px rgba(10,18,64,.28);
-          transform: rotate(-6deg);
+        }
+        .fw-usa-orbit::before { width: 16px; height: 16px; }
+        .fw-usa-orbit::after { width: 8px; height: 8px; }
+        .fw-usa-orbit-a {
+          width: 78px;
+          height: 78px;
+          top: 0;
+          left: 4%;
+        }
+        .fw-usa-orbit-a::before { top: -5px; right: 12px; }
+        .fw-usa-orbit-a::after { bottom: 8px; left: -2px; }
+        .fw-usa-orbit-b {
+          width: 64px;
+          height: 64px;
+          right: 2%;
+          bottom: 6%;
+        }
+        .fw-usa-orbit-b::before { right: -4px; bottom: 14px; }
+        .fw-usa-orbit-b::after { top: 6px; left: 8px; }
+        .fw-usa-doc {
+          position: absolute;
+          z-index: 4;
+          right: 4%;
+          bottom: 16%;
+          width: 96px;
+          height: 122px;
+          padding: 12px 10px;
+          border-radius: 14px;
+          background: #fff;
+          box-shadow: 0 22px 44px rgba(10,18,64,.32);
+          transform: rotate(8deg);
           animation: fwDocFloat 7s ease-in-out infinite alternate;
           pointer-events: none;
         }
         .fw-usa-doc span {
           display: block;
           height: 6px;
-          margin-bottom: 8px;
+          margin-bottom: 10px;
           border-radius: 999px;
           background: #d5dcf5;
         }
         .fw-usa-doc span:first-child {
           width: 42%;
-          height: 10px;
-          margin-bottom: 14px;
+          height: 12px;
+          margin-bottom: 16px;
           background: #1546e8;
         }
         .fw-usa-doc span:nth-child(3) { width: 78%; }
         .fw-usa-doc span:nth-child(4) { width: 62%; margin-bottom: 0; }
         @keyframes fwDocFloat {
-          from { transform: rotate(-6deg) translateY(-10px); }
-          to { transform: rotate(-6deg) translateY(10px); }
+          from { transform: rotate(8deg) translateY(-10px); }
+          to { transform: rotate(8deg) translateY(10px); }
         }
         .fw-usa-card {
-          position: relative;
-          z-index: 1;
+          position: absolute;
+          z-index: 3;
+          left: 0;
+          bottom: 2%;
           display: block;
-          width: 100%;
-          aspect-ratio: 4 / 5;
+          width: 78%;
+          aspect-ratio: 19 / 10;
           padding: 0;
           overflow: hidden;
           border: 0;
-          border-radius: 220px 220px 28px 28px;
+          border-radius: 22px;
           background: #0a1240;
           cursor: pointer;
-          clip-path: inset(100% 0 0 0 round 220px 220px 28px 28px);
-          transform: translate3d(var(--px), var(--py), 0);
-          transition: clip-path 1.3s var(--fw-ease), transform .35s var(--fw-ease);
+          box-shadow: 0 28px 50px -22px rgba(5, 11, 46, .55);
+          opacity: 0;
+          transform: translate3d(var(--px), calc(var(--py) + 28px), 0) rotate(-3deg);
+          transition: opacity 1s var(--fw-ease), transform .45s var(--fw-ease);
         }
-        .fw-usa.is-on .fw-usa-card { clip-path: inset(0 round 220px 220px 28px 28px); }
+        .fw-usa.is-on .fw-usa-card {
+          opacity: 1;
+          transform: translate3d(var(--px), var(--py), 0) rotate(-3deg);
+        }
         .fw-usa-poster {
           object-fit: cover;
           object-position: center center;
-          transform: scale(1.04);
-          transition: transform 8s var(--fw-ease);
         }
-        .fw-usa.is-on .fw-usa-poster { transform: scale(1); }
         .fw-usa-shade {
           position: absolute;
           inset: 0;
-          background: linear-gradient(180deg, transparent 42%, rgba(10,18,64,.55));
+          background: linear-gradient(180deg, transparent 48%, rgba(10,18,64,.4));
           pointer-events: none;
         }
         .fw-usa-play {
@@ -1391,12 +1493,12 @@ export default function FortalezasSection() {
         .fw-btn:hover .fw-arrow, .fw-btn:focus-visible .fw-arrow { width: 40px; }
         @media (max-width: 900px) {
           .fw-head { grid-template-columns: 1fr; }
-          .fw-photo { max-width: 420px; }
+          .fw-photo { max-width: 460px; min-height: 440px; margin: 0 auto; }
           .fw-bento { grid-template-columns: 1fr; }
           .fw-ia, .fw-tri, .fw-inst, .fw-comp { grid-column: auto; grid-row: auto; }
           .fw-usa { padding: 64px 1.15rem; }
           .fw-usa-inner { grid-template-columns: 1fr; gap: 2rem; }
-          .fw-usa-media { justify-self: center; width: min(100%, 340px); }
+          .fw-usa-media { justify-self: center; width: min(100%, 420px); min-height: 400px; }
           .fw-track { display: flex; flex-direction: column; gap: 1.2rem; padding-left: 8px; }
           .fw-track-line { left: 10px; top: 0; bottom: 0; width: 2px; height: auto; right: auto; }
           .fw-track-line i {
@@ -1411,21 +1513,26 @@ export default function FortalezasSection() {
           .fw-ia { grid-column: span 2; }
         }
         @media (prefers-reduced-motion: reduce) {
-          .fw-word, .fw-arch, .fw-card, .fw-chip, .fw-drift, .fw-usa-glow, .fw-icon, .fw-lang span, .fw-dot, .fw-arrow,
-          .fw-usa-word, .fw-usa-poster, .fw-usa-card, .fw-usa-doc, .fw-usa-play-ring, .fw-track-line i, .fw-usa-play-core {
+          .fw-word, .fw-shot, .fw-slab, .fw-card, .fw-chip, .fw-drift, .fw-usa-glow, .fw-icon, .fw-lang span, .fw-dot, .fw-arrow,
+          .fw-usa-word, .fw-usa-poster, .fw-usa-card, .fw-usa-doc, .fw-usa-play-ring, .fw-track-line i, .fw-usa-play-core, .fw-usa-slab, .fw-usa-shot {
             animation: none !important;
             transition: none !important;
           }
           .fw-word, .fw-usa-word { transform: none !important; }
-          .fw-arch, .fw-card, .fw-usa-card { clip-path: none !important; }
-          .fw-usa-poster { transform: scale(1.02) !important; }
+          .fw-shot, .fw-slab, .fw-usa-slab, .fw-usa-card, .fw-usa-shot { opacity: 1 !important; }
+          .fw-shot-tech { transform: rotate(3deg) !important; }
+          .fw-shot-group { transform: rotate(-4deg) !important; }
+          .fw-usa-slab { transform: rotate(-6deg) !important; }
+          .fw-usa-card { transform: rotate(-3deg) !important; }
+          .fw-usa-shot { transform: rotate(5deg) !important; }
+          .fw-card { clip-path: none !important; }
           .fw-dot { transform: scale(1) !important; }
           .fw-track-line i { transform: scaleX(1) !important; }
-          .fw-usa-card { transform: none !important; }
         }
         .fw-usa.is-reduced .fw-usa-word { transform: none; }
-        .fw-usa.is-reduced .fw-usa-card { clip-path: inset(0 round 220px 220px 28px 28px); }
-        .fw-usa.is-reduced .fw-usa-poster { transform: scale(1.02); }
+        .fw-usa.is-reduced .fw-usa-card { opacity: 1; transform: rotate(-3deg); }
+        .fw-usa.is-reduced .fw-usa-shot { opacity: 1; transform: rotate(5deg); }
+        .fw-usa.is-reduced .fw-usa-slab { opacity: 1; transform: rotate(-6deg); }
         .fw-usa.is-reduced .fw-dot { transform: scale(1); animation: none; }
         .fw-usa.is-reduced .fw-dot::after { animation: none; opacity: 0; }
         .fw-usa.is-reduced .fw-track-line i { transform: scaleX(1); }

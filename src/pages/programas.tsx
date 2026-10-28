@@ -29,8 +29,8 @@ const PROGRAMS: Program[] = [
     num: '01',
     title: 'Finanzas y emprendimiento',
     subtitle: 'Entrepreneurs',
-    lead: 'Asociación exclusiva con COPARMEX y AMMJE para formar emprendedores desde edades tempranas.',
-    body: 'Nuestros alumnos no sólo imaginan ideas innovadoras: aprenden a construir un negocio desde cero. Desarrollan planes de negocio reales, crean estrategias de marketing, realizan proyecciones financieras básicas y presentan sus proyectos de forma profesional — con el respaldo de alianzas como COPARMEX y AMMJE — fortaleciendo liderazgo, pensamiento estratégico y toma de decisiones.',
+    lead: 'Finanzas y emprendimiento con visión empresarial desde edades tempranas.',
+    body: 'Nuestros alumnos transforman sus ideas en proyectos de negocio reales, aprendiendo a desarrollar planes de negocio, diseñar estrategias de marketing y realizar proyecciones financieras para evaluar costos, rentabilidad y viabilidad. Se familiarizan con el lenguaje y la terminología financiera, desarrollando habilidades para analizar resultados, tomar decisiones estratégicas y comprender cómo funciona un negocio, con el respaldo de alianzas como COPARMEX y AMMJE.',
     image: '/images/PROGRAMAS/emprende.jpg',
     w: 1920,
     h: 1280,
@@ -38,25 +38,38 @@ const PROGRAMS: Program[] = [
     glow: 'rgba(255, 180, 42, 0.28)',
   },
   {
-    id: 'tecnologia-innovacion',
+    id: 'robotica-programacion',
     num: '02',
-    title: 'Tecnología e innovación',
-    subtitle: 'Programación, IA y robótica',
-    lead: 'Formación en programación avanzada con inteligencia artificial, desde el preescolar hasta la secundaria.',
-    body: 'Integramos tecnología y robótica en el día a día académico. Los alumnos exploran programación, pensamiento computacional e inteligencia artificial con proyectos reales, y participan en robótica como eje explícito de innovación — preparándolos para un mundo digital con criterio y creatividad.',
+    title: 'Robótica y programación',
+    subtitle: 'Robótica',
+    lead: 'Programación y robótica para convertir ideas en soluciones.',
+    body: 'Nuestros alumnos aprenden a desarrollar y aplicar lenguajes de programación para dar instrucciones, controlar robots y explorar cómo funciona la tecnología desde dentro. Mediante proyectos prácticos, integran código, componentes electrónicos y diseño para construir, programar y poner a prueba sus propias creaciones.',
     image: '/images/secundaria/robotica.png',
     w: 1200,
     h: 800,
-    imageAlt: 'Tecnología, programación, IA y robótica — Instituto Winston Churchill',
+    imageAlt: 'Robótica y programación — Instituto Winston Churchill',
     glow: 'rgba(1, 59, 223, 0.28)',
   },
   {
-    id: 'mindfulness',
+    id: 'tecnologia-innovacion',
     num: '03',
+    title: 'Tecnología e innovación',
+    subtitle: 'Innovación',
+    lead: 'Tecnología e innovación para crear en el entorno digital.',
+    body: 'Nuestros alumnos desarrollan competencias digitales avanzadas mediante el uso estratégico de la inteligencia artificial y plataformas especializadas en diseño y creación de interfaces web. Exploran herramientas como Canva Pro, Photoshop e Illustrator, mientras amplían sus conocimientos más allá de la paquetería básica de Office, adquiriendo habilidades para diseñar, crear y desenvolverse con mayor autonomía en el mundo digital.',
+    image: '/images/tecnologia/tec1.png',
+    w: 1200,
+    h: 900,
+    imageAlt: 'Tecnología e innovación — Instituto Winston Churchill',
+    glow: 'rgba(1, 59, 223, 0.22)',
+  },
+  {
+    id: 'mindfulness',
+    num: '04',
     title: 'Mindfulness',
-    subtitle: 'Narrative 4 · resiliencia',
-    lead: 'Formación emocional basada en mindfulness, con enfoque en resiliencia y empatía.',
-    body: 'Con ejercicios de respiración, enfoque y relajación — y el respaldo del programa Narrative 4 — fortalecemos la resiliencia y la empatía. Nuestros alumnos aprenden a gestionar emociones, a escucharse y a mejorar su rendimiento académico con bienestar real.',
+    subtitle: 'Mindfulness',
+    lead: 'Mindfulness para fortalecer el bienestar emocional.',
+    body: 'A través de una formación basada en mindfulness y apoyada en el programa Narrative 4, nuestros alumnos desarrollan resiliencia, empatía y herramientas para gestionar emociones como la frustración, el estrés y la ansiedad. Estas habilidades favorecen su concentración y disposición para aprender, al mismo tiempo que promueven relaciones más empáticas y una convivencia positiva dentro y fuera del aula.',
     image: '/images/PROGRAMAS/socioemocional.jpg',
     w: 6000,
     h: 4000,
@@ -65,11 +78,11 @@ const PROGRAMS: Program[] = [
   },
   {
     id: 'formacion-social',
-    num: '04',
+    num: '05',
     title: 'Formación social y humana',
-    subtitle: 'Comunidad y valores',
-    lead: 'Entendimiento del mundo a través del respeto y la participación.',
-    body: 'Promovemos la conciencia social, la identidad cultural y el compromiso con la comunidad mediante actividades integradoras y experiencias significativas.',
+    subtitle: 'Formación social',
+    lead: 'Generar un impacto positivo.',
+    body: 'Nuestros alumnos desarrollan conciencia social, fortalecen su identidad cultural y aprenden el valor de la participación y el respeto. A través de experiencias significativas, diseñan y participan en proyectos de beneficio social que responden a distintas necesidades de su comunidad, convirtiendo sus aprendizajes en acciones que generan un cambio positivo.',
     image: '/images/secundaria/formacion/formacion1.JPG',
     w: 4032,
     h: 2584,
@@ -302,8 +315,8 @@ export default function ProgramasPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.14, ease }}
           >
-            Finanzas y emprendimiento, tecnología e innovación, mindfulness y formación
-            humana — experiencias que forman carácter más allá del aula.
+            Emprendimiento y finanzas, robótica, tecnología e innovación, mindfulness y
+            formación humana.
           </motion.p>
 
           <motion.nav
@@ -330,30 +343,14 @@ export default function ProgramasPage() {
           </motion.nav>
         </div>
 
-        {/* Indicador scroll */}
-        <motion.div
-          className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 md:flex"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.9 }}
-        >
-          <span className="text-[9px] font-semibold uppercase tracking-[0.3em] text-white/40">
-            Scroll
-          </span>
-          <motion.span
-            className="h-8 w-px bg-gradient-to-b from-white/50 to-transparent"
-            animate={{ scaleY: [1, 0.5, 1], opacity: [0.6, 1, 0.6] }}
-            transition={{ duration: 1.8, repeat: Infinity }}
-          />
-        </motion.div>
       </header>
 
-      {/* Intro strip */}
+      {/* 2026-10-28: texto pedido en CAMBIOS WEB WINSTON (2). */}
       <div className="border-b border-[#013BDF]/5 bg-white/80 px-4 py-8 backdrop-blur-sm md:py-10">
         <p className="mx-auto max-w-2xl text-center text-sm leading-relaxed text-gray-500 md:text-base">
-          Cuatro caminos. Una misma familia{' '}
-          <span className="font-semibold text-[#013BDF]">Winston</span>. Diseñados para acompañar
-          el crecimiento académico con propósito — incluyendo robótica y programación con IA.
+          En Winston vamos más allá del aprendizaje tradicional. A través de programas
+          especializados, nuestros alumnos desarrollan conocimientos y habilidades para la vida
+          real, preparándose para los retos del presente y las oportunidades del futuro.
         </p>
       </div>
 
