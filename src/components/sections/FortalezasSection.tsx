@@ -5,7 +5,6 @@ import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import Image from 'next/image'
 
-const TITLE = 'Programa académico, cimentado en tecnología, innovación y emprendimiento'
 const LEVELS = ['Maternal', 'Kínder', 'Primaria', 'Secundaria'] as const
 // 2026-10-19: video público de servicios (usa_programa_config, ciclo 23). Sin montos.
 const USA_VIDEO =
@@ -220,49 +219,38 @@ export default function FortalezasSection() {
       <div className="fw-drift" aria-hidden />
 
       <div className="fw-wrap">
-        <div className="fw-head">
-          <div>
-            <p className="fw-eyebrow">Por qué Winston</p>
-            <h2 id="fortalezas-heading" className="fw-title">
-              {TITLE.split(' ').map((word) => (
-                <span className="fw-mask" key={word}>
-                  <span className="fw-word">{word}</span>
-                </span>
-              ))}
-            </h2>
-            <p className="fw-lead">
-              Formamos con propósito: academia sólida, herramientas digitales y espíritu
-              emprendedor — en Ciudad Madero, con visión internacional.
-            </p>
-          </div>
-        </div>
-
-        {/* 2026-10-28: cinco fortalezas con icono azul; cada una abre su sección. */}
+        {/* 2026-10-29: sin título grande; las cinco fortalezas tienen el mismo peso. */}
+        <h2 id="fortalezas-heading" className="sr-only">Por qué Winston</h2>
         <div ref={bentoRef} className="fw-links">
           <Link href="/conocenos#instalaciones" className="fw-link">
-            <Icon name="home" />
+            <span className="fw-mark"><Icon name="home" /></span>
             <h3>Instalaciones climatizadas</h3>
             <p>Circuito cerrado y cámaras de vigilancia. Agenda una visita y recorre el campus.</p>
+            <span className="fw-go" aria-hidden>Ver</span>
           </Link>
           <Link href="/oferta-educativa#estancia" className="fw-link">
-            <Icon name="home" />
+            <span className="fw-mark"><Icon name="clock" /></span>
             <h3>Estancia extendida</h3>
             <p>Acompañamiento después de clases, dentro de la oferta educativa.</p>
+            <span className="fw-go" aria-hidden>Ver</span>
           </Link>
           <Link href="/programas#tecnologia-innovacion" className="fw-link">
-            <Icon name="ia" />
+            <span className="fw-mark"><Icon name="ia" /></span>
             <h3>Modelo avanzado con IA</h3>
             <p>Enseñanza potenciada con inteligencia artificial, de preescolar a secundaria.</p>
+            <span className="fw-go" aria-hidden>Ver</span>
           </Link>
           <a href="#winston-usa" className="fw-link">
-            <Icon name="trophy" />
+            <span className="fw-mark"><Icon name="trophy" /></span>
             <h3>Doble titulación</h3>
             <p>Winston USA: validación académica en el extranjero.</p>
+            <span className="fw-go" aria-hidden>Ver</span>
           </a>
           <Link href="/programas" className="fw-link">
-            <Icon name="lang" />
+            <span className="fw-mark"><Icon name="lang" /></span>
             <h3>Tecnología, innovación y emprendimiento</h3>
             <p>El programa académico que sostiene el día a día en Winston.</p>
+            <span className="fw-go" aria-hidden>Ver</span>
           </Link>
         </div>
       </div>
@@ -548,7 +536,7 @@ export default function FortalezasSection() {
           from { transform: translate3d(0,0,0); }
           to { transform: translate3d(40px,-28px,0); }
         }
-        .fw-wrap { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 0 1.25rem 4rem; }
+        .fw-wrap { position: relative; z-index: 1; max-width: 1280px; margin: 0 auto; padding: 0 1.25rem 4rem; }
         .fw-head {
           max-width: 46rem;
           margin-bottom: 2.5rem;
@@ -709,27 +697,115 @@ export default function FortalezasSection() {
         .fw-bento { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; }
         .fw-links {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-          gap: 16px;
+          grid-template-columns: repeat(5, minmax(0, 1fr));
+          gap: 14px;
+          align-items: stretch;
         }
         .fw-link {
           position: relative;
           display: flex;
           flex-direction: column;
-          min-height: 190px;
-          padding: 1.4rem 1.25rem 1.3rem;
-          border: 1px solid #d5def8;
-          border-radius: 24px;
+          min-height: 300px;
+          padding: 1.35rem 1.2rem 1.25rem;
+          overflow: hidden;
+          border: 0;
+          border-radius: 22px;
           background: #fff;
           color: var(--fw-ink);
           text-decoration: none;
+          box-shadow: 0 1px 0 rgba(1,59,223,.08), 0 18px 40px -28px rgba(10,18,64,.45);
+          opacity: 0;
+          transform: translateY(22px);
         }
-        .fw-link .fw-icon { position: static; width: 36px; height: 36px; }
-        .fw-link svg { stroke: #1546e8; }
-        .fw-link h3 { margin: .85rem 0 .35rem; color: #1546e8; font-size: 1.05rem; line-height: 1.25; }
-        .fw-link p { margin: 0; color: #3d466e; font-size: .92rem; line-height: 1.45; }
-        .fw-link:hover { border-color: #1546e8; }
-        .fw-link:focus-visible { outline: 3px solid #1546e8; outline-offset: 3px; }
+        .fw-link::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 4px;
+          background: #E3FB07;
+          transform: scaleX(0);
+          transform-origin: left center;
+        }
+        .fw.is-cards .fw-link {
+          animation: fwRise .7s var(--fw-ease) forwards;
+        }
+        .fw.is-cards .fw-link::before {
+          animation: fwBar .55s var(--fw-ease) forwards;
+        }
+        .fw.is-cards .fw-link:nth-child(2),
+        .fw.is-cards .fw-link:nth-child(2)::before { animation-delay: .08s; }
+        .fw.is-cards .fw-link:nth-child(3),
+        .fw.is-cards .fw-link:nth-child(3)::before { animation-delay: .16s; }
+        .fw.is-cards .fw-link:nth-child(4),
+        .fw.is-cards .fw-link:nth-child(4)::before { animation-delay: .24s; }
+        .fw.is-cards .fw-link:nth-child(5),
+        .fw.is-cards .fw-link:nth-child(5)::before { animation-delay: .32s; }
+        @keyframes fwRise {
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fwBar {
+          to { transform: scaleX(1); }
+        }
+        .fw-mark {
+          display: grid;
+          place-items: center;
+          width: 52px;
+          height: 52px;
+          border-radius: 16px;
+          background: #013BDF;
+          transition: background .35s var(--fw-ease);
+        }
+        .fw-link .fw-icon { position: static; width: 28px; height: 28px; }
+        .fw-link svg { stroke: #fff; transition: stroke .35s var(--fw-ease); }
+        .fw.is-cards .fw-link:hover,
+        .fw.is-cards .fw-link:focus-visible {
+          animation: none;
+          opacity: 1;
+          transform: translateY(-8px);
+          box-shadow: 0 28px 50px -24px rgba(1,59,223,.4);
+        }
+        .fw.is-cards .fw-link:hover::before,
+        .fw.is-cards .fw-link:focus-visible::before {
+          animation: none;
+          transform: scaleX(1);
+        }
+        .fw-link:hover .fw-mark,
+        .fw-link:focus-visible .fw-mark { background: #E3FB07; }
+        .fw-link:hover svg,
+        .fw-link:focus-visible svg { stroke: #013BDF; }
+        .fw-link h3 {
+          margin: 1.25rem 0 .4rem;
+          color: #0a1240;
+          font-size: 1.28rem;
+          font-weight: 800;
+          line-height: 1.15;
+          letter-spacing: -0.03em;
+        }
+        .fw-link p {
+          margin: 0;
+          color: #3d466e;
+          font-size: .95rem;
+          line-height: 1.45;
+        }
+        .fw-go {
+          margin-top: auto;
+          padding-top: 1.1rem;
+          color: #013BDF;
+          font-size: .72rem;
+          font-weight: 800;
+          letter-spacing: .16em;
+          text-transform: uppercase;
+        }
+        .fw-go::after {
+          content: ' →';
+          display: inline-block;
+          transition: transform .35s var(--fw-ease);
+        }
+        .fw-link:hover .fw-go::after,
+        .fw-link:focus-visible .fw-go::after { transform: translateX(4px); }
+        .fw-link:focus-visible { outline: 3px solid #013BDF; outline-offset: 3px; }
         .fw-card {
           position: relative;
           overflow: hidden;
@@ -1462,6 +1538,19 @@ export default function FortalezasSection() {
           border-left: 7px solid currentColor;
         }
         .fw-btn:hover .fw-arrow, .fw-btn:focus-visible .fw-arrow { width: 40px; }
+        @media (max-width: 1100px) {
+          .fw-links {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            padding-bottom: 8px;
+          }
+          .fw-link {
+            flex: 0 0 min(78vw, 280px);
+            scroll-snap-align: start;
+            min-height: 250px;
+          }
+        }
         @media (max-width: 900px) {
           .fw-head { grid-template-columns: 1fr; }
           .fw-photo { max-width: 460px; min-height: 440px; margin: 0 auto; }
@@ -1484,7 +1573,7 @@ export default function FortalezasSection() {
           .fw-ia { grid-column: span 2; }
         }
         @media (prefers-reduced-motion: reduce) {
-          .fw-word, .fw-shot, .fw-slab, .fw-card, .fw-chip, .fw-drift, .fw-usa-glow, .fw-icon, .fw-lang span, .fw-dot, .fw-arrow,
+          .fw-word, .fw-shot, .fw-slab, .fw-card, .fw-chip, .fw-drift, .fw-usa-glow, .fw-icon, .fw-link, .fw-lang span, .fw-dot, .fw-arrow,
           .fw-usa-word, .fw-usa-poster, .fw-usa-card, .fw-usa-doc, .fw-usa-play-ring, .fw-track-line i, .fw-usa-play-core, .fw-usa-slab, .fw-usa-shot {
             animation: none !important;
             transition: none !important;
@@ -1497,6 +1586,8 @@ export default function FortalezasSection() {
           .fw-usa-card { transform: rotate(-3deg) !important; }
           .fw-usa-shot { transform: rotate(5deg) !important; }
           .fw-card { clip-path: none !important; }
+          .fw-link { opacity: 1 !important; transform: none !important; }
+          .fw-link::before { transform: scaleX(1) !important; }
           .fw-dot { transform: scale(1) !important; }
           .fw-track-line i { transform: scaleX(1) !important; }
         }
@@ -1544,7 +1635,7 @@ function UsaBenefitIcon({ name }: { name: 'award' | 'globe' | 'check' }) {
   )
 }
 
-function Icon({ name }: { name: 'ia' | 'lang' | 'home' | 'trophy' }) {
+function Icon({ name }: { name: 'ia' | 'lang' | 'home' | 'trophy' | 'clock' }) {
   const common = { className: 'fw-icon', viewBox: '0 0 40 40', fill: 'none', 'aria-hidden': true as const }
   if (name === 'ia') {
     return (
@@ -1567,6 +1658,14 @@ function Icon({ name }: { name: 'ia' | 'lang' | 'home' | 'trophy' }) {
       <svg {...common} stroke="#fff">
         <path d="M8 18 20 8l12 10v12H8V18Z" strokeWidth="1.6" />
         <path d="M16 30V20h8v10" strokeWidth="1.6" />
+      </svg>
+    )
+  }
+  if (name === 'clock') {
+    return (
+      <svg {...common} stroke="#1546E8">
+        <circle cx="20" cy="20" r="12" strokeWidth="1.6" />
+        <path d="M20 13v8l5 3" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     )
   }

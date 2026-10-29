@@ -41,33 +41,42 @@ const LEVELS = [
 
 const CLOSE_HEAD = 'Da el siguiente paso con la familia Winston'
 
-function firstSentence(text: string) {
-  const match = text.match(/^[^.!?]+[.!?]?/)
-  return match ? match[0].trim() : text
-}
+const CHAMPS = [
+  {
+    src: '/images/logos/convenios-alumnas.jpg',
+    alt: 'Alumnas del Instituto Winston Churchill con medallas',
+    label: 'Medallas',
+  },
+  {
+    src: '/images/slider/SLIDE_INICIO_2.jpg',
+    alt: 'Alumna con medalla frente al campus Winston',
+    label: 'Generación',
+  },
+  {
+    src: '/images/Winston%20Life/portada-1280.webp',
+    alt: 'Equipo de alumnos en Winston Olympics',
+    label: 'Winston Olympics',
+  },
+] as const
 
 export default function OfertaEducativaSection({
-  // 2026-08-15: En /oferta-educativa el título es H1; en home (sección) es H2.
+  // 2026-08-15: En /oferta-educativa el título es H1.
   isPageTitle = false,
   // 2026-10-19: En FullPage el cierre (CTA+footer) va en HomeClosingSection — evita corte.
   includeClosing = true,
-  // 2026-10-28: en home solo los tres niveles; el camino queda en /oferta-educativa.
-  showPath = true,
 }: {
   isPageTitle?: boolean
   includeClosing?: boolean
-  showPath?: boolean
 }) {
   const [isMobile, setIsMobile] = useState(false)
   const [isStacked, setIsStacked] = useState(false)
   const [active, setActive] = useState(0)
   const [inView, setInView] = useState(false)
-  const [pathIn, setPathIn] = useState(false)
   const [closeIn, setCloseIn] = useState(false)
-  const [pathProgress, setPathProgress] = useState(0)
   const [reduced, setReduced] = useState(false)
+  const [champ, setChamp] = useState(0)
+  const [champPaused, setChampPaused] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
-  const pathRef = useRef<HTMLElement>(null)
   const closeRef = useRef<HTMLElement>(null)
   const TitleTag = isPageTitle ? 'h1' : 'h2'
 
@@ -80,6 +89,14 @@ export default function OfertaEducativaSection({
     window.addEventListener('resize', update)
     return () => window.removeEventListener('resize', update)
   }, [])
+
+  useEffect(() => {
+    if (reduced || champPaused) return
+    const id = window.setInterval(() => {
+      setChamp((index) => (index + 1) % CHAMPS.length)
+    }, 4800)
+    return () => window.clearInterval(id)
+  }, [reduced, champPaused])
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -110,27 +127,6 @@ export default function OfertaEducativaSection({
   }, [reduced])
 
   useEffect(() => {
-    const node = pathRef.current
-    if (!node) return
-    if (reduced) {
-      setPathIn(true)
-      setPathProgress(1)
-      return
-    }
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setPathIn(true)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.2 }
-    )
-    observer.observe(node)
-    return () => observer.disconnect()
-  }, [reduced])
-
-  useEffect(() => {
     const node = closeRef.current
     if (!node || !includeClosing) return
     if (reduced) {
@@ -149,38 +145,6 @@ export default function OfertaEducativaSection({
     observer.observe(node)
     return () => observer.disconnect()
   }, [reduced, includeClosing])
-
-  useEffect(() => {
-    if (reduced) {
-      setPathProgress(1)
-      return
-    }
-    const el = pathRef.current
-    if (!el) return
-
-    let raf = 0
-    const measure = () => {
-      raf = 0
-      const rect = el.getBoundingClientRect()
-      const vh = window.innerHeight || 1
-      const start = vh * 0.85
-      const end = vh * 0.25
-      const raw = (start - rect.top) / (start - end + rect.height * 0.35)
-      setPathProgress(Math.min(1, Math.max(0, raw)))
-    }
-    const onScroll = () => {
-      if (raf) return
-      raf = window.requestAnimationFrame(measure)
-    }
-    measure()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onScroll)
-    return () => {
-      if (raf) window.cancelAnimationFrame(raf)
-      window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', onScroll)
-    }
-  }, [reduced])
 
   const moveCard = (event: ReactMouseEvent<HTMLElement>) => {
     if (reduced || window.innerWidth < 900) return
@@ -226,9 +190,7 @@ export default function OfertaEducativaSection({
           </TitleTag>
           <div className="oe-bar" />
           <p className="oe-lead">
-            {showPath
-              ? 'Un camino bilingüe de kínder a secundaria. Conoce cada etapa. Da el siguiente paso con la familia del Instituto Winston Churchill.'
-              : 'Impulsamos y acompañamos su potencial en cada etapa.'}
+            Impulsamos y acompañamos su potencial en cada etapa.
           </p>
         </div>
 
@@ -280,92 +242,92 @@ export default function OfertaEducativaSection({
                   <h3 className="oe-name">{level.name}</h3>
                   <span className="oe-rule" aria-hidden />
                   <p className="oe-blurb">{level.blurb}</p>
-                  {showPath ? (
-                    <div
-                      className="oe-cta"
-                      aria-hidden={!ctaOpen}
-                      {...(!ctaOpen ? { inert: true } : {})}
-                    >
-                      {explore}
-                    </div>
-                  ) : null}
+                  <div
+                    className="oe-cta"
+                    aria-hidden={!ctaOpen}
+                    {...(!ctaOpen ? { inert: true } : {})}
+                  >
+                    {explore}
+                  </div>
                 </div>
               </article>
             )
           })}
         </div>
 
-        {/* 2026-10-28: en home, el camino se sustituye por el carrete de campeones. */}
-        {!showPath ? (
-          <section className="oe-champs" aria-labelledby="oe-champs-heading">
-            <h2 id="oe-champs-heading">Formamos campeones</h2>
-            <p>
+        {/* 2026-10-29: título y párrafo en una fila; el carrusel ocupa el ancho de abajo. */}
+        <section className="oe-champs" aria-labelledby="oe-champs-heading">
+          <div className="oe-champs-copy">
+            <div className="oe-champs-title">
+              <p className="oe-champs-kicker">Primaria y secundaria</p>
+              <h2 id="oe-champs-heading">Formamos campeones</h2>
+            </div>
+            <p className="oe-champs-lead">
               En Winston celebramos con orgullo el talento, la dedicación y los logros de nuestros
               alumnos de primaria y secundaria, quienes destacan en competencias estatales, regionales
               y nacionales. Con su esfuerzo y preparación, nuestros estudiantes dejan en alto el nombre
               de nuestra institución y demuestran que en Winston formamos campeones.
             </p>
-            <div className="oe-reel">
-              {[
-                { src: '/images/logos/convenios-alumnas.jpg', alt: 'Alumnas del Instituto Winston Churchill con medallas' },
-                { src: '/images/slider/SLIDE_INICIO_2.jpg', alt: 'Alumna con medalla frente al campus Winston' },
-                { src: '/images/Winston%20Life/portada-1280.webp', alt: 'Equipo de alumnos en Winston Olympics' },
-                { src: '/images/slider/SLIDE_INICIO_1-1280.webp', alt: 'Alumnos del Instituto Winston Churchill' },
-              ].map((shot) => (
-                <figure key={shot.src}>
-                  <Image src={shot.src} alt={shot.alt} fill sizes="280px" className="oe-reel-img" />
-                </figure>
+          </div>
+          <div
+            className="oe-carousel"
+            onMouseEnter={() => setChampPaused(true)}
+            onMouseLeave={() => setChampPaused(false)}
+          >
+            <div className="oe-carousel-viewport">
+              <div
+                className="oe-carousel-track"
+                style={{ transform: `translate3d(-${champ * 100}%, 0, 0)` }}
+              >
+                {CHAMPS.map((shot) => (
+                  <figure key={shot.src} className="oe-shot">
+                    <Image
+                      src={shot.src}
+                      alt={shot.alt}
+                      fill
+                      sizes="(max-width: 800px) 100vw, 1120px"
+                      className="oe-shot-img"
+                    />
+                    <figcaption>{shot.label}</figcaption>
+                  </figure>
+                ))}
+              </div>
+              <button
+                type="button"
+                className="oe-car-btn oe-car-prev"
+                aria-label="Foto anterior"
+                onClick={() => setChamp((index) => (index - 1 + CHAMPS.length) % CHAMPS.length)}
+              />
+              <button
+                type="button"
+                className="oe-car-btn oe-car-next"
+                aria-label="Foto siguiente"
+                onClick={() => setChamp((index) => (index + 1) % CHAMPS.length)}
+              />
+            </div>
+            <div className="oe-car-dots">
+              {CHAMPS.map((shot, index) => (
+                <button
+                  key={shot.src}
+                  type="button"
+                  className={index === champ ? 'is-on' : undefined}
+                  aria-label={shot.label}
+                  aria-current={index === champ ? 'true' : undefined}
+                  onClick={() => setChamp(index)}
+                />
               ))}
             </div>
-          </section>
-        ) : null}
-
-        {/* 2026-10-28: estancia extendida, ancla desde las fortalezas de home. */}
-        {showPath ? (
-          <section id="estancia" className="oe-estancia">
-            <h2>Estancia extendida</h2>
-            <p>
-              Después de clases acompañamos a los alumnos hasta las 7:00 p.m., con cuidado y apoyo
-              en tareas. Cada familia elige el horario que necesita.
-            </p>
-          </section>
-        ) : null}
-
-        {/* 2026-10-19: Línea de continuidad Kínder → Primaria → Secundaria. */}
-        {showPath ? (
-        <section
-          ref={pathRef}
-          className={`oe-path${pathIn ? ' is-in' : ''}${reduced ? ' is-reduced' : ''}`}
-          aria-labelledby="oe-path-heading"
-          style={{ ['--oe-path' as string]: String(pathProgress) }}
-        >
-          <h2 id="oe-path-heading" className="oe-path-title">
-            Un camino, tres etapas
-          </h2>
-          <div className="oe-path-track" aria-hidden>
-            <span className="oe-path-base" />
-            <span className="oe-path-fill" />
-            <ol className="oe-path-dots">
-              {LEVELS.map((level, index) => {
-                const reached = pathProgress >= (index + 0.35) / LEVELS.length || reduced
-                return (
-                  <li
-                    key={level.name}
-                    className={`oe-path-dot${reached ? ' is-on' : ''}`}
-                    style={{ ['--c' as string]: level.color }}
-                  >
-                    <span className="oe-path-orb" />
-                    <span className="oe-path-meta">
-                      <strong>{level.name}</strong>
-                      <span>{firstSentence(level.blurb)}</span>
-                    </span>
-                  </li>
-                )
-              })}
-            </ol>
           </div>
         </section>
-        ) : null}
+
+        {/* 2026-10-28: estancia extendida, ancla desde las fortalezas de home. */}
+        <section id="estancia" className="oe-estancia">
+          <h2>Estancia extendida</h2>
+          <p>
+            Después de clases acompañamos a los alumnos hasta las 7:00 p.m., con cuidado y apoyo
+            en tareas. Cada familia elige el horario que necesita.
+          </p>
+        </section>
 
         <style jsx global>{`
           .oe {
@@ -460,41 +422,136 @@ export default function OfertaEducativaSection({
           .oe-champs {
             position: relative;
             z-index: 1;
-            max-width: 1100px;
-            margin: 3.5rem auto 0;
+            max-width: 1120px;
+            margin: 3.25rem auto 0;
+          }
+          .oe-champs-copy {
+            display: grid;
+            grid-template-columns: minmax(15rem, .82fr) minmax(0, 1.18fr);
+            gap: 1.25rem 3rem;
+            align-items: center;
+            margin-bottom: 1.15rem;
+          }
+          .oe-champs-title { position: relative; padding-left: 1rem; }
+          .oe-champs-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: .15rem;
+            bottom: .2rem;
+            width: 4px;
+            border-radius: 999px;
+            background: #E3FB07;
+          }
+          .oe-champs-kicker {
+            margin: 0 0 .55rem;
+            color: #013BDF;
+            font-size: .75rem;
+            font-weight: 800;
+            letter-spacing: .18em;
+            text-transform: uppercase;
           }
           .oe-champs h2 {
-            margin: 0 0 .8rem;
+            margin: 0;
+            max-width: 8ch;
             color: #0a1240;
-            font-size: clamp(1.8rem, 3vw, 2.4rem);
+            font-size: clamp(2.35rem, 3.4vw, 3.35rem);
             font-weight: 800;
-            text-align: center;
+            letter-spacing: -0.045em;
+            line-height: .92;
+            text-align: left;
           }
-          .oe-champs p {
-            max-width: 68ch;
-            margin: 0 auto 1.4rem;
+          .oe-champs-lead {
+            margin: 0;
             color: #3d466e;
-            text-align: center;
+            font-size: 1.02rem;
             line-height: 1.6;
           }
-          .oe-reel {
-            display: flex;
-            gap: 16px;
-            overflow-x: auto;
-            padding: 4px 2px 12px;
-            scroll-snap-type: x mandatory;
-          }
-          .oe-reel figure {
+          .oe-carousel { position: relative; }
+          .oe-carousel-viewport {
             position: relative;
-            flex: 0 0 min(78vw, 320px);
-            height: 220px;
-            margin: 0;
             overflow: hidden;
-            border-radius: 22px;
-            scroll-snap-align: start;
+            border-radius: 28px;
+          }
+          .oe-carousel-track {
+            display: flex;
+            transition: transform .7s var(--oe-ease);
+          }
+          .oe-shot {
+            position: relative;
+            flex: 0 0 100%;
+            aspect-ratio: 2 / 1;
+            height: auto;
+            margin: 0;
             background: #0a1240;
           }
-          .oe-reel-img { object-fit: cover; }
+          .oe-shot-img { object-fit: cover; object-position: center 32%; }
+          .oe-shot figcaption {
+            position: absolute;
+            left: 16px;
+            bottom: 16px;
+            margin: 0;
+            padding: .4rem .75rem;
+            border-radius: 999px;
+            background: rgba(10, 18, 64, .62);
+            color: #fff;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            backdrop-filter: blur(8px);
+          }
+          .oe-car-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
+            width: 44px;
+            height: 44px;
+            border: 0;
+            border-radius: 999px;
+            background: #fff;
+            box-shadow: 0 10px 24px -12px rgba(10, 18, 64, .6);
+            cursor: pointer;
+          }
+          .oe-car-btn::before {
+            content: '';
+            position: absolute;
+            top: 16px;
+            width: 10px;
+            height: 10px;
+            border-top: 2px solid #013BDF;
+            border-right: 2px solid #013BDF;
+          }
+          .oe-car-prev { left: 14px; }
+          .oe-car-prev::before { left: 18px; transform: rotate(-135deg); }
+          .oe-car-next { right: 14px; }
+          .oe-car-next::before { right: 18px; transform: rotate(45deg); }
+          .oe-car-btn:focus-visible { outline: 3px solid #013BDF; outline-offset: 3px; }
+          .oe-car-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 14px;
+          }
+          .oe-car-dots button {
+            width: 8px;
+            height: 8px;
+            padding: 0;
+            border: 0;
+            border-radius: 999px;
+            background: #d5def8;
+            cursor: pointer;
+            transition: width .35s var(--oe-ease), background .35s var(--oe-ease);
+          }
+          .oe-car-dots button.is-on { width: 28px; background: #013BDF; }
+          @media (max-width: 800px) {
+            .oe-champs-copy { grid-template-columns: 1fr; gap: .85rem; }
+            .oe-champs h2 { max-width: none; }
+            .oe-shot { aspect-ratio: auto; height: 280px; }
+            .oe-car-prev { left: 8px; }
+            .oe-car-next { right: 8px; }
+          }
           .oe-estancia {
             position: relative;
             z-index: 1;
@@ -1034,7 +1091,10 @@ export default function OfertaEducativaSection({
             .oe-rule,
             .oe-arrow,
             .oe-path-orb,
-            .oe-btn { transition: none !important; }
+            .oe-btn,
+            .oe-shot-img { transition: none !important; }
+            .oe-shot-img { transform: none !important; }
+            .oe-carousel-track { transition: none !important; }
           }
           @media (max-width: 899px) and (prefers-reduced-motion: reduce) {
             .oe-path-fill { transform: scaleY(1) !important; }

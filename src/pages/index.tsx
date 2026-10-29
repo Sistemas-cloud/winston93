@@ -19,10 +19,6 @@ const ConveniosSection = dynamic(() => import('@/components/sections/ConveniosSe
   ssr: false,
   loading: () => <div className="min-h-[70vh] w-full bg-white lg:min-h-screen" aria-hidden />,
 })
-const OfertaEducativaSection = dynamic(
-  () => import('@/components/sections/OfertaEducativaSection'),
-  { loading: () => <div className="min-h-[50vh] w-full bg-white" aria-hidden /> }
-)
 const HomeClosingSection = dynamic(
   () => import('@/components/sections/HomeClosingSection'),
   { loading: () => <div className="min-h-[50vh] w-full bg-[#012A9E]" aria-hidden /> }
@@ -92,9 +88,6 @@ export default function Home() {
         <ConveniosSection />
       </section>
       <section className="w-full">
-        <OfertaEducativaSection includeClosing={false} showPath={false} />
-      </section>
-      <section className="w-full">
         <HomeClosingSection />
       </section>
     </div>
@@ -131,7 +124,6 @@ export default function Home() {
                 <EducationalOfferSection />
               </section>
               <ConveniosSection />
-              <OfertaEducativaSection includeClosing={false} showPath={false} />
               <HomeClosingSection />
             </>
           }
