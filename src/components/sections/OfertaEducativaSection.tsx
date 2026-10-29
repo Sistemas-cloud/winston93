@@ -64,9 +64,12 @@ export default function OfertaEducativaSection({
   isPageTitle = false,
   // 2026-10-19: En FullPage el cierre (CTA+footer) va en HomeClosingSection — evita corte.
   includeClosing = true,
+  // 2026-10-29: En el home, solo las fotos de los tres niveles, sin título grande.
+  levelsOnly = false,
 }: {
   isPageTitle?: boolean
   includeClosing?: boolean
+  levelsOnly?: boolean
 }) {
   const [isMobile, setIsMobile] = useState(false)
   const [isStacked, setIsStacked] = useState(false)
@@ -91,12 +94,12 @@ export default function OfertaEducativaSection({
   }, [])
 
   useEffect(() => {
-    if (reduced || champPaused) return
+    if (reduced || champPaused || levelsOnly) return
     const id = window.setInterval(() => {
       setChamp((index) => (index + 1) % CHAMPS.length)
     }, 4800)
     return () => window.clearInterval(id)
-  }, [reduced, champPaused])
+  }, [reduced, champPaused, levelsOnly])
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -170,7 +173,11 @@ export default function OfertaEducativaSection({
       <section
         ref={sectionRef}
         className={`oe relative overflow-x-hidden px-4 md:px-8 ${inView ? 'is-in' : ''} ${
-          includeClosing ? 'pb-10 pt-24 md:pb-12 md:pt-28' : 'pb-10 pt-20 md:pb-12 md:pt-24'
+          levelsOnly
+            ? 'is-levels'
+            : includeClosing
+              ? 'pb-10 pt-24 md:pb-12 md:pt-28'
+              : 'pb-10 pt-20 md:pb-12 md:pt-24'
         }`}
       >
         <div className="oe-glow-wrap" aria-hidden>
@@ -178,21 +185,25 @@ export default function OfertaEducativaSection({
           <div className="oe-glow oe-glow-b" />
         </div>
 
-        <div className="oe-head">
-          <p className="oe-kicker">Instituto Winston Churchill</p>
-          <TitleTag className="oe-title">
-            <span className="oe-mask">
-              <span className="oe-word">Oferta</span>
-            </span>{' '}
-            <span className="oe-mask">
-              <span className="oe-word">educativa</span>
-            </span>
-          </TitleTag>
-          <div className="oe-bar" />
-          <p className="oe-lead">
-            Impulsamos y acompañamos su potencial en cada etapa.
-          </p>
-        </div>
+        {levelsOnly ? (
+          <h2 className="oe-levels-note">Nuestros niveles</h2>
+        ) : (
+          <div className="oe-head">
+            <p className="oe-kicker">Instituto Winston Churchill</p>
+            <TitleTag className="oe-title">
+              <span className="oe-mask">
+                <span className="oe-word">Oferta</span>
+              </span>{' '}
+              <span className="oe-mask">
+                <span className="oe-word">educativa</span>
+              </span>
+            </TitleTag>
+            <div className="oe-bar" />
+            <p className="oe-lead">
+              Impulsamos y acompañamos su potencial en cada etapa.
+            </p>
+          </div>
+        )}
 
         <div className="oe-row">
           {LEVELS.map((level, index) => {
@@ -256,6 +267,7 @@ export default function OfertaEducativaSection({
         </div>
 
         {/* 2026-10-29: título y párrafo en una fila; el carrusel ocupa el ancho de abajo. */}
+        {levelsOnly ? null : (
         <section className="oe-champs" aria-labelledby="oe-champs-heading">
           <div className="oe-champs-copy">
             <div className="oe-champs-title">
@@ -319,8 +331,10 @@ export default function OfertaEducativaSection({
             </div>
           </div>
         </section>
+        )}
 
         {/* 2026-10-29: estancia con foto real de acompañamiento; el texto oficial se conserva. */}
+        {levelsOnly ? null : (
         <section id="estancia" className="oe-estancia">
           <figure className="oe-estancia-photo">
             <Image
@@ -341,6 +355,7 @@ export default function OfertaEducativaSection({
             </p>
           </div>
         </section>
+        )}
 
         <style jsx global>{`
           .oe {
@@ -390,6 +405,17 @@ export default function OfertaEducativaSection({
           .oe-path {
             position: relative;
             z-index: 1;
+          }
+          .oe.is-levels { padding-top: 3.25rem; padding-bottom: 3.5rem; }
+          .oe-levels-note {
+            margin: 0 auto 1.75rem;
+            color: #013BDF;
+            font-size: .78rem;
+            font-weight: 800;
+            letter-spacing: .2em;
+            line-height: 1.4;
+            text-align: center;
+            text-transform: uppercase;
           }
           .oe-head {
             text-align: center;

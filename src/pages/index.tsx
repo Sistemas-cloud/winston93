@@ -23,6 +23,10 @@ const HomeClosingSection = dynamic(
   () => import('@/components/sections/HomeClosingSection'),
   { loading: () => <div className="min-h-[50vh] w-full bg-[#012A9E]" aria-hidden /> }
 )
+const OfertaEducativaSection = dynamic(
+  () => import('@/components/sections/OfertaEducativaSection'),
+  { loading: () => <div className="min-h-[40vh] w-full bg-white" aria-hidden /> }
+)
 
 export default function Home() {
   const [currentSection, setCurrentSection] = useState(0)
@@ -87,6 +91,10 @@ export default function Home() {
       <section className="w-full">
         <ConveniosSection />
       </section>
+      {/* 2026-10-29: penúltima del home. Solo las fotos de los tres niveles. */}
+      <section className="w-full">
+        <OfertaEducativaSection levelsOnly includeClosing={false} />
+      </section>
       <section className="w-full">
         <HomeClosingSection />
       </section>
@@ -124,6 +132,7 @@ export default function Home() {
                 <EducationalOfferSection />
               </section>
               <ConveniosSection />
+              <OfertaEducativaSection levelsOnly includeClosing={false} />
               <HomeClosingSection />
             </>
           }
