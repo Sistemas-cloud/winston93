@@ -320,13 +320,26 @@ export default function OfertaEducativaSection({
           </div>
         </section>
 
-        {/* 2026-10-28: estancia extendida, ancla desde las fortalezas de home. */}
+        {/* 2026-10-29: estancia con foto real de acompañamiento; el texto oficial se conserva. */}
         <section id="estancia" className="oe-estancia">
-          <h2>Estancia extendida</h2>
-          <p>
-            Después de clases acompañamos a los alumnos hasta las 7:00 p.m., con cuidado y apoyo
-            en tareas. Cada familia elige el horario que necesita.
-          </p>
+          <figure className="oe-estancia-photo">
+            <Image
+              src="/images/mindfulness/mindfulness3.jpg"
+              alt="Maestra del Instituto Winston Churchill acompaña a una alumna en una actividad"
+              fill
+              sizes="(max-width: 800px) 100vw, 520px"
+              className="oe-estancia-img"
+            />
+          </figure>
+          <div className="oe-estancia-copy">
+            <p className="oe-estancia-kicker">Después de clases</p>
+            <h2>Estancia extendida</h2>
+            <p className="oe-estancia-hour">Hasta las 7:00 p.m.</p>
+            <p>
+              Después de clases acompañamos a los alumnos hasta las 7:00 p.m., con cuidado y apoyo
+              en tareas. Cada familia elige el horario que necesita.
+            </p>
+          </div>
         </section>
 
         <style jsx global>{`
@@ -555,19 +568,67 @@ export default function OfertaEducativaSection({
           .oe-estancia {
             position: relative;
             z-index: 1;
-            max-width: 720px;
-            margin: 3rem auto 0;
-            padding: 1.5rem 1.6rem;
-            border-radius: 24px;
-            background: #f4f7ff;
+            display: grid;
+            grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr);
+            gap: 1.5rem 2.75rem;
+            align-items: center;
+            max-width: 1120px;
+            margin: 3.5rem auto 0;
+          }
+          .oe-estancia-photo {
+            position: relative;
+            height: min(42vw, 420px);
+            margin: 0;
+            overflow: hidden;
+            border-radius: 28px;
+            background: #0a1240;
+          }
+          .oe-estancia-img { object-fit: cover; object-position: 34% 42%; }
+          .oe-estancia-copy { position: relative; padding-left: 1rem; }
+          .oe-estancia-copy::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: .15rem;
+            bottom: .2rem;
+            width: 4px;
+            border-radius: 999px;
+            background: #E3FB07;
+          }
+          .oe-estancia-kicker {
+            margin: 0 0 .55rem;
+            color: #013BDF;
+            font-size: .75rem;
+            font-weight: 800;
+            letter-spacing: .18em;
+            text-transform: uppercase;
           }
           .oe-estancia h2 {
-            margin: 0 0 .5rem;
-            color: #1546e8;
-            font-size: 1.35rem;
+            margin: 0;
+            color: #0a1240;
+            font-size: clamp(2.1rem, 3.2vw, 3rem);
             font-weight: 800;
+            letter-spacing: -0.04em;
+            line-height: .95;
           }
-          .oe-estancia p { margin: 0; color: #3d466e; line-height: 1.6; }
+          .oe-estancia-hour {
+            margin: .9rem 0 0;
+            color: #013BDF;
+            font-size: .95rem;
+            font-weight: 800;
+            letter-spacing: .04em;
+          }
+          .oe-estancia-copy p:last-child {
+            max-width: 38ch;
+            margin: .75rem 0 0;
+            color: #3d466e;
+            line-height: 1.6;
+          }
+          @media (max-width: 800px) {
+            .oe-estancia { grid-template-columns: 1fr; gap: 1.1rem; }
+            .oe-estancia-photo { height: 240px; }
+            .oe-estancia-copy p:last-child { max-width: none; }
+          }
           .oe-lead {
             max-width: 46ch;
             margin: 1rem auto 0;
