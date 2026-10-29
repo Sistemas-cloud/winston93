@@ -52,8 +52,11 @@ export const SITE_AUTHOR = 'Instituto Winston Churchill' as const
 export const SITE_CREATOR = 'Instituto Winston Churchill' as const
 export const SITE_PUBLISHER = 'Instituto Winston Churchill' as const
 
-/** Logo institucional (también usado como favicon). */
+/** Logo institucional completo (schema y pie). No usarlo como favicon: es horizontal. */
 export const SITE_LOGO_PATH = '/images/logos/logo_winston.png' as const
+
+/** 2026-10-29: favicon cuadrado, solo la W, para la pestaña y Google. */
+export const SITE_FAVICON_PATH = '/images/logos/favicon-w.png' as const
 
 /** Imagen Open Graph / Twitter Card por defecto (1200x630). */
 export const SITE_OG_IMAGE_PATH = '/og-image.jpg' as const

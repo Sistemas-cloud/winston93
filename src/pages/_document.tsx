@@ -8,7 +8,7 @@ import Document, {
   type DocumentContext,
   type DocumentInitialProps,
 } from 'next/document'
-import { SITE_LANG, SITE_LOGO_PATH, SITE_NAME } from '@/lib/seo/site-config'
+import { SITE_FAVICON_PATH, SITE_LANG, SITE_NAME } from '@/lib/seo/site-config'
 
 class MyDocument extends Document {
   static async getInitialProps(
@@ -22,8 +22,9 @@ class MyDocument extends Document {
     return (
       <Html lang={SITE_LANG}>
         <Head>
-          <link rel="icon" href={SITE_LOGO_PATH} type="image/png" />
-          <link rel="apple-touch-icon" href={SITE_LOGO_PATH} />
+          <link rel="icon" href="/favicon.ico" sizes="48x48" />
+          <link rel="icon" href={SITE_FAVICON_PATH} type="image/png" sizes="192x192" />
+          <link rel="apple-touch-icon" href={SITE_FAVICON_PATH} />
           <meta name="theme-color" content="#013BDF" />
           <meta name="application-name" content={SITE_NAME} />
 
