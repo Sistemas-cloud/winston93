@@ -1,12 +1,13 @@
 // 2026-08-21: Modal de inscripciones en cada recarga.
 // 2026-10-13: El contenido del modal (reloj "30 años") se reemplaza por la imagen del Open House 21 nov 2026.
+// 2026-11-24: Oculto hasta el 15 de enero de 2027; ese día vuelve a mostrarse solo.
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { OPEN_HOUSE_FORM_URL } from '@/lib/open-house'
+import { isCampaignPopupVisible, OPEN_HOUSE_FORM_URL } from '@/lib/open-house'
 
 // 2026-10-13: El popup se abre en cuanto se entra al sitio (antes esperaba 12 s o scroll).
 export default function CampaignModal() {
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(isCampaignPopupVisible)
 
   useEffect(() => {
     if (!open) return
