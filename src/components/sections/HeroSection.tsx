@@ -172,12 +172,15 @@ export default function HeroSection() {
             Working for a Brighter Future
           </p>
           <div className="mb-5 flex flex-wrap items-center justify-center gap-3">
-            <Link
-              href="/admisiones"
+            {/* 2026-11-24: Admisiones del hero abre el registro del examen en AgendaW. */}
+            <a
+              href="https://agendaw.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="rounded-full bg-[#E3FB07] px-6 py-2.5 text-xs font-bold uppercase tracking-wide text-black shadow-lg transition hover:scale-[1.02] md:text-sm"
             >
               Admisiones
-            </Link>
+            </a>
             <Link
               href="/admisiones#examen-admision"
               className="rounded-full border border-white/50 bg-white/10 px-6 py-2.5 text-xs font-bold uppercase tracking-wide text-white backdrop-blur-sm transition hover:border-[#E3FB07] hover:text-[#E3FB07] md:text-sm"
